@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LfkClient.Models.Repository
 {
+    /// <summary>
+    /// Модель потенциально возможного репозиторияы
+    /// </summary>
     public abstract class AbstractRepository
     {
 

@@ -7,6 +7,9 @@ using System.IO;
 
 namespace LfkClient.FileSystemControl
 {
+    /// <summary>
+    /// Отвечает за работу над записью информации на жёсткий диск
+    /// </summary>
     internal class FileSystemWriter
     {
         private string path;

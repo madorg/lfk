@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LfkClient.Models.Repository
 {
+    /// <summary>
+    /// Модель экземпляра конкретного репозитория
+    /// </summary>
     public class Repository : AbstractRepository
     {
         public int Id { get; set; }

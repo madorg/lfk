@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LfkClient.Models.User
 {
+    /// <summary>
+    /// Модель экземпляра конкретного пользователя
+    /// </summary>
     public class User
     {
 

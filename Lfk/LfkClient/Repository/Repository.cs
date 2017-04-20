@@ -9,6 +9,9 @@ using LfkClient.Models.Repository;
 
 namespace LfkClient.Repository
 {
+    /// <summary>
+    /// Фасад репозитория, перенаправляющий запросы из формы в соответствующие обработчики
+    /// </summary>
     public class Repository
     {
         internal RepoAgent.RepoAgent RepoAgent { get; set; }
@@ -17,8 +20,7 @@ namespace LfkClient.Repository
         public Repository()
         {
             RepoAgent = new RepoAgent.RepoAgent();
-            RepoController = new RepoController();
-            
+            RepoController = new RepoController();          
         }
 
         public void Init(AbstractRepository abstractRepository)

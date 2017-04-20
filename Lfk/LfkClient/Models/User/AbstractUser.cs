@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LfkClient.Models.User
 {
+    /// <summary>
+    /// Модель потенциального пользователя
+    /// </summary>
     public abstract class AbstractUser
     {
 

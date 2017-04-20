@@ -7,6 +7,9 @@ using LfkClient.Models.User;
 
 namespace LfkClient.Authorization
 {
+    /// <summary>
+    /// Фасад авторизации пользователя, перенаправляющий запросы пользователя в соответствующие обработчики
+    /// </summary>
     public class Authorizator
     {
         public static bool TryLogin(AbstractUser abstractUser)

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace LfkServer
 {
+    /// <summary>
+    /// Отвечает за ответ клиенту
+    /// </summary>
     class ResponseSender
     {
+
     }
 }
