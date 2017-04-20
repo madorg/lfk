@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LfkClient.Repository.RepoAgent.Handlers
+namespace LfkClient.Serialization.Json
 {
-    class WatchCommandHandler
+    class JsonSerializer
     {
     }
 }

@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LfkClient.Repository.RepoAgent;
+using LfkClient.Repository.RepoControl;
+using LfkClient.Models.Repository;
 
 namespace LfkClient.Repository
 {
-    class Repository
+    public class Repository
     {
-        private static Repository instance = null;
+        internal RepoAgent.RepoAgent RepoAgent { get; set; }
+        internal RepoController RepoController { get; set; }
 
-        private Repository()
+        public Repository()
         {
-        }
-        public static Repository GetInstance()
-        {
-            lock (instance)
-            {
-                if (instance == null)
-                {
-                    instance = new Repository();
-                }
-            }
-            return instance;
+            RepoAgent = new RepoAgent.RepoAgent();
+            RepoController = new RepoController();
+            
         }
 
+        public void Init(AbstractRepository abstractRepository)
+        {
+            RepoController.Init(abstractRepository);
+        }
 
+        public void Include(IEnumerable<string> included)
+        {
+            RepoAgent.HandleInclude(included);
+        }
     }
 }

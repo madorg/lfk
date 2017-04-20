@@ -1,0 +1,26 @@
+﻿<Window x:Class="LfkGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LfkGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="166*"/>
+            <ColumnDefinition Width="215*"/>
+            <ColumnDefinition Width="137*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="107*"/>
+            <RowDefinition Height="24*"/>
+            <RowDefinition Height="188*"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="Username" Grid.Row="1" Width="100" Margin="42.5,0,72,0" Grid.Column="1"></TextBox>
+        <TextBox x:Name="Password" Grid.Row="1" Width="100" Margin="160.5,0,91,0" Grid.ColumnSpan="2" Grid.Column="1"></TextBox>
+        <Button x:Name="LoginButton" Grid.Row="2" Click="Button_Click" Grid.ColumnSpan="3">Click me!</Button>
+        <Button x:Name="InitButton" Grid.Row="0" Grid.Column="0" Click="Button_Click_1" IsEnabled="False" Margin="0,0,10,0">INIT</Button>
+        <Button x:Name="IncludeButton" Grid.Row="0" Grid.Column="1" Click="IncludeButton_Click" IsEnabled="False">INCLUDE</Button>
+    </Grid>
+</Window>

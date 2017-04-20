@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LfkClient.Models
+namespace LfkServer.User
 {
-    public class User
+    class UserController
     {
-
     }
 }
