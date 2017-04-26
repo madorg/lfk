@@ -1,0 +1,22 @@
+﻿<Window x:Class="LfkGUI.RepositoryManagementWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LfkGUI"
+        mc:Ignorable="d"
+        Title="RepositoryManagementWindow" Height="300" Width="300">
+    <Grid>
+        <Menu VerticalAlignment="Top" Height="25">
+            <MenuItem x:Name="RepositoryMenuItem" Header="Репозиторий">
+                <MenuItem x:Name="CreateRepositoryMenuItem" Header="Создать" Click="CreateRepositoryMenuItem_Click"></MenuItem>
+                <MenuItem x:Name="OpenRepositoryMenuItem" Header="Открыть">
+                    <MenuItem x:Name="OpenRepositoryFromServerMenuItem" Header="С сервера"></MenuItem>
+                    <MenuItem x:Name="OpenRepositoryFromFolderMenuItem" Header="Из каталога"></MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="UpdateRepositoryMenuItem" Header="Изменить"></MenuItem>
+                <MenuItem x:Name="DeleteRepositoryMenuItem" Header="Удалить"></MenuItem>
+            </MenuItem>
+        </Menu>
+    </Grid>
+</Window>

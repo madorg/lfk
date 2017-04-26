@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:LfkGUI"
-             StartupUri="MainWindow.xaml">
+             xmlns:u="clr-namespace:LfkClient.Models.User;assembly=LfkClient"
+             StartupUri="AuthorizationWindow.xaml">
     <Application.Resources>
-         
+        <u:User x:Key="AppUser"/>
     </Application.Resources>
 </Application>

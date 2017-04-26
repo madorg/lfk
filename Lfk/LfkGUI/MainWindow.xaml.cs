@@ -28,6 +28,8 @@ namespace LfkGUI
         public MainWindow()
         {
             InitializeComponent();
+
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -38,14 +40,14 @@ namespace LfkGUI
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            repo.Init(new LfkClient.Models.Repository.Repository() { Id = 1, Title = "First repo", UserId = 1, Path = @"F:\garbage\lfk" });
+            //repo.Init(new LfkClient.Models.Repository.LocalRepository() { Id = 1, Title = "First repo", UserId = , Path = @"F:\garbage\lfk" });
 
             // TODO: Добавить путь к репозиторию!!!
         }
 
         private void IncludeButton_Click(object sender, RoutedEventArgs e)
         {
-            repo.Include(new List<string>() { "myfile.txt", "mydoc.docx" });
+            //repo.Include(new List<string>() { "myfile.txt", "mydoc.docx" });
         }
     }
 }
