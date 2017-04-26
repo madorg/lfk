@@ -24,7 +24,7 @@ namespace LfkClient.Repository.RepoControl
 
         public void Init(AbstractRepository abstractRepository)
         {
-            Models.Repository.Repository repo = abstractRepository as Models.Repository.Repository;
+            Models.Repository.LocalRepository repo = abstractRepository as Models.Repository.LocalRepository;
 
             // ТУДУ: проверить наличие схожего репо этого же юзера на сервере
 

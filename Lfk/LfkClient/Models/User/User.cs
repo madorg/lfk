@@ -11,6 +11,7 @@ namespace LfkClient.Models.User
     /// </summary>
     public class User
     {
-
+        public Guid Id { get; set; }
+        // todo
     }
 }
