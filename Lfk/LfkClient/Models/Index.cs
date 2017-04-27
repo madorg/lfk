@@ -8,6 +8,14 @@ namespace LfkClient.Models
 {
     public class Index
     {
-        public int Id { get; set; }
+        public Index()
+        {
+            FileName = new List<string>();
+            Hash = new List<string>();
+        }
+
+        public Guid Id { get; set; }
+        public List<string> FileName { get; set; }
+        public List<string> Hash { get; set; }
     }
 }

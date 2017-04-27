@@ -12,7 +12,7 @@
                 <MenuItem x:Name="CreateRepositoryMenuItem" Header="Создать" Click="CreateRepositoryMenuItem_Click"></MenuItem>
                 <MenuItem x:Name="OpenRepositoryMenuItem" Header="Открыть">
                     <MenuItem x:Name="OpenRepositoryFromServerMenuItem" Header="С сервера"></MenuItem>
-                    <MenuItem x:Name="OpenRepositoryFromFolderMenuItem" Header="Из каталога"></MenuItem>
+                    <MenuItem x:Name="OpenRepositoryFromFolderMenuItem" Header="Из каталога" Click="OpenRepositoryFromFolderMenuItem_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="UpdateRepositoryMenuItem" Header="Изменить"></MenuItem>
                 <MenuItem x:Name="DeleteRepositoryMenuItem" Header="Удалить"></MenuItem>

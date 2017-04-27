@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystemControl\FileSystem.cs" />
     <Compile Include="ServerConnection\ServerActionMode.cs" />
     <Compile Include="ServerConnection\ServerConnector.cs" />
     <Compile Include="Models\Repository\AbstractRepository.cs" />
@@ -59,12 +60,6 @@
     <Compile Include="Authorization\Authorizator.cs" />
     <Compile Include="FileSystemControl\FileSystemReader.cs" />
     <Compile Include="FileSystemControl\FileSystemWriter.cs" />
-    <Compile Include="Repository\RepoAgent\Handlers\AddCommandHandler.cs" />
-    <Compile Include="Repository\RepoAgent\Handlers\CommitCommandHandler.cs" />
-    <Compile Include="Repository\RepoAgent\Handlers\HistoryCommandHandler.cs" />
-    <Compile Include="Repository\RepoAgent\Handlers\SwitchCommandHandler.cs" />
-    <Compile Include="Repository\RepoAgent\Handlers\UploadCommandHandler.cs" />
-    <Compile Include="Repository\RepoAgent\Handlers\IncludeCommandHandler.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\Index.cs" />

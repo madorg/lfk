@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfkServer", "LfkServer\LfkServer.csproj", "{2C8D6C96-0DC0-4B2C-8D0D-800F2BF4C380}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfkGUI", "LfkGUI\LfkGUI.csproj", "{D65BA871-95DC-42E7-A260-E7045471B5B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BE365C44-5689-43EB-9911-C8E916A692CC} = {BE365C44-5689-43EB-9911-C8E916A692CC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

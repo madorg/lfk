@@ -24,19 +24,24 @@ namespace LfkClient.Repository.RepoControl
 
         public void Init(AbstractRepository abstractRepository)
         {
-            Models.Repository.LocalRepository repo = abstractRepository as Models.Repository.LocalRepository;
+            LocalRepository repo = abstractRepository as LocalRepository;
 
             // ТУДУ: проверить наличие схожего репо этого же юзера на сервере
 
-            FileSystemWriter fsw = new FileSystemWriter(repo.Path);
+            FileSystem.Path = repo.Path;
 
-            fsw.CreateFolder("lfk");
+            FileSystem.CreateFolder("/lfk");
 
-            fsw.CreateFolder("lfk/objects");
-            fsw.CreateFolder("lfk/commits");
-            fsw.CreateFile("lfk/info.json");
-            fsw.CreateFile("lfk/index.json");
-            fsw.CreateFile("lfk/included.json");
+            FileSystem.CreateFolder("/lfk/objects");
+            FileSystem.CreateFolder("/lfk/commits");
+            FileSystem.CreateFile("/lfk/info.json");
+            FileSystem.CreateFile("/lfk/index.json");
+            FileSystem.CreateFile("/lfk/included.json");
+            FileSystem.CreateFile("/lfk/files.json");
+
+            FileSystem.AppendToFile(@"\lfk\included.json", "[]");
+            FileSystem.AppendToFile(@"\lfk\files.json", "[]");
+            FileSystem.AppendToFile(@"\lfk\index.json", "[]");
         }
     }
 }

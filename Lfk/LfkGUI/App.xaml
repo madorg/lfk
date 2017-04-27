@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:LfkGUI"
              xmlns:u="clr-namespace:LfkClient.Models.User;assembly=LfkClient"
-             StartupUri="AuthorizationWindow.xaml">
+             StartupUri="RepositoryWindow.xaml">
     <Application.Resources>
         <u:User x:Key="AppUser"/>
     </Application.Resources>

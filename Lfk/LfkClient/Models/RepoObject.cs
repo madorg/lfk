@@ -8,8 +8,9 @@ namespace LfkClient.Models
 {
     public class RepoObject
     {
-        public int Hash { get; set; }
-        public int FileId { get; set; }
-        public int IndexId { get; set; }
+        public Guid Id { get; set; }
+        public string Hash { get; set; }
+        public Guid   FileId { get; set; }
+        public Guid   IndexId { get; set; }
     }
 }

@@ -12,26 +12,33 @@ namespace LfkClient.FileSystemControl
     /// </summary>
     internal class FileSystemWriter
     {
-        private string path;
-
-        public FileSystemWriter(string p)
-        {
-            path = p;
-        }
-
         public void CreateFolder(string folderName)
         {
-            Directory.CreateDirectory(path + folderName);   
+            Directory.CreateDirectory(folderName);   
         }
 
         public void CreateFile(string fileName)
         {
-            File.Create(path + fileName);
+            using (File.Create(fileName))
+            {
+
+            }
         }
 
         public void AppendToFile(string fileName, string data)
         {
-            File.AppendText(fileName).Write(data);
+            using (StreamWriter sw = File.AppendText(fileName))
+            {
+                sw.Write(data);
+            }
+        }
+
+        public void WriteToFile(string fileName, string data)
+        {
+            using (StreamWriter sw = new StreamWriter(fileName, false))
+            {
+                sw.Write(data);
+            }
         }
     }
 }

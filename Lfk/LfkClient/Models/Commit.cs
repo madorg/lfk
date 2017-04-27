@@ -8,8 +8,9 @@ namespace LfkClient.Models
 {
     public class Commit
     {
-        public int IndexId { get; set; }
-        public int Id { get; set; }
+        //public Guid IndexId { get; set; }
+        public Guid Id { get; set; }
+        public Index Index { get; set; }
         public DateTime Date { get; set; }
         public string Comment { get; set; }
         public Commit Parent { get; set; }

@@ -27,24 +27,62 @@ namespace LfkGUI
         public RepositoryManagementWindow()
         {
             InitializeComponent();
+
+            this.Closing += OnOpenRepository;
+        }
+
+        private void OnOpenRepository(object sender, EventArgs e)
+        {
+            RepositoryWindow rw = new RepositoryWindow();
+            rw.Show();
+        }
+
+        private void CreateRepositoryTEST()
+        {
+            Repository repo = Repository.GetInstance();
+
+            string tempPath = @"F:\lfk_tests";
+
+            repo.Init(new LocalRepository()
+            {
+                Id = Guid.NewGuid(),
+                Title = tempPath.Split('\\').Last(),
+                UserId = (App.Current.Resources["AppUser"] as User).Id,
+                Path = tempPath
+            });
+
+            this.Close();
         }
 
         private void CreateRepositoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            //FolderBrowserDialog fbd = new FolderBrowserDialog();
+            //fbd.RootFolder = Environment.SpecialFolder.MyComputer;
 
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                Repository repo = new Repository();
 
-                repo.Init(new LocalRepository()
-                {
-                    Id = Guid.NewGuid(),
-                    Title = fbd.SelectedPath.Split('\\').Last(),
-                    UserId = (App.Current.Resources["AppUser"] as User).Id,
-                    Path = fbd.SelectedPath
-                });
-            }
+            CreateRepositoryTEST();
+
+            //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //{
+            //    Repository repo = Repository.GetInstance();
+
+            //    string tempPath = @"F:\lfk_tests";
+
+            //    repo.Init(new LocalRepository()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Title = fbd.SelectedPath.Split('\\').Last(),
+            //        UserId = (App.Current.Resources["AppUser"] as User).Id,
+            //        Path = fbd.SelectedPath
+            //    });
+
+            //    this.Close();
+            //}
+        }
+
+        private void OpenRepositoryFromFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
