@@ -10,12 +10,10 @@ namespace LfkClient.Models
     {
         public Index()
         {
-            FileName = new List<string>();
-            Hash = new List<string>();
+            RepoObjectId_FileName = new Dictionary<Guid, string>();
         }
 
         public Guid Id { get; set; }
-        public List<string> FileName { get; set; }
-        public List<string> Hash { get; set; }
+        public Dictionary<Guid, string> RepoObjectId_FileName { get; set; }
     }
 }

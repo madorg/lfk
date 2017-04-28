@@ -41,7 +41,7 @@ namespace LfkClient.Repository.RepoControl
 
             FileSystem.AppendToFile(@"\lfk\included.json", "[]");
             FileSystem.AppendToFile(@"\lfk\files.json", "[]");
-            FileSystem.AppendToFile(@"\lfk\index.json", "[]");
+            FileSystem.AppendToFile(@"\lfk\index.json", "{}");
         }
     }
 }

@@ -7,6 +7,7 @@ using LfkClient.Repository.RepoAgent;
 using LfkClient.Repository.RepoControl;
 using LfkClient.Models.Repository;
 using LfkClient.FileSystemControl;
+using LfkClient.Models;
 
 namespace LfkClient.Repository
 {
@@ -56,9 +57,19 @@ namespace LfkClient.Repository
             RepoAgent.HandleCommit(message);
         }
 
+        public List<Commit> History()
+        {
+            return RepoAgent.HandleHistory();
+        }
+
+        public void Switch(string commitId)
+        {
+            RepoAgent.HandleSwitch(commitId);
+        }
+
         public string[] GetWorkingDirectoryFiles()
         {
-            return FileSystem.ReadWorkingDirectory();
+            return FileSystem.ReadWorkingDirectory(FilesType.Client);
         }
     }
 }

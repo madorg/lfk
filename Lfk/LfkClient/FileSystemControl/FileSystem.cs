@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace LfkClient.FileSystemControl
 {
+    public enum FilesType
+    {
+        Client        = 0x01,
+        EntireSystem  = 0x02,
+        SystemCommits = 0x04,
+        SystemObjects = 0x08
+    }
+    
     public static class FileSystem
     {
         private static FileSystemWriter writer;
@@ -43,9 +51,21 @@ namespace LfkClient.FileSystemControl
 
         // --- Reading ---
 
-        public static string[] ReadWorkingDirectory(/* enum ТИП_СЧИТЫВАЕМЫХ_ФАЙЛОВ */)
+        public static string[] ReadWorkingDirectory(FilesType filesType)
         {
-            return reader.ReadWorkingDirectory(Path);
+            switch (filesType)
+            {
+                case FilesType.Client:
+                    return reader.ReadWorkingDirectory(Path);
+                case FilesType.EntireSystem:
+                    return reader.ReadWorkingDirectory(Path, @"\lfk\");
+                case FilesType.SystemCommits:
+                    return reader.ReadWorkingDirectory(Path, "\\lfk\\commits\\");
+                case FilesType.SystemObjects:
+                    return reader.ReadWorkingDirectory(Path, @"\lfk\objects\");
+                default:
+                    return null;
+            }
         }
 
         public static string ReadFileContent(string fileName)

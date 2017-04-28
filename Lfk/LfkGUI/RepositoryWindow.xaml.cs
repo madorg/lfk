@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using LfkClient.Repository;
 using LfkClient.Models.Repository;
 using LfkClient.Models.User;
+using LfkClient.Models;
 
 namespace LfkGUI
 {
@@ -67,6 +68,21 @@ namespace LfkGUI
         private void CommitButton_Click(object sender, RoutedEventArgs e)
         {
             Repository.GetInstance().Commit(CommitMessageTextBox.Text);
+        }
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<Commit> commits = Repository.GetInstance().History();
+
+            foreach (Commit commit in commits)
+            {
+                CommitsComboBox.Items.Add(commit.Id);
+            }
+        }
+
+        private void SwitchButton_Click(object sender, RoutedEventArgs e)
+        {
+            Repository.GetInstance().Switch(CommitsComboBox.SelectedItem.ToString());
         }
     }
 }

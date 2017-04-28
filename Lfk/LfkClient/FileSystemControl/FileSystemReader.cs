@@ -17,8 +17,21 @@ namespace LfkClient.FileSystemControl
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
             return directoryInfo
                 .GetFiles("*", SearchOption.AllDirectories)
-                .Select(f => f.FullName.Substring(path.Length + 1))
-                .Where(m => !m.StartsWith(@"lfk\"))
+                .Select(f => f.FullName.Substring(path.Length))
+                .Where(m => !m.StartsWith(@"\lfk\"))
+                .ToArray();
+        }
+
+        public string[] ReadWorkingDirectory(string path, string folder)
+        {
+            //p = F:\lfk_test    11
+            //folder = \lfk\commits 13
+            //d = F:\lfk_test\lfk\commits 
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(path + folder);
+            return directoryInfo
+                .GetFiles("*", SearchOption.AllDirectories)
+                .Select(f => f.FullName.Substring(path.Length))
                 .ToArray();
         }
 

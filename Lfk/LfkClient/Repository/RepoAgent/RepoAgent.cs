@@ -19,15 +19,13 @@ namespace LfkClient.Repository.RepoAgent
         #region Методы обработки входящих команд
         public void HandleInclude(IEnumerable<string> included)
         {
-            string oldData = FileSystem.ReadFileContent(@"\lfk\included.json");
-            List<string> deserializedOldData = 
-                JsonDeserializer.DeserializeObject<List<string>>(oldData) as List<string>;
+            List<string> deserializedOldData =
+                JsonDeserializer.DeserializeObjectFromFile<List<string>>(@"\lfk\included.json");
 
             if (deserializedOldData != null)
             {
                 deserializedOldData.AddRange(included);
-                string newData = JsonSerializer.SerializeObject(deserializedOldData);
-                FileSystem.WriteToFile(@"\lfk\included.json", newData);
+                JsonSerializer.SerializeObjectToFile(deserializedOldData, @"\lfk\included.json");
             }
         }
 
@@ -45,33 +43,55 @@ namespace LfkClient.Repository.RepoAgent
                 RepoObject blob = new RepoObject() { Id = id, Hash = hash, FileId = fileId, IndexId = indexId };
                 string serizalizedBlob = JsonSerializer.SerializeObject(blob);
 
-                string blobFileName = hash.Substring(0, 9);
-
-                // ДЕЗЕЛИАЛИЗОВАТЬ index.json , ДОБАВТЬ ТУДА ЗНАЧЕНИЯ НОВЫЕ (filename - hash_id)
-                // СЕРИАЛИЗОВАТЬ И СОХРАНИТЬ ОБРАТНО 
+                string blobFileName = id.ToString();
 
                 FileSystem.CreateFile(@"\lfk\objects\" + blobFileName);
                 FileSystem.WriteToFile(@"\lfk\objects\" + blobFileName, serizalizedBlob);
+
+                Dictionary<Guid, string> deserializedIndex =
+                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(@"\lfk\index.json");
+
+                if (deserializedIndex != null)
+                {
+                    deserializedIndex.Add(id, fileName);
+                    JsonSerializer.SerializeObjectToFile(deserializedIndex, @"\lfk\index.json");
+                }
             }
         }
 
         public void HandleCommit(string message)
         {
-            Index index = new Index();
-            
-
+            Index index = new Index()
+            {
+                Id = currentIndexId,
+                RepoObjectId_FileName =
+                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(@"\lfk\index.json")
+            };
 
             Commit commit = new Commit()
             {
                 Id = Guid.NewGuid(),
-                
-
+                Index = index,
+                Date = DateTime.Now,
+                Comment = message,
+                Parent = null
             };
+
+            JsonSerializer.SerializeObjectToFile(commit, @"\lfk\commits\" + commit.Id.ToString());
+
+            currentIndexId = Guid.NewGuid();
         }
 
-        public void HandleHistory()
+        public List<Commit> HandleHistory()
         {
+            List<Commit> commits = new List<Commit>();
 
+            foreach (string fileName in FileSystem.ReadWorkingDirectory(FilesType.SystemCommits))
+            {
+                commits.Add(JsonDeserializer.DeserializeObjectFromFile<Commit>(fileName));
+            }
+
+            return commits;
         }
 
         public void HandleUpload()
@@ -79,7 +99,7 @@ namespace LfkClient.Repository.RepoAgent
 
         }
 
-        public void HandleSwitch()
+        public void HandleSwitch(string commitId)
         {
 
         }

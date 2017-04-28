@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LfkGUI"
         mc:Ignorable="d"
-        Title="RepositoryWindow" Height="300" Width="300">
+        Title="RepositoryWindow" Height="600" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="31*"/>
@@ -28,6 +28,9 @@
             <TextBox x:Name="AddTextBox" Text="Файлы для добавления" AcceptsReturn="True"/>
             <Button x:Name="AddButton" Click="AddButton_Click">ADD</Button>
             <Button x:Name="CommitButton" Click="CommitButton_Click">COMMIT</Button>
+            <Button x:Name="HistoryButton" Click="HistoryButton_Click">HISTORY</Button>
+            <Button x:Name="SwitchButton" Click="SwitchButton_Click">SWITCH</Button>
+            <ComboBox x:Name="CommitsComboBox"></ComboBox>
         </StackPanel>
     </Grid>
 </Window>
