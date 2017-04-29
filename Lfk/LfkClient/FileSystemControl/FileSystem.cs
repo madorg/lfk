@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LfkClient.FileSystemControl
+﻿namespace LfkClient.FileSystemControl
 {
     public enum FilesType
     {
@@ -58,11 +52,11 @@ namespace LfkClient.FileSystemControl
                 case FilesType.Client:
                     return reader.ReadWorkingDirectory(Path);
                 case FilesType.EntireSystem:
-                    return reader.ReadWorkingDirectory(Path, @"\lfk\");
+                    return reader.ReadWorkingDirectory(Path, FileSystemPaths.LfkMainFolder);
                 case FilesType.SystemCommits:
-                    return reader.ReadWorkingDirectory(Path, "\\lfk\\commits\\");
+                    return reader.ReadWorkingDirectory(Path, FileSystemPaths.LfkCommitsFolder);
                 case FilesType.SystemObjects:
-                    return reader.ReadWorkingDirectory(Path, @"\lfk\objects\");
+                    return reader.ReadWorkingDirectory(Path, FileSystemPaths.LfkObjectsFolder);
                 default:
                     return null;
             }

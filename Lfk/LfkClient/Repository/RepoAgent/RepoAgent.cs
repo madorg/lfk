@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LfkClient.FileSystemControl;
 using LfkClient.Serialization.Json;
 using LfkClient.Models;
@@ -20,12 +17,12 @@ namespace LfkClient.Repository.RepoAgent
         public void HandleInclude(IEnumerable<string> included)
         {
             List<string> deserializedOldData =
-                JsonDeserializer.DeserializeObjectFromFile<List<string>>(@"\lfk\included.json");
+                JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
 
             if (deserializedOldData != null)
             {
                 deserializedOldData.AddRange(included);
-                JsonSerializer.SerializeObjectToFile(deserializedOldData, @"\lfk\included.json");
+                JsonSerializer.SerializeObjectToFile(deserializedOldData, FileSystemPaths.LfkIncludedFile);
             }
         }
 
@@ -45,16 +42,16 @@ namespace LfkClient.Repository.RepoAgent
 
                 string blobFileName = id.ToString();
 
-                FileSystem.CreateFile(@"\lfk\objects\" + blobFileName);
-                FileSystem.WriteToFile(@"\lfk\objects\" + blobFileName, serizalizedBlob);
+                FileSystem.CreateFile(FileSystemPaths.LfkObjectsFolder + blobFileName);
+                FileSystem.WriteToFile(FileSystemPaths.LfkObjectsFolder + blobFileName, serizalizedBlob);
 
                 Dictionary<Guid, string> deserializedIndex =
-                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(@"\lfk\index.json");
+                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(FileSystemPaths.LfkIndexFile);
 
                 if (deserializedIndex != null)
                 {
                     deserializedIndex.Add(id, fileName);
-                    JsonSerializer.SerializeObjectToFile(deserializedIndex, @"\lfk\index.json");
+                    JsonSerializer.SerializeObjectToFile(deserializedIndex, FileSystemPaths.LfkIndexFile);
                 }
             }
         }
@@ -65,7 +62,7 @@ namespace LfkClient.Repository.RepoAgent
             {
                 Id = currentIndexId,
                 RepoObjectId_FileName =
-                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(@"\lfk\index.json")
+                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(FileSystemPaths.LfkIndexFile)
             };
 
             Commit commit = new Commit()
@@ -77,7 +74,7 @@ namespace LfkClient.Repository.RepoAgent
                 Parent = null
             };
 
-            JsonSerializer.SerializeObjectToFile(commit, @"\lfk\commits\" + commit.Id.ToString());
+            JsonSerializer.SerializeObjectToFile(commit, FileSystemPaths.LfkCommitsFolder + commit.Id.ToString());
 
             currentIndexId = Guid.NewGuid();
         }

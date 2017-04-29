@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LfkClient.Models.Repository;
+﻿using LfkClient.Models.Repository;
 using LfkClient.FileSystemControl;
 
 namespace LfkClient.Repository.RepoControl
@@ -13,15 +8,9 @@ namespace LfkClient.Repository.RepoControl
     /// </summary>
     internal class RepoController
     {
-        // Структура каталога lfk:
-        // - commits/
-        // --- <commits>
-        // - objects/ 
-        // --- <blobs>
-        // - info
-        // - index
-        // - included
-
+        /// <summary>
+        /// Инициализирует системный каталог lfk необходимыми файлами и папками
+        /// </summary>
         public void Init(AbstractRepository abstractRepository)
         {
             LocalRepository repo = abstractRepository as LocalRepository;
@@ -30,18 +19,19 @@ namespace LfkClient.Repository.RepoControl
 
             FileSystem.Path = repo.Path;
 
-            FileSystem.CreateFolder("/lfk");
+            FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
 
-            FileSystem.CreateFolder("/lfk/objects");
-            FileSystem.CreateFolder("/lfk/commits");
-            FileSystem.CreateFile("/lfk/info.json");
-            FileSystem.CreateFile("/lfk/index.json");
-            FileSystem.CreateFile("/lfk/included.json");
-            FileSystem.CreateFile("/lfk/files.json");
+            FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
+            FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
 
-            FileSystem.AppendToFile(@"\lfk\included.json", "[]");
-            FileSystem.AppendToFile(@"\lfk\files.json", "[]");
-            FileSystem.AppendToFile(@"\lfk\index.json", "{}");
+            FileSystem.CreateFile(FileSystemPaths.LfkFilesFile);
+            FileSystem.CreateFile(FileSystemPaths.LfkIncludedFile);
+            FileSystem.CreateFile(FileSystemPaths.LfkIndexFile);
+            FileSystem.CreateFile(FileSystemPaths.LfkInfoFile);
+
+            FileSystem.AppendToFile(FileSystemPaths.LfkFilesFile, "[]");
+            FileSystem.AppendToFile(FileSystemPaths.LfkIncludedFile, "[]");           
+            FileSystem.AppendToFile(FileSystemPaths.LfkIndexFile, "{}");
         }
     }
 }
