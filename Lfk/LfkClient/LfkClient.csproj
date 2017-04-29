@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystemControl\FileSystem.cs" />
+    <Compile Include="FileSystemControl\FileSystemPaths.cs" />
     <Compile Include="ServerConnection\ServerActionMode.cs" />
     <Compile Include="ServerConnection\ServerConnector.cs" />
     <Compile Include="Models\Repository\AbstractRepository.cs" />
