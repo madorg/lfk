@@ -31,20 +31,15 @@
          VerticalAlignment="Stretch" />
         <GridSplitter Grid.Row="0" Grid.ColumnSpan="1" VerticalAlignment="Bottom" ShowsPreview="False" Height="5"
          HorizontalAlignment="Stretch"  />
-        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom" ShowsPreview="False" Height="5"
-         HorizontalAlignment="Stretch"  />
 
-        <Frame Grid.Row="0" Grid.Column="1" x:Name="CommandFrame" NavigationUIVisibility="Hidden"/>
+        <Frame Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="CommandFrame" NavigationUIVisibility="Hidden"/>
 
         <StackPanel  Grid.Row="0" Grid.Column="0" Margin="3,3,8,8" >
             <Button x:Name="IncludeCommandButton"   Content="Include" Style="{StaticResource MaterialDesignFlatButton}" Click="IncludeCommandButton_Click" />
             <Button x:Name="AddCommandButton"   Content="Add" Style="{StaticResource MaterialDesignFlatButton}" Click="AddCommandButton_Click" />
             <Button x:Name="CommitCommandButton"   Content="Commit" Style="{StaticResource MaterialDesignFlatButton}" Click="CommitCommandButton_Click" />
-            <Button x:Name="SwitchCommandButton"   Content="Switch" Style="{StaticResource MaterialDesignFlatButton}" />
-            <Button x:Name="HistoryCommandButton"   Content="History" Style="{StaticResource MaterialDesignFlatButton}" />
+            <Button x:Name="HistoryCommandButton"   Content="History" Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
         </StackPanel>
          
-        <StackPanel Grid.Column="1" Grid.Row="1">
-        </StackPanel>
     </Grid>
 </Controls:MetroWindow>

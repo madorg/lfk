@@ -97,6 +97,9 @@
     <Compile Include="Repository\CommitCommandPage.xaml.cs">
       <DependentUpon>CommitCommandPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Repository\HistoryCommandPage.xaml.cs">
+      <DependentUpon>HistoryCommandPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Repository\IncludeCommandPage.xaml.cs">
       <DependentUpon>IncludeCommandPage.xaml</DependentUpon>
     </Compile>
@@ -128,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Repository\CommitCommandPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Repository\HistoryCommandPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

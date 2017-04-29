@@ -1,0 +1,34 @@
+﻿<Page x:Class="LfkGUI.Repository.HistoryCommandPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
+      xmlns:local="clr-namespace:LfkGUI.Repository"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="HistoryCommandPage">
+
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <DockPanel  DockPanel.Dock="Top">
+                <TextBlock Text="History of commits" Foreground="WhiteSmoke" FontSize="20" MinWidth="300" Margin="30,0,0,0"/>
+                <Button x:Name="SwitchCommandButton"   Content="Switch" Style="{StaticResource MaterialDesignFlatButton}"  Click="SwitchCommandButton_Click"/>
+            </DockPanel>
+            <ListView x:Name="HistoryListView" ItemsSource="{DynamicResource ResourceKey=Commits}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Date}">Date</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Comment}">Comment</GridViewColumn>
+                    </GridView>
+                </ListView.View>
+                <ListView.Resources>
+                    <collections:ArrayList x:Key="Commits">
+                    </collections:ArrayList>
+                </ListView.Resources>
+            </ListView>
+        </DockPanel>
+
+    </Grid>
+</Page>

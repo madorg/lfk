@@ -59,5 +59,10 @@ namespace LfkGUI.Repository
         {
             CommandFrame.Content = new CommitCommandPage();
         }
+
+        private void HistoryCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandFrame.Content = new HistoryCommandPage();
+        }
     }
 }
