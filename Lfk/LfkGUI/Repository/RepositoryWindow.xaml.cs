@@ -38,13 +38,6 @@ namespace LfkGUI.Repository
             });
         }
 
-        private TreeViewItem BuildFilesTreeViewItem(string[] filenames)
-        {
-            TreeViewItem root = new TreeViewItem();
-            //TODO НАПИСАТЬ ФУНКЦИЮ ПрЕОБРАЗОВАНИЯ СТРОК В ДРЕВОВИДНУЮ СТРУКТУРУ
-            return root;
-        }
-
         private void IncludeCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandFrame.Content = new IncludeCommandPage();
@@ -63,6 +56,13 @@ namespace LfkGUI.Repository
         private void HistoryCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandFrame.Content = new HistoryCommandPage();
+        }
+
+        private void NavigateToRepositoryManagementWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            RepositoryManagement.RepositoryManagementWindow rmw = new RepositoryManagement.RepositoryManagementWindow();
+            rmw.Show();
+            this.Close();
         }
     }
 }

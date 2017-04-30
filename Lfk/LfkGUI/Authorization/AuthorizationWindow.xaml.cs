@@ -53,6 +53,7 @@ namespace LfkGUI.Authorization
                 if (rc)
                 {
                     App.Current.Resources["AppUser"] = new User();
+                 
                     this.Closing += OnSuccessAuthorization;
                     this.Close();
                 }

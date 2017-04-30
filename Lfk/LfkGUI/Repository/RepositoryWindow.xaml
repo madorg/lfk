@@ -40,6 +40,8 @@
             <Button x:Name="CommitCommandButton"   Content="Commit" Style="{StaticResource MaterialDesignFlatButton}" Click="CommitCommandButton_Click" />
             <Button x:Name="HistoryCommandButton"   Content="History" Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
         </StackPanel>
-         
+        <StackPanel Grid.Column="0" Grid.Row="1" x:Name="NavigationStackPanel">
+            <Button x:Name="NavigateToRepositoryManagementWindowButton" Content="Back to repo management" Click="NavigateToRepositoryManagementWindowButton_Click"/>
+        </StackPanel>
     </Grid>
 </Controls:MetroWindow>

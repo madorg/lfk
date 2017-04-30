@@ -20,12 +20,14 @@
                       WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Button x:Key="OpenLocalRepositoryButton" x:Name="OpenLocalRepositoryButton" Content="From folder"  
-                Style="{DynamicResource MaterialDesignFlatButton }"  Height="25" BorderThickness="1,1,1,1" 
+                Style="{DynamicResource MaterialDesignFlatButton }"  Height="25" BorderThickness="1,1,1,1"
+                Margin="3,0,3,0"
                 Background="{DynamicResource AccentColorBrush}"
                 Click="OpenLocalRepositoryButton_Click"
                 />
         <Button x:Key="OpenRemoteRepositoryButton" x:Name="OpenRemoteRepositoryButton" Content="From server"
                 Style="{DynamicResource MaterialDesignFlatButton }" Height="25" BorderThickness="1,1,1,1"
+                Margin="3,0,3,0"
                 Background="{DynamicResource AccentColorBrush}"
                 Click="OpenRemoteRepositoryButton_Click"/>
     </Window.Resources>

@@ -31,10 +31,18 @@ namespace LfkGUI.Repository
             }
         }
 
+        private TreeViewItem BuildFilesTreeViewItem(string[] filenames)
+        {
+            TreeViewItem root = new TreeViewItem();
+            //TODO НАПИСАТЬ ФУНКЦИЮ ПрЕОБРАЗОВАНИЯ СТРОК В ДРЕВОВИДНУЮ СТРУКТУРУ
+            return root;
+        }
+
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             startDragPoint = e.GetPosition(null);
         }
+
         private void StartDrag(object sender, MouseEventArgs e)
         {
             TreeView treeView = sender as TreeView;
