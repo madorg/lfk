@@ -14,11 +14,5 @@ namespace LfkGUI
     /// </summary>
     public partial class App : Application
     {
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            var flyout = App.Current.Resources["SettingsFlyout"] as Flyout;
-            flyout.IsOpen = !flyout.IsOpen;
-
-        }
     }
 }

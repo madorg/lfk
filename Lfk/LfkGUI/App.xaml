@@ -27,28 +27,7 @@
                 <!-- Material Design: MahApps Compatibility -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Fonts.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Flyout.xaml" />-->
-                <ResourceDictionary>
-                    <Controls:Flyout x:Key="SettingsFlyout" x:Name="SettingsFlyout"
-                                     Header="Settings" 
-                                     Position="Right" 
-                                     Background="{DynamicResource WindowTitleColorBrush}"
-                                     MinWidth="200">
-                        <StackPanel Margin="10">
-                            <Controls:ToggleSwitch x:Name="LanguageToggleSwitch" Header="Language" OnLabel="Russian" OffLabel="English" />
-                            <Controls:ToggleSwitch Header="Color theme" OnLabel="Dark" OffLabel="Light" />
-                        </StackPanel>
-                    </Controls:Flyout>
-
-                    <Button x:Key="SettingsButton" x:Name="SettingsButton"
-                            Style="{DynamicResource MetroCircleButtonStyle}"  
-                            Width="32" Height="32"
-                            BorderThickness="0"
-                            Click="SettingsButton_Click" >
-                        <materialDesign:PackIcon Kind="Settings" 
-                                                 Width="16" Height="16"
-                                                 Foreground="{DynamicResource MaterialDesignBody}"/>
-                    </Button>
-                </ResourceDictionary>
+                <ResourceDictionary Source="Resources/SharedResourcesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

@@ -1,0 +1,28 @@
+﻿<ResourceDictionary x:Class="LfkGUI.SharedResourcesDictionary"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LfkGUI"
+                    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
+                    >
+    <Controls:Flyout x:Key="SettingsFlyout" x:Name="SettingsFlyout"
+                                     Header="Settings" 
+                                     Position="Right" 
+                                     Background="{DynamicResource WindowTitleColorBrush}"
+                                     MinWidth="200">
+        <StackPanel Margin="10">
+            <Controls:ToggleSwitch x:Name="LanguageToggleSwitch" Header="Language" OnLabel="Russian" OffLabel="English" />
+            <Controls:ToggleSwitch Header="Color theme" OnLabel="Dark" OffLabel="Light" />
+        </StackPanel>
+    </Controls:Flyout>
+
+    <Button x:Key="SettingsButton" x:Name="SettingsButton"
+                            Style="{DynamicResource MetroCircleButtonStyle}"  
+                            Width="32" Height="32"
+                            BorderThickness="0"
+                            Click="SettingsButton_Click" >
+        <materialDesign:PackIcon Kind="Settings" 
+                                                 Width="16" Height="16"
+                                                 Foreground="{DynamicResource MaterialDesignBody}"/>
+    </Button>
+</ResourceDictionary>
