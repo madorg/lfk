@@ -20,16 +20,13 @@ namespace LfkGUI.Repository
     /// <summary>
     /// Логика взаимодействия для RepositoryWindow.xaml
     /// </summary>
-    public partial class RepositoryWindow : MetroWindow
+    public partial class RepositoryWindow : Base.BaseWindow
     {
         
         public RepositoryWindow()
         {
             InitializeComponent();
             App.Current.Resources["AppUser"] = new User();
-
-            SettingsWindowCommands.Items.Add(App.Current.Resources["SettingsButton"] as Button);
-            SettingsFlyoutsControl.Items.Add(App.Current.Resources["SettingsFlyout"] as Flyout);
 
             string tempPath = @"D:\lfk_tests";
             LfkClient.Repository.Repository.GetInstance().Init(new LocalRepository()

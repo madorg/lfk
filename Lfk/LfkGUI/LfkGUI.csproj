@@ -88,6 +88,7 @@
     <Compile Include="Authorization\RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Base\BaseWindow.cs" />
     <Compile Include="RepositoryManagement\RepositoryManagementWindow.xaml.cs">
       <DependentUpon>RepositoryManagementWindow.xaml</DependentUpon>
     </Compile>
@@ -105,9 +106,6 @@
     </Compile>
     <Compile Include="Repository\RepositoryWindow.xaml.cs">
       <DependentUpon>RepositoryWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\SharedResourcesDictionary.xaml.cs">
-      <DependentUpon>SharedResourcesDictionary.xaml</DependentUpon>
     </Compile>
     <Page Include="Authorization\AuthorizationWindow.xaml">
       <SubType>Designer</SubType>
@@ -146,10 +144,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Repository\RepositoryWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\SharedResourcesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -22,13 +22,11 @@ namespace LfkGUI.RepositoryManagement
     /// <summary>
     /// Логика взаимодействия для RepositoryManagementWindow.xaml
     /// </summary>
-    public partial class RepositoryManagementWindow : MetroWindow
+    public partial class RepositoryManagementWindow : Base.BaseWindow
     {
         public RepositoryManagementWindow()
         {
             InitializeComponent();
-            SettingsWindowCommands.Items.Add(App.Current.Resources["SettingsButton"] as Button);
-            SettingsFlyoutControl.Items.Add(App.Current.Resources["SettingsFlyout"] as Flyout);
         }
 
         private void OnOpenRepository(object sender, EventArgs e)
