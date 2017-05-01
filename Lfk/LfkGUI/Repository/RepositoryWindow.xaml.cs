@@ -28,6 +28,9 @@ namespace LfkGUI.Repository
             InitializeComponent();
             App.Current.Resources["AppUser"] = new User();
 
+            SettingsWindowCommands.Items.Add(App.Current.Resources["SettingsButton"] as Button);
+            SettingsFlyoutsControl.Items.Add(App.Current.Resources["SettingsFlyout"] as Flyout);
+
             string tempPath = @"D:\lfk_tests";
             LfkClient.Repository.Repository.GetInstance().Init(new LocalRepository()
             {
@@ -64,5 +67,6 @@ namespace LfkGUI.Repository
             rmw.Show();
             this.Close();
         }
+
     }
 }

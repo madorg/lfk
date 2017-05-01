@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using LfkClient.Models.Repository;
-//using LfkClient.Repository;
 using LfkClient.Models.User;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -28,7 +27,8 @@ namespace LfkGUI.RepositoryManagement
         public RepositoryManagementWindow()
         {
             InitializeComponent();
-
+            SettingsWindowCommands.Items.Add(App.Current.Resources["SettingsButton"] as Button);
+            SettingsFlyoutControl.Items.Add(App.Current.Resources["SettingsFlyout"] as Flyout);
         }
 
         private void OnOpenRepository(object sender, EventArgs e)

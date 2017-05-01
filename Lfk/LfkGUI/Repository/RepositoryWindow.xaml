@@ -18,6 +18,15 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen">
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl x:Name="SettingsFlyoutsControl">
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+    
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands x:Name="SettingsWindowCommands">
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="14*" MinHeight="120"/>
