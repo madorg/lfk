@@ -27,6 +27,9 @@
                 <!-- Material Design: MahApps Compatibility -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Fonts.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Flyout.xaml" />-->
+                
+                <!--Localization-->
+                <ResourceDictionary Source="Resources/Language_en-US.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

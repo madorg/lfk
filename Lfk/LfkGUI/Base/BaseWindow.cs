@@ -42,33 +42,31 @@ namespace LfkGUI.Base
 
             #region Добавление Fyout
             StackPanel stackPanel = new StackPanel() { Margin = new Thickness(10) };
-            ToggleSwitch languageToggleSwitch = new ToggleSwitch()
-            {
-                Name = "LanguageToggleSwitch",
-                Header = "Language",
-                OnLabel = "Russian",
-                OffLabel = "English"
-            };
+            ToggleSwitch languageToggleSwitch = new ToggleSwitch() { Name = "LanguageToggleSwitch" };
+
+            languageToggleSwitch.SetResourceReference(ToggleSwitch.HeaderProperty, "LanguageString");
+            languageToggleSwitch.SetResourceReference(ToggleSwitch.OnLabelProperty, "RussianLanguageString");
+            languageToggleSwitch.SetResourceReference(ToggleSwitch.OffLabelProperty, "EnglishLanguageString");
             languageToggleSwitch.IsCheckedChanged += LanguageToggleSwitch_IsCheckedChanged;
+
             stackPanel.Children.Add(languageToggleSwitch);
-            ToggleSwitch themeToggleSwitch = new ToggleSwitch()
-            {
-                Name = "ThemeToggleSwitch",
-                Header = "Color theme",
-                OnLabel = "Light",
-                OffLabel = "Dark",
-            };
+            ToggleSwitch themeToggleSwitch = new ToggleSwitch() { Name = "ThemeToggleSwitch" };
+
+            themeToggleSwitch.SetResourceReference(ToggleSwitch.HeaderProperty, "ColorThemeString");
+            themeToggleSwitch.SetResourceReference(ToggleSwitch.OnLabelProperty, "DarkThemeString");
+            themeToggleSwitch.SetResourceReference(ToggleSwitch.OffLabelProperty, "LightThemeString");
             themeToggleSwitch.IsCheckedChanged += ThemeToggleSwitch_IsCheckedChanged;
+
             stackPanel.Children.Add(themeToggleSwitch);
             settingsFlyout = new Flyout()
             {
                 Name = "SettingsFlyout",
-                Header = "Settings",
                 Position = Position.Right,
                 Background = App.Current.Resources["WindowTitleColorBrush"] as Brush,
                 MinWidth = 200,
                 Content = stackPanel
             };
+            settingsFlyout.SetResourceReference(Flyout.HeaderProperty, "SettingsString");
             this.Flyouts = new FlyoutsControl();
             this.Flyouts.Items.Add(settingsFlyout);
             #endregion
@@ -128,6 +126,16 @@ namespace LfkGUI.Base
 
         private void LanguageToggleSwitch_IsCheckedChanged(object sender, EventArgs e)
         {
+            if ((sender as ToggleSwitch).IsChecked.Value)
+            {
+                App.Current.Resources.MergedDictionaries.First(m => m.Source.OriginalString == "Resources/Language_en-US.xaml").Source =
+                new Uri("Resources/Language_ru-RU.xaml", UriKind.RelativeOrAbsolute);
+            }
+            else
+            {
+                App.Current.Resources.MergedDictionaries.First(m => m.Source.OriginalString == "Resources/Language_ru-RU.xaml").Source =
+                new Uri("Resources/Language_en-US.xaml", UriKind.RelativeOrAbsolute);
+            }
         }
     }
 }

@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:LfkGUI"
         xmlns:base="clr-namespace:LfkGUI.Base"
         mc:Ignorable="d"
-        Title="AuthorizationWindow" Height="400" Width="400" MinHeight="400" MinWidth="400"
+        TitleCaps="False"
+        Title="{DynamicResource AuthorizationWindowTitle}" Height="400" Width="400" MinHeight="400" MinWidth="400"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}">
 
@@ -17,9 +18,9 @@
             <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="{Binding ElementName=SwitchDockPanel,Path=ActualHeight}"/>
         </Style>
-        <TextBlock x:Key="WelcomeTextBlock" x:Name="WelcomeTextBox" Text="Welcome!" TextAlignment="Center" FontSize="25" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignBody}"/>
-        <Button x:Key="LoginButton" x:Name="LoginButton"  Content="Log in" Style="{StaticResource MaterialDesignRaisedButton}" Click="LoginButton_Click" />
-        <Button x:Key="SignupButton" x:Name="SignupButton"  Content="Sign up" Style="{StaticResource MaterialDesignRaisedButton}" Click="SignupButton_Click" />
+        <TextBlock x:Key="WelcomeTextBlock" x:Name="WelcomeTextBox" Text="{DynamicResource AuthorizationWelcomeString}" TextAlignment="Center" FontSize="25" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignBody}"/>
+        <Button x:Key="LoginButton" x:Name="LoginButton"  Content="{DynamicResource LoginString}" Style="{StaticResource MaterialDesignRaisedButton}" Click="LoginButton_Click" />
+        <Button x:Key="SignupButton" x:Name="SignupButton"  Content="{DynamicResource SignupString}" Style="{StaticResource MaterialDesignRaisedButton}" Click="SignupButton_Click" />
     </Window.Resources>
 
     <Grid x:Name="MainGrid">
@@ -36,12 +37,12 @@
             <Button x:Name="LoginShowButton" 
                     DockPanel.Dock="Left" 
                     Style="{StaticResource MaterialMyStyleButton}"
-                    Content="Log in" 
+                    Content="{DynamicResource LoginString}" 
                     Click="LoginShowButton_Click"/>
             <Button x:Name="SignupShowButton" 
                     DockPanel.Dock="Right" 
                     Style="{StaticResource MaterialMyStyleButton}"
-                    Content="Sign in" 
+                    Content="{DynamicResource SignupString}" 
                     Click="SignupShowButton_Click"/>
         </DockPanel>
 

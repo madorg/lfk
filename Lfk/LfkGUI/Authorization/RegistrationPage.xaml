@@ -12,26 +12,26 @@
     <Grid>
         <DockPanel>
             <materialDesign:Card  DockPanel.Dock="Top" Padding="20" Width="300"  Margin="10">
-                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">Please, register</TextBlock>
+                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}" Text="{DynamicResource PleaseSignupString}"/>
             </materialDesign:Card>
             <StackPanel  DockPanel.Dock="Bottom" Orientation="Vertical"  VerticalAlignment="Stretch">
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
-                    <Label DockPanel.Dock="Left" Content="Name:" FontWeight="Bold"/>
+                    <Label DockPanel.Dock="Left" Content="{DynamicResource NameString}" FontWeight="Bold"/>
                     <TextBox DockPanel.Dock="Right"  Width="200" x:Name="SignupNameTextBox"/>
                 </DockPanel>
                 
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
-                    <Label DockPanel.Dock="Left"  Content="E-mail:" FontWeight="Bold"/>
+                    <Label DockPanel.Dock="Left"  Content="{DynamicResource EmailString}" FontWeight="Bold"/>
                     <TextBox  DockPanel.Dock="Right" Width="200" x:Name="SignupEmailTextBox" MaxLength="24"/>
                 </DockPanel>
                 
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
-                    <Label DockPanel.Dock="Left" Content="Password:" FontWeight="Bold"/>
+                    <Label DockPanel.Dock="Left" Content="{DynamicResource PasswordString}" FontWeight="Bold"/>
                     <PasswordBox DockPanel.Dock="Right"  Width="200" x:Name="SignupPasswordTextBox"/>
                 </DockPanel>
 
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
-                    <Label DockPanel.Dock="Left"  Content="Confirm password:" FontWeight="Bold"/>
+                    <Label DockPanel.Dock="Left"  Content="{DynamicResource PasswordConfirmString}" FontWeight="Bold"/>
                     <PasswordBox  DockPanel.Dock="Right" Width="200" x:Name="SignupConfirmPasswordTextBox" MaxLength="24"/>
                 </DockPanel>
 
