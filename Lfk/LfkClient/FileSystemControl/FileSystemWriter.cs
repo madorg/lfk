@@ -25,6 +25,15 @@ namespace LfkClient.FileSystemControl
             }
         }
 
+        public void InitializeFile(string fileName, string data)
+        {
+            if (!File.Exists(fileName))
+            {
+                CreateFile(fileName);
+                WriteToFile(fileName, data);
+            }
+        }
+
         public void AppendToFile(string fileName, string data)
         {
             using (StreamWriter sw = File.AppendText(fileName))

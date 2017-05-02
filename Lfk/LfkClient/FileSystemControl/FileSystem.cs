@@ -33,6 +33,16 @@
             writer.CreateFile(Path + fileName);
         }
 
+        public static void CreateFile(string fileName, bool rewriteIfExists)
+        {
+            writer.CreateFile(Path + fileName);
+        }
+
+        public static void InitializeInexistentFile(string fileName, string data)
+        {
+            writer.InitializeFile(Path + fileName, data);
+        }
+
         public static void AppendToFile(string fileName, string data)
         {
             writer.AppendToFile(Path + fileName, data);
@@ -65,6 +75,11 @@
         public static string ReadFileContent(string fileName)
         {
             return reader.ReadFileContent(Path + fileName);
+        }
+
+        public static bool FileExists(string fileName)
+        {
+            return reader.FileExists(Path + fileName);
         }
     }
 }

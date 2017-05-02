@@ -31,5 +31,10 @@ namespace LfkClient.FileSystemControl
         {
             return File.ReadAllText(fileName);
         }
+
+        public bool FileExists(string fileName)
+        {
+            return File.Exists(fileName);
+        }
     }
 }
