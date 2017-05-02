@@ -88,6 +88,10 @@ namespace LfkClient.Repository.RepoAgent
                 commits.Add(JsonDeserializer.DeserializeObjectFromFile<Commit>(fileName));
             }
 
+            ///////////////////////////////////////////////
+            HandleSwitch(commits[0].Id.ToString());
+            //////////////////////////////////////////////
+
             return commits;
         }
 
@@ -98,7 +102,25 @@ namespace LfkClient.Repository.RepoAgent
 
         public void HandleSwitch(string commitId)
         {
-
+            foreach (string filename in FileSystem.ReadWorkingDirectory(FilesType.SystemCommits))
+            {
+                if (filename == commitId)
+                {
+                    Commit commit = JsonDeserializer.DeserializeObjectFromFile<Commit>(filename);
+                    foreach (var item in commit.Index.RepoObjectId_FileName)
+                    {
+                        foreach (string blobFileName in FileSystem.ReadWorkingDirectory(FilesType.SystemObjects))
+                        {
+                            if (blobFileName == item.Key.ToString())
+                            {
+                                string data = FileSystem.ReadFileContent(blobFileName);
+                            }
+                        }
+                        
+                    }
+                    
+                }
+            }
         }
 
         #endregion

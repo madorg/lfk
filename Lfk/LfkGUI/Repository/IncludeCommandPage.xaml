@@ -7,20 +7,19 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="IncludeCommandPage">
-
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
+         VerticalAlignment="Stretch" />
         <DockPanel x:Name="LeftStackPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
             <TextBlock DockPanel.Dock="Top" Text="WorkingDirectoryTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
-
             <TreeView  x:Name="WorkingDirectoryFilesTreeView"  Margin="3,3,3,3"
-                       MouseLeftButtonDown="FilesTreeView_MouseLeftButtonDown"
+                       MouseDown="FilesTreeView_MouseLeftButtonDown"
                        MouseMove="FilesTreeView_MouseMove"
-                       Drop="TreeView_Drop"
-                       AllowDrop="False" 
                        >
             </TreeView>
         </DockPanel>
@@ -28,16 +27,15 @@
             <TextBlock Text="IncludedFilesTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
             <StackPanel>
                 <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
-                       MouseLeftButtonDown="FilesTreeView_MouseLeftButtonDown"
+                            Drop="TreeView_Drop" >
+                    <!--MouseLeftButtonDown="FilesTreeView_MouseLeftButtonDown"
                        MouseMove="FilesTreeView_MouseMove"
-                       Drop="TreeView_Drop"
-                           >
+                       Drop="TreeView_Drop"-->
                     <TreeViewItem Header="Root">
                     </TreeViewItem>
                 </TreeView>
             </StackPanel>
         </StackPanel>
-        <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Center"   VerticalAlignment="Stretch" Margin="0,0,0,3"  Grid.ColumnSpan="2" />
 
     </Grid>
 </Page>

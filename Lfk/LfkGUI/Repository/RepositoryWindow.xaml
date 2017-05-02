@@ -24,7 +24,8 @@
         <GridSplitter Grid.Row="0" Grid.ColumnSpan="1" VerticalAlignment="Bottom" ShowsPreview="False" Height="5"
          HorizontalAlignment="Stretch"  />
 
-        <Frame Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="CommandFrame" NavigationUIVisibility="Hidden"/>
+        <Frame VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="1"
+               Grid.RowSpan="2" x:Name="CommandFrame" NavigationUIVisibility="Hidden"/>
 
         <StackPanel  Grid.Row="0" Grid.Column="0" Margin="3,3,8,8" >
             <Button x:Name="IncludeCommandButton"   Content="Include" Style="{StaticResource MaterialDesignFlatButton}" Click="IncludeCommandButton_Click" />

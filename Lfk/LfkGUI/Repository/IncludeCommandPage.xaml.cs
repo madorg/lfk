@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using LfkGUI.Utility;
 namespace LfkGUI.Repository
 {
     /// <summary>
@@ -28,120 +30,29 @@ namespace LfkGUI.Repository
             BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView);
         }
 
-        private void BuildFilesTreeViewItem(TreeView tree/*string[] filenames*/)
+        private void BuildFilesTreeViewItem(TreeView tree)
         {
-            string[][] temp = new string[5][]
+            string[] filespaths = LfkClient.Repository.Repository.GetInstance().GetWorkingDirectoryFiles();
+            string[][] filenames = new string[filespaths.Length][];
+            for (int i = 0; i < filespaths.Count(); i++)
             {
-               new string[] {"folder1", "file1.txt" },
-               new string[] {"folder1","folder3", "file2.txt" },
-               new string[] {"folder2", "file3.txt" },
-               new string[] {"file4.txt" },
-               new string[] {"folder1","folder3", "file5.txt" }
-            };
-            BuildTreeView(tree, temp, 0, 0);
+                filenames[i] = filespaths[i].Split('\\')
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).ToArray();
+            }
+            TreeViewConverter.BuildTreeView(tree,filenames,0,0);
         }
-
-        private void FindNode(ItemsControl node, string[] filepaths, int branchNumber, int branchDepth,ref TreeViewItem item)
-        {
-            if(branchNumber < node.Items.Count &&
-                branchDepth < filepaths.Length)
-            {
-                if ((node.Items[branchNumber] as TreeViewItem).Header.ToString() == filepaths[branchDepth])
-                {
-                    if (branchDepth == filepaths.Length-1)
-                    {
-                        item = node.Items[branchNumber] as TreeViewItem;
-                    }
-                    FindNode(node.Items[branchNumber] as ItemsControl, filepaths, 0, ++branchDepth, ref item);
-                }
-                else if (node.Items.Count != 0)
-                {
-                    FindNode(node, filepaths, ++branchNumber, branchDepth,ref item);
-                }
-            }
-           
-        }
-        private TreeViewItem BuildTreeView(TreeView root, string[][] filenames, int i, int j)
-        {
-            TreeViewItem branch = null;
-            if (i == filenames.GetLength(0))
-            {
-                return branch;
-            }
-            else if (j == 0)
-            {
-                branch = new TreeViewItem() { Header = filenames[i][j] };
-                TreeViewItem node = BuildTreeView(root, filenames, i, ++j);
-                if (node != null)
-                {
-                    string[] pathToFind = new string[j];
-                    Array.Copy(filenames[i], pathToFind, j);
-
-                    TreeViewItem item = null;
-                    FindNode(root, pathToFind, 0, 0, ref item);
-                    if (item != null)
-                    {
-                        if (!item.Items.Contains(node))
-                        {
-                            item.Items.Add(node);
-                        }
-                        branch = item;
-                    }
-                    else
-                    {
-                        branch.Items.Add(node);
-                    }
-                }
-                if (!root.Items.Contains(branch))
-                {
-                    root.Items.Add(branch);
-                }
-            }
-            else if (j == filenames[i].GetLength(0))
-            {
-                BuildTreeView(root, filenames, ++i, 0);
-            }
-            else
-            {
-                branch = new TreeViewItem() { Header = filenames[i][j] };
-                TreeViewItem node = BuildTreeView(root, filenames, i, ++j);
-                if (node != null)
-                {
-                    string[] pathToFind = new string[j];
-                    Array.Copy(filenames[i], pathToFind, j);
-                    TreeViewItem item = null;
-                    FindNode(root, pathToFind, 0, 0, ref item);
-                    if (item != null)
-                    {
-                        if (!item.Items.Contains(node))
-                        {
-                            item.Items.Add(node);
-                        }
-                        branch = item;
-                    }
-                    else
-                    {
-                        branch.Items.Add(node);
-                    }
-                }
-            }
-            return branch;
-        }
-
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             startDragPoint = e.GetPosition(null);
         }
-
+       
         private void StartDrag(object sender, MouseEventArgs e)
         {
             TreeView treeView = sender as TreeView;
-            object itemParent = (treeView.SelectedItem as Control).Parent;
-            isDrag = true;
-            if ((treeView.SelectedItem as TreeViewItem).Header.ToString() != "Root")
+            if (treeView.Items.Count > 0)
             {
+                isDrag = true;
                 object temp = treeView.SelectedItem;
-                (itemParent as ItemsControl).Items.Remove(temp);
                 DataObject data = null;
                 data = new DataObject(typeof(TreeViewItem), temp);
                 if (data != null)
@@ -175,10 +86,9 @@ namespace LfkGUI.Repository
 
         private void TreeView_Drop(object sender, DragEventArgs e)
         {
-            (sender as ItemsControl).Items.Add(e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem);
-            LfkClient.Repository.Repository.GetInstance().Include(new List<string> {
-                (e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem).Header.ToString()
-            });
+            TreeViewItem item = e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem;
+            LfkClient.Repository.Repository.GetInstance()
+                .Include(TreeViewConverter.ParseTreeViewItemToFullFilenames(item));
         }
     }
 }
