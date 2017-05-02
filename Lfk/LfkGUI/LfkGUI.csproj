@@ -107,6 +107,7 @@
     <Compile Include="Repository\RepositoryWindow.xaml.cs">
       <DependentUpon>RepositoryWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utility\TreeViewConverter.cs" />
     <Page Include="Authorization\AuthorizationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

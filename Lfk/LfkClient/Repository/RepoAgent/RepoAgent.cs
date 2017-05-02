@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using LfkClient.FileSystemControl;
 using LfkClient.Serialization.Json;
@@ -50,7 +51,14 @@ namespace LfkClient.Repository.RepoAgent
 
                 if (deserializedIndex != null)
                 {
+                    if (deserializedIndex.ContainsValue(fileName))
+                    {
+                        deserializedIndex.Remove(
+                            deserializedIndex.Select(p => p).Where(p => p.Value == fileName).First().Key);                       
+                    }
+
                     deserializedIndex.Add(id, fileName);
+
                     JsonSerializer.SerializeObjectToFile(deserializedIndex, FileSystemPaths.LfkIndexFile);
                 }
             }
@@ -88,10 +96,6 @@ namespace LfkClient.Repository.RepoAgent
                 commits.Add(JsonDeserializer.DeserializeObjectFromFile<Commit>(fileName));
             }
 
-            ///////////////////////////////////////////////
-            HandleSwitch(commits[0].Id.ToString());
-            //////////////////////////////////////////////
-
             return commits;
         }
 
@@ -100,26 +104,18 @@ namespace LfkClient.Repository.RepoAgent
 
         }
 
-        public void HandleSwitch(string commitId)
+        /// <summary>
+        /// Обеспечивает переключение состояний файлов в соответствии с указанным коммитом
+        /// </summary>
+        /// <param name="commit">Объект коммита, на который обеспечивается переключение</param>
+        public void HandleSwitch(Commit commit)
         {
-            foreach (string filename in FileSystem.ReadWorkingDirectory(FilesType.SystemCommits))
+            foreach (KeyValuePair<Guid, string> idFileNamePair in commit.Index.RepoObjectId_FileName)
             {
-                if (filename == commitId)
-                {
-                    Commit commit = JsonDeserializer.DeserializeObjectFromFile<Commit>(filename);
-                    foreach (var item in commit.Index.RepoObjectId_FileName)
-                    {
-                        foreach (string blobFileName in FileSystem.ReadWorkingDirectory(FilesType.SystemObjects))
-                        {
-                            if (blobFileName == item.Key.ToString())
-                            {
-                                string data = FileSystem.ReadFileContent(blobFileName);
-                            }
-                        }
-                        
-                    }
-                    
-                }
+                RepoObject oldBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(
+                    FileSystemPaths.LfkObjectsFolder + idFileNamePair.Key.ToString());
+
+                FileSystem.WriteToFile(idFileNamePair.Value, oldBlob.Hash);
             }
         }
 
