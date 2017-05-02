@@ -14,7 +14,7 @@ namespace LfkClient.Repository.RepoAgent
     {
         private static Guid currentIndexId = Guid.NewGuid();
 
-        #region Методы обработки входящих команд
+        #region Обработчики основных команд системы контроля версия (Handle)
 
         public void HandleInclude(IEnumerable<string> included)
         {
@@ -130,6 +130,20 @@ namespace LfkClient.Repository.RepoAgent
             }
 
             JsonSerializer.SerializeObjectToFile(included, FileSystemPaths.LfkIncludedFile);
+        }
+
+        #endregion
+
+        #region Обработчики служебных команд (Get)
+
+        public string[] GetWorkingDirectoryFiles()
+        {
+            return FileSystem.ReadWorkingDirectory(FilesType.Client);
+        }
+
+        public string[] GetIncludedFiles()
+        {
+            return JsonDeserializer.DeserializeObjectFromFile<string[]>(FileSystemPaths.LfkIncludedFile);
         }
 
         #endregion

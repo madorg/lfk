@@ -74,7 +74,12 @@ namespace LfkClient.Repository
 
         public string[] GetWorkingDirectoryFiles()
         {
-            return FileSystem.ReadWorkingDirectory(FilesType.Client);
+            return RepoAgent.GetWorkingDirectoryFiles();
+        }
+
+        public string[] GetIncludedFiles()
+        {
+            return RepoAgent.GetIncludedFiles();
         }
     }
 }
