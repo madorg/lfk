@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
+using LfkGUI.Utility;
 namespace LfkGUI.Base
 {
     class RemovableTreeViewItem : TreeViewItem
@@ -14,20 +15,17 @@ namespace LfkGUI.Base
             ContextMenu contextMenu = new ContextMenu();
             MenuItem removeMenuItem = new MenuItem();
             removeMenuItem.Icon = new PackIcon() { Kind = PackIconKind.CloseBoxOutline};
-            removeMenuItem.Header = "remove";
+            removeMenuItem.Header = "Remove";
             this.SetResourceReference(BaseWindow.StyleProperty, "MaterialDesignTreeViewItem");
-            removeMenuItem.Click += RemoveMenuItem_Click;
+            removeMenuItem.Command = CustomCommands.RemoveTreeViewItem;
             contextMenu.Items.Add(removeMenuItem);
+            this.PreviewMouseRightButtonDown += RemovableTreeViewItem_PreviewMouseRightButtonDown;
             this.ContextMenu = contextMenu;
         }
 
-        private void RemoveMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void RemovableTreeViewItem_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ItemsControl parent = this.Parent as ItemsControl;
-            if(parent!= null)
-            {
-                parent.Items.Remove(this);
-            }
+            this.IsSelected = true;
         }
     }
 }

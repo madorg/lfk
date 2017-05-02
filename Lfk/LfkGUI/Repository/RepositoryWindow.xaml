@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:LfkGUI"
         xmlns:base="clr-namespace:LfkGUI.Base"
         mc:Ignorable="d"
-        Title="RepositoryWindow" Height="500" Width="800"
+        Title="{DynamicResource RepositoryWindowTitle}" Height="500" Width="800"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}" >
     <Grid>
         <Grid.RowDefinitions>
@@ -28,13 +28,18 @@
                Grid.RowSpan="2" x:Name="CommandFrame" NavigationUIVisibility="Hidden"/>
 
         <StackPanel  Grid.Row="0" Grid.Column="0" Margin="3,3,8,8" >
-            <Button x:Name="IncludeCommandButton"   Content="Include" Style="{StaticResource MaterialDesignFlatButton}" Click="IncludeCommandButton_Click" />
-            <Button x:Name="AddCommandButton"   Content="Add" Style="{StaticResource MaterialDesignFlatButton}" Click="AddCommandButton_Click" />
-            <Button x:Name="CommitCommandButton"   Content="Commit" Style="{StaticResource MaterialDesignFlatButton}" Click="CommitCommandButton_Click" />
-            <Button x:Name="HistoryCommandButton"   Content="History" Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
+            <Button x:Name="IncludeCommandButton"   Content="{DynamicResource IncludeString}"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="IncludeCommandButton_Click" />
+            <Button x:Name="AddCommandButton"   Content="{DynamicResource AddString}"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="AddCommandButton_Click" />
+            <Button x:Name="CommitCommandButton"   Content="{DynamicResource CommitString}"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="CommitCommandButton_Click" />
+            <Button x:Name="HistoryCommandButton"   Content="{DynamicResource HistoryString}"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
         </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="1" x:Name="NavigationStackPanel">
-            <Button x:Name="NavigateToRepositoryManagementWindowButton" Content="Back to repo management" Click="NavigateToRepositoryManagementWindowButton_Click"/>
+        <StackPanel Grid.Column="0" Grid.Row="1" x:Name="NavigationStackPanel" Margin="5">
+            <Button x:Name="NavigateToRepositoryManagementWindowButton" Content="{DynamicResource BackToRepositoryManagementString}"
+                    Click="NavigateToRepositoryManagementWindowButton_Click"/>
         </StackPanel>
     </Grid>
 </base:BaseWindow>

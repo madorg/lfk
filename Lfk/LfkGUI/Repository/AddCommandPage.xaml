@@ -4,9 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LfkGUI.Repository"
-      mc:Ignorable="d" 
+      xmlns:commands ="clr-namespace:LfkGUI.Utility"
+      mc:Ignorable="d"                 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="AddCommandPage">
+    <Page.CommandBindings>
+        <CommandBinding Command="commands:CustomCommands.RemoveTreeViewItem" Executed="CommandBinding_Executed"/>
+    </Page.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -15,7 +19,13 @@
         <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
          VerticalAlignment="Stretch" />
         <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
-            <TextBlock DockPanel.Dock="Top" Text="IncludedTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
+            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IncludedFilesString}" 
+                       TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Label Content="{DynamicResource FilesCountString}"/>
+                <Label x:Name="IncludedFilesCount" Content="0"/>
+            </StackPanel>
+
             <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" Drop="TreeView_Drop"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"
                        MouseMove="FilesTreeView_MouseMove"
@@ -23,12 +33,15 @@
             </TreeView>
         </DockPanel>
         <DockPanel  Grid.Row="0" Grid.Column="1" Margin="10" >
-            <TextBlock DockPanel.Dock="Top" Text="AddedFilesTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
-            <DockPanel LastChildFill="True">
-                <TreeView  x:Name="AddedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
+            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource AddedFilesString}" 
+                       TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Label Content="{DynamicResource FilesCountString}"/>
+                <Label x:Name="AddedFilesCount" Content="0"/>
+            </StackPanel>
+            <TreeView  x:Name="AddedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
                            Drop="TreeView_Drop" >
-                </TreeView>
-            </DockPanel>
+            </TreeView>
         </DockPanel>
 
     </Grid>

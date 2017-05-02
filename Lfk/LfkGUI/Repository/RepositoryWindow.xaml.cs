@@ -28,7 +28,7 @@ namespace LfkGUI.Repository
             InitializeComponent();
             App.Current.Resources["AppUser"] = new User();
 
-            string tempPath = @"F:\lfk_tests";
+            string tempPath = @"D:\lfk_tests";
             LfkClient.Repository.Repository.GetInstance().Init(new LocalRepository()
             {
                 Id = Guid.NewGuid(),

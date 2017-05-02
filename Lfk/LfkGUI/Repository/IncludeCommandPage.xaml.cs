@@ -27,20 +27,10 @@ namespace LfkGUI.Repository
         public IncludeCommandPage()
         {
             InitializeComponent();
-            BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
+            TreeViewConverter.BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
                 LfkClient.Repository.Repository.GetInstance().GetWorkingDirectoryFiles());
-        }
-
-        private void BuildFilesTreeViewItem(TreeView tree, string[] filespaths)
-        {
-
-            string[][] filenames = new string[filespaths.Length][];
-            for (int i = 0; i < filespaths.Count(); i++)
-            {
-                filenames[i] = filespaths[i].Split('\\')
-                    .Where(m => !string.IsNullOrWhiteSpace(m)).ToArray();
-            }
-            TreeViewConverter.BuildTreeView(tree, filenames, 0, 0);
+            TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView,
+                LfkClient.Repository.Repository.GetInstance().GetIncludedFiles());
         }
 
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -57,7 +47,8 @@ namespace LfkGUI.Repository
 
                 object temp = treeView.SelectedItem;
                 DataObject data = null;
-                data = new DataObject(typeof(TreeViewItem), temp);
+                if (temp != null)
+                    data = new DataObject(typeof(TreeViewItem), temp);
                 if (data != null)
                 {
                     DragDropEffects effects = DragDropEffects.Move;
@@ -90,15 +81,25 @@ namespace LfkGUI.Repository
         private void TreeView_Drop(object sender, DragEventArgs e)
         {
             TreeViewItem item = e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem;
+
             List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
-            BuildFilesTreeViewItem(IncludedFilesTreeView, files.ToArray());
-            LfkClient.Repository.Repository.GetInstance()
-                .Include(files);
+            TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView, files.ToArray());
+
+            LfkClient.Repository.Repository.GetInstance().Include(files);
         }
 
-        private void IncludedFilesTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            ItemsControl item = e.OriginalSource as ItemsControl;
+            if (item.Parent != null)
+            {
+                LfkClient.Repository.Repository.GetInstance().Uninclude(TreeViewConverter.ParseTreeViewItemToFullFilenames(item as TreeViewItem));
+                ItemsControl parent = item.Parent as ItemsControl;
+                if (parent != null)
+                {
+                    parent.Items.Remove(item);
+                }
+            }
         }
     }
 }

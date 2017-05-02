@@ -10,7 +10,19 @@ namespace LfkGUI.Utility
 {
     public class TreeViewConverter
     {
-        public static TreeViewItem BuildTreeView(ItemsControl root, string[][] filenames, int i, int j)
+
+        public static void BuildFilesTreeViewItem(TreeView tree, string[] filespaths)
+        {
+            string[][] filenames = new string[filespaths.Length][];
+            for (int i = 0; i < filespaths.Count(); i++)
+            {
+                filenames[i] = filespaths[i].Split('\\')
+                    .Where(m => !string.IsNullOrWhiteSpace(m)).ToArray();
+            }
+            BuildTreeView(tree, filenames, 0, 0);
+        }
+
+        private static TreeViewItem BuildTreeView(ItemsControl root, string[][] filenames, int i, int j)
         {
             RemovableTreeViewItem branch = null;
             if (i == filenames.GetLength(0))

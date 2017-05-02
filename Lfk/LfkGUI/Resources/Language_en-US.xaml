@@ -30,6 +30,23 @@
     <system:String x:Key="EnglishLanguageString">English</system:String>
     <system:String x:Key="RussianLanguageString">Russian</system:String>
     
+    <!--Repository window resources-->
+    <system:String x:Key="RepositoryWindowTitle">Repository</system:String>
+    <system:String x:Key="IncludeString">Include</system:String>
+    <system:String x:Key="AddString">Add</system:String>
+    <system:String x:Key="CommitString">Commit</system:String>
+    <system:String x:Key="HistoryString">History</system:String>
+    <system:String x:Key="BackToRepositoryManagementString">Back to repository management</system:String>
+    <system:String x:Key="WorkingDirectoryString">Working directory</system:String>
+    <system:String x:Key="IncludedFilesString">Included files</system:String>
+    <system:String x:Key="FilesCountString">Count of files: </system:String>
+    <system:String x:Key="AddedFilesString">Added files</system:String>
+
+
+
+
+
+
 
 
 
