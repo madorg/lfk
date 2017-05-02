@@ -67,6 +67,11 @@ namespace LfkClient.Repository
             RepoAgent.HandleSwitch(commit);
         }
 
+        public void Uninclude(IEnumerable<string> unincluded)
+        {
+            RepoAgent.HandleUninclude(unincluded);
+        }
+
         public string[] GetWorkingDirectoryFiles()
         {
             return FileSystem.ReadWorkingDirectory(FilesType.Client);

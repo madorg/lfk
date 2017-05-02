@@ -15,6 +15,7 @@ namespace LfkClient.Repository.RepoAgent
         private static Guid currentIndexId = Guid.NewGuid();
 
         #region Методы обработки входящих команд
+
         public void HandleInclude(IEnumerable<string> included)
         {
             List<string> deserializedOldData =
@@ -117,6 +118,18 @@ namespace LfkClient.Repository.RepoAgent
 
                 FileSystem.WriteToFile(idFileNamePair.Value, oldBlob.Hash);
             }
+        }
+
+        public void HandleUninclude(IEnumerable<string> unincluded)
+        {
+            List<string> included = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
+
+            foreach (string unincludedItem in unincluded)
+            {
+                included.Remove(unincludedItem);
+            }
+
+            JsonSerializer.SerializeObjectToFile(included, FileSystemPaths.LfkIncludedFile);
         }
 
         #endregion

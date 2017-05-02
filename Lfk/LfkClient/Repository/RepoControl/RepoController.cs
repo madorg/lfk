@@ -15,7 +15,7 @@ namespace LfkClient.Repository.RepoControl
         {
             LocalRepository repo = abstractRepository as LocalRepository;
 
-            // ТУДУ: проверить наличие схожего репо этого же юзера на сервере
+            // TODO: проверить наличие схожего репо этого же юзера на сервере
 
             FileSystem.Path = repo.Path;
 
@@ -24,14 +24,10 @@ namespace LfkClient.Repository.RepoControl
             FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
             FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
 
-            FileSystem.CreateFile(FileSystemPaths.LfkFilesFile);
-            FileSystem.CreateFile(FileSystemPaths.LfkIncludedFile);
-            FileSystem.CreateFile(FileSystemPaths.LfkIndexFile);
-            FileSystem.CreateFile(FileSystemPaths.LfkInfoFile);
-
-            FileSystem.AppendToFile(FileSystemPaths.LfkFilesFile, "[]");
-            FileSystem.AppendToFile(FileSystemPaths.LfkIncludedFile, "[]");           
-            FileSystem.AppendToFile(FileSystemPaths.LfkIndexFile, "{}");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "");
         }
     }
 }
