@@ -38,84 +38,94 @@ namespace LfkGUI.Repository
                new string[] {"file4.txt" },
                new string[] {"folder1","folder3", "file5.txt" }
             };
-            BuildTreeViewItemNode(tree, temp, 0, 0);
+            BuildTreeView(tree, temp, 0, 0);
         }
 
-        private TreeViewItem FindNode(ItemsControl root, string[] filepath, int depth, int pathdepth)
+        private void FindNode(ItemsControl node, string[] filepaths, int branchNumber, int branchDepth,ref TreeViewItem item)
         {
-            TreeViewItem node = null;
-            for (int i = 0; i < root.Items.Count; i++)
+            if(branchNumber < node.Items.Count &&
+                branchDepth < filepaths.Length)
             {
-                if ((root.Items[i] as TreeViewItem).Header.ToString() == filepath[pathdepth])
+                if ((node.Items[branchNumber] as TreeViewItem).Header.ToString() == filepaths[branchDepth])
                 {
-                    FindNode(root.Items[i] as ItemsControl, filepath, ++depth, pathdepth);
-                }
-            }
-            return node;
-        }
-
-        private bool CheckIfNodeExists(string[][] filenames, int row, int column)
-        {
-            bool rc = false;
-            for (int i = 0; i < filenames.GetLength(0); i++)
-            {
-                if (column < filenames[i].GetLength(0) && filenames[i][column] == filenames[row][column])
-                {
-                    if (i != row)
+                    if (branchDepth == filepaths.Length-1)
                     {
-                        rc = true;
-                        break;
+                        item = node.Items[branchNumber] as TreeViewItem;
                     }
+                    FindNode(node.Items[branchNumber] as ItemsControl, filepaths, 0, ++branchDepth, ref item);
+                }
+                else if (node.Items.Count != 0)
+                {
+                    FindNode(node, filepaths, ++branchNumber, branchDepth,ref item);
                 }
             }
-            return rc;
+           
         }
-        private TreeViewItem BuildTreeViewItemNode(TreeView root, string[][] filenames, int i, int j)
+        private TreeViewItem BuildTreeView(TreeView root, string[][] filenames, int i, int j)
         {
-            TreeViewItem returnValue = null;
+            TreeViewItem branch = null;
             if (i == filenames.GetLength(0))
             {
-                return returnValue;
+                return branch;
             }
             else if (j == 0)
             {
-                returnValue = new TreeViewItem() { Header = filenames[i][j] };
-                TreeViewItem node = BuildTreeViewItemNode(root, filenames, i, ++j);
+                branch = new TreeViewItem() { Header = filenames[i][j] };
+                TreeViewItem node = BuildTreeView(root, filenames, i, ++j);
                 if (node != null)
                 {
-                    if (CheckIfNodeExists(filenames, i, j) && (FindNode(root, filenames[i], 0, j - 1) != null))
+                    string[] pathToFind = new string[j];
+                    Array.Copy(filenames[i], pathToFind, j);
+
+                    TreeViewItem item = null;
+                    FindNode(root, pathToFind, 0, 0, ref item);
+                    if (item != null)
                     {
-                        returnValue = FindNode(root, filenames[i], 0, j - 1);
+                        if (!item.Items.Contains(node))
+                        {
+                            item.Items.Add(node);
+                        }
+                        branch = item;
                     }
                     else
                     {
-                        returnValue.Items.Add(node);
+                        branch.Items.Add(node);
                     }
-
                 }
-                root.Items.Add(returnValue);
+                if (!root.Items.Contains(branch))
+                {
+                    root.Items.Add(branch);
+                }
             }
             else if (j == filenames[i].GetLength(0))
             {
-                BuildTreeViewItemNode(root, filenames, ++i, 0);
+                BuildTreeView(root, filenames, ++i, 0);
             }
             else
             {
-                returnValue = new TreeViewItem() { Header = filenames[i][j] };
-                TreeViewItem node = BuildTreeViewItemNode(root, filenames, i, ++j);
+                branch = new TreeViewItem() { Header = filenames[i][j] };
+                TreeViewItem node = BuildTreeView(root, filenames, i, ++j);
                 if (node != null)
                 {
-                    if (CheckIfNodeExists(filenames, i, j) && (FindNode(root, filenames[i], 0, j - 1) != null))
+                    string[] pathToFind = new string[j];
+                    Array.Copy(filenames[i], pathToFind, j);
+                    TreeViewItem item = null;
+                    FindNode(root, pathToFind, 0, 0, ref item);
+                    if (item != null)
                     {
-                        returnValue = FindNode(root, filenames[i], 0,j-1);
+                        if (!item.Items.Contains(node))
+                        {
+                            item.Items.Add(node);
+                        }
+                        branch = item;
                     }
                     else
                     {
-                        returnValue.Items.Add(node);
+                        branch.Items.Add(node);
                     }
                 }
             }
-            return returnValue;
+            return branch;
         }
 
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
