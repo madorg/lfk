@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.IO;
 namespace LfkGUI.Repository
 {
     /// <summary>
@@ -25,17 +25,97 @@ namespace LfkGUI.Repository
         public IncludeCommandPage()
         {
             InitializeComponent();
-            foreach (string filename in LfkClient.Repository.Repository.GetInstance().GetWorkingDirectoryFiles())
-            {
-                WorkingDirectoryFilesTreeView.Items.Add(new TreeViewItem() { Header = filename });
-            }
+            BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView);
         }
 
-        private TreeViewItem BuildFilesTreeViewItem(string[] filenames)
+        private void BuildFilesTreeViewItem(TreeView tree/*string[] filenames*/)
         {
-            TreeViewItem root = new TreeViewItem();
-            //TODO НАПИСАТЬ ФУНКЦИЮ ПрЕОБРАЗОВАНИЯ СТРОК В ДРЕВОВИДНУЮ СТРУКТУРУ
-            return root;
+            string[][] temp = new string[5][]
+            {
+               new string[] {"folder1", "file1.txt" },
+               new string[] {"folder1","folder3", "file2.txt" },
+               new string[] {"folder2", "file3.txt" },
+               new string[] {"file4.txt" },
+               new string[] {"folder1","folder3", "file5.txt" }
+            };
+            BuildTreeViewItemNode(tree, temp, 0, 0);
+        }
+
+        private TreeViewItem FindNode(ItemsControl root, string[] filepath, int depth, int pathdepth)
+        {
+            TreeViewItem node = null;
+            for (int i = 0; i < root.Items.Count; i++)
+            {
+                if ((root.Items[i] as TreeViewItem).Header.ToString() == filepath[pathdepth])
+                {
+                    FindNode(root.Items[i] as ItemsControl, filepath, ++depth, pathdepth);
+                }
+            }
+            return node;
+        }
+
+        private bool CheckIfNodeExists(string[][] filenames, int row, int column)
+        {
+            bool rc = false;
+            for (int i = 0; i < filenames.GetLength(0); i++)
+            {
+                if (column < filenames[i].GetLength(0) && filenames[i][column] == filenames[row][column])
+                {
+                    if (i != row)
+                    {
+                        rc = true;
+                        break;
+                    }
+                }
+            }
+            return rc;
+        }
+        private TreeViewItem BuildTreeViewItemNode(TreeView root, string[][] filenames, int i, int j)
+        {
+            TreeViewItem returnValue = null;
+            if (i == filenames.GetLength(0))
+            {
+                return returnValue;
+            }
+            else if (j == 0)
+            {
+                returnValue = new TreeViewItem() { Header = filenames[i][j] };
+                TreeViewItem node = BuildTreeViewItemNode(root, filenames, i, ++j);
+                if (node != null)
+                {
+                    if (CheckIfNodeExists(filenames, i, j) && (FindNode(root, filenames[i], 0, j - 1) != null))
+                    {
+                        returnValue = FindNode(root, filenames[i], 0, j - 1);
+                    }
+                    else
+                    {
+                        returnValue.Items.Add(node);
+                    }
+
+                }
+                root.Items.Add(returnValue);
+            }
+            else if (j == filenames[i].GetLength(0))
+            {
+                BuildTreeViewItemNode(root, filenames, ++i, 0);
+            }
+            else
+            {
+                returnValue = new TreeViewItem() { Header = filenames[i][j] };
+                TreeViewItem node = BuildTreeViewItemNode(root, filenames, i, ++j);
+                if (node != null)
+                {
+                    if (CheckIfNodeExists(filenames, i, j) && (FindNode(root, filenames[i], 0, j - 1) != null))
+                    {
+                        returnValue = FindNode(root, filenames[i], 0,j-1);
+                    }
+                    else
+                    {
+                        returnValue.Items.Add(node);
+                    }
+                }
+            }
+            return returnValue;
         }
 
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
