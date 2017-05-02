@@ -89,6 +89,7 @@
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Base\BaseWindow.cs" />
+    <Compile Include="Base\RemovableTreeViewItem.cs" />
     <Compile Include="RepositoryManagement\RepositoryManagementWindow.xaml.cs">
       <DependentUpon>RepositoryManagementWindow.xaml</DependentUpon>
     </Compile>
@@ -107,6 +108,7 @@
     <Compile Include="Repository\RepositoryWindow.xaml.cs">
       <DependentUpon>RepositoryWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utility\TreeViewConverter.cs" />
     <Page Include="Authorization\AuthorizationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Repository\RepositoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ControlsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
