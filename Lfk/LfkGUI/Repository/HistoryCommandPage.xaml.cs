@@ -24,14 +24,18 @@ namespace LfkGUI.Repository
         public HistoryCommandPage()
         {
             InitializeComponent();
+            var history = LfkClient.Repository.Repository.GetInstance().History();
+            if(history != null && history.Count != 0)
+            { 
             (HistoryListView.Resources["Commits"] as ArrayList).AddRange(
-                LfkClient.Repository.Repository.GetInstance().History()
+                history
                 );
+            }
         }
 
         private void SwitchCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            //LfkClient.Repository.Repository.GetInstance().Switch(CommitsComboBox.SelectedItem.ToString());
+            LfkClient.Repository.Repository.GetInstance().Switch(HistoryListView.SelectedItem.ToString());
         }
     }
 }

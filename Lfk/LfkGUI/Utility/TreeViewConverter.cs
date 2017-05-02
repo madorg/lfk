@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.IO;
+using LfkGUI.Base;
 namespace LfkGUI.Utility
 {
     public class TreeViewConverter
     {
         public static TreeViewItem BuildTreeView(ItemsControl root, string[][] filenames, int i, int j)
         {
-            TreeViewItem branch = null;
+            RemovableTreeViewItem branch = null;
             if (i == filenames.GetLength(0))
             {
                 return branch;
@@ -36,10 +37,10 @@ namespace LfkGUI.Utility
             return branch;
         }
 
-        private static TreeViewItem BuildBranch(ItemsControl root, string[][] filenames, ref int i, ref int j)
+        private static RemovableTreeViewItem BuildBranch(ItemsControl root, string[][] filenames, ref int i, ref int j)
         {
-            TreeViewItem branch = new TreeViewItem() { Header = filenames[i][j] };
-            TreeViewItem node = BuildTreeView(root, filenames, i, ++j);
+            RemovableTreeViewItem branch = new RemovableTreeViewItem() { Header = filenames[i][j] };
+            RemovableTreeViewItem node = BuildTreeView(root, filenames, i, ++j) as RemovableTreeViewItem;
             if (node != null)
             {
                 string[] pathToFind = new string[j];
@@ -51,16 +52,16 @@ namespace LfkGUI.Utility
             return branch;
         }
 
-        private static void FindNode(ItemsControl node, string[] filepaths, int branchNumber, int branchDepth, ref TreeViewItem item)
+        private static void FindNode(ItemsControl node, string[] filepaths, int branchNumber, int branchDepth, ref RemovableTreeViewItem item)
         {
             if (branchNumber < node.Items.Count &&
                 branchDepth < filepaths.Length)
             {
-                if ((node.Items[branchNumber] as TreeViewItem).Header.ToString() == filepaths[branchDepth])
+                if ((node.Items[branchNumber] as RemovableTreeViewItem).Header.ToString() == filepaths[branchDepth])
                 {
                     if (branchDepth == filepaths.Length - 1)
                     {
-                        item = node.Items[branchNumber] as TreeViewItem;
+                        item = node.Items[branchNumber] as RemovableTreeViewItem;
                     }
                     FindNode(node.Items[branchNumber] as ItemsControl, filepaths, 0, ++branchDepth, ref item);
                 }
@@ -71,11 +72,11 @@ namespace LfkGUI.Utility
             }
         }
 
-        private static void GetParentPath(TreeViewItem node,ref StringBuilder path)
+        private static void GetParentPath(RemovableTreeViewItem node,ref StringBuilder path)
         {
-            if (node.Parent is TreeViewItem)
+            if (node.Parent is RemovableTreeViewItem)
             {
-                GetParentPath(node.Parent as TreeViewItem,ref path);
+                GetParentPath(node.Parent as RemovableTreeViewItem,ref path);
             }
             path.Append(string.Concat("\\" + node.Header.ToString()));
         }
@@ -84,23 +85,23 @@ namespace LfkGUI.Utility
         {
             List<string> list = new List<string>();
             StringBuilder prefix = new StringBuilder();
-            TreeViewItem parent = node.Parent as TreeViewItem;
+            RemovableTreeViewItem parent = node.Parent as RemovableTreeViewItem;
             if(parent != null) {
                 GetParentPath(parent,ref prefix);
             }
             prefix.Append("\\" + node.Header.ToString());
-            ParseTreeViewItem(node, ref list, prefix.ToString());
+            ParseTreeViewItem(node as RemovableTreeViewItem, ref list, prefix.ToString());
             return list;
         }
-        private static void ParseTreeViewItem(TreeViewItem root, ref List<string> files, string prefix)
+        private static void ParseTreeViewItem(RemovableTreeViewItem root, ref List<string> files, string prefix)
         {
             foreach (var item in root.Items)
             {
-                if (Path.HasExtension((item as TreeViewItem).Header.ToString()))
+                if (Path.HasExtension((item as RemovableTreeViewItem).Header.ToString()))
                 {
-                    files.Add(prefix + "\\" + (item as TreeViewItem).Header.ToString());
+                    files.Add(prefix + "\\" + (item as RemovableTreeViewItem).Header.ToString());
                 }
-                ParseTreeViewItem(item as TreeViewItem, ref files, prefix + "\\" + (item as TreeViewItem).Header.ToString());
+                ParseTreeViewItem(item as RemovableTreeViewItem, ref files, prefix + "\\" + (item as RemovableTreeViewItem).Header.ToString());
             }
             if (!root.HasItems && files.Count == 0)
             {

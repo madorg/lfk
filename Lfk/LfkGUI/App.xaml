@@ -6,7 +6,7 @@
              xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
-             StartupUri="Authorization/AuthorizationWindow.xaml">
+             StartupUri="Repository/RepositoryWindow.xaml">
     
     <Application.Resources>
         <ResourceDictionary>
@@ -30,6 +30,9 @@
                 
                 <!--Localization-->
                 <ResourceDictionary Source="Resources/Language_en-US.xaml"/>
+                
+                <!--Controls-->
+                <ResourceDictionary Source="Resources/ControlsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
