@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
          VerticalAlignment="Stretch" />
-        <DockPanel x:Name="LeftStackPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
+        <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
             <TextBlock DockPanel.Dock="Top" Text="WorkingDirectoryTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
             <TreeView  x:Name="WorkingDirectoryFilesTreeView"  Margin="3,3,3,3"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"
@@ -23,19 +23,16 @@
                        >
             </TreeView>
         </DockPanel>
-        <StackPanel  Grid.Row="0" Grid.Column="1" Margin="10" >
-            <TextBlock Text="IncludedFilesTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
-            <StackPanel>
+        <DockPanel  Grid.Row="0" Grid.Column="1" Margin="10" >
+            <TextBlock DockPanel.Dock="Top" Text="IncludedFilesTextBlock" TextAlignment="Center" Padding="4" FontSize="20"/>
+            <DockPanel LastChildFill="True">
                 <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
-                            Drop="TreeView_Drop" >
-                    <!--MouseLeftButtonDown="FilesTreeView_MouseLeftButtonDown"
-                       MouseMove="FilesTreeView_MouseMove"
-                       Drop="TreeView_Drop"-->
-                    <TreeViewItem Header="Root">
-                    </TreeViewItem>
+                           Drop="TreeView_Drop"
+                           SelectedItemChanged="IncludedFilesTreeView_SelectedItemChanged"
+                           >
                 </TreeView>
-            </StackPanel>
-        </StackPanel>
+            </DockPanel>
+        </DockPanel>
 
     </Grid>
 </Page>

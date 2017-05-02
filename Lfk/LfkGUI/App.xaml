@@ -30,6 +30,9 @@
                 
                 <!--Localization-->
                 <ResourceDictionary Source="Resources/Language_en-US.xaml"/>
+                
+                <!--Controls-->
+                <ResourceDictionary Source="Resources/ControlsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

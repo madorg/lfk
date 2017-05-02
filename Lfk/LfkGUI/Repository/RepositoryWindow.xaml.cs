@@ -37,7 +37,6 @@ namespace LfkGUI.Repository
                 Path = tempPath
             });
         }
-
         private void IncludeCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandFrame.Content = new IncludeCommandPage();
