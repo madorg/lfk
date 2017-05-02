@@ -62,9 +62,9 @@ namespace LfkClient.Repository
             return RepoAgent.HandleHistory();
         }
 
-        public void Switch(string commitId)
+        public void Switch(Commit commit)
         {
-            RepoAgent.HandleSwitch(commitId);
+            RepoAgent.HandleSwitch(commit);
         }
 
         public string[] GetWorkingDirectoryFiles()

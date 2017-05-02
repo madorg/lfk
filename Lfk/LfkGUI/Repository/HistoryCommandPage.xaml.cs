@@ -35,7 +35,8 @@ namespace LfkGUI.Repository
 
         private void SwitchCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            LfkClient.Repository.Repository.GetInstance().Switch(HistoryListView.SelectedItem.ToString());
+            LfkClient.Models.Commit commit = HistoryListView.SelectedItem as LfkClient.Models.Commit;
+            LfkClient.Repository.Repository.GetInstance().Switch(commit);
         }
     }
 }
