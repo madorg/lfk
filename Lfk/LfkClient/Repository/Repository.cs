@@ -86,5 +86,9 @@ namespace LfkClient.Repository
         {
             return RepoAgent.GetUnincludedFiles();
         }
+        public string[] GetChangedFilesAfterLastCommit()
+        {
+            return RepoAgent.GetChangedFilesAfterLastCommit();
+        }
     }
 }

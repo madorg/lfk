@@ -36,6 +36,8 @@ namespace LfkGUI.Repository
                 UserId = (App.Current.Resources["AppUser"] as User).Id,
                 Path = tempPath
             });
+
+            LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit();
         }
         private void IncludeCommandButton_Click(object sender, RoutedEventArgs e)
         {

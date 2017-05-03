@@ -97,6 +97,8 @@ namespace LfkClient.Repository.RepoAgent
                 commits.Add(JsonDeserializer.DeserializeObjectFromFile<Commit>(fileName));
             }
 
+            commits.OrderBy(c => c.Date);
+
             return commits;
         }
 
@@ -149,6 +151,24 @@ namespace LfkClient.Repository.RepoAgent
         public string[] GetUnincludedFiles()
         {
             return GetWorkingDirectoryFiles().Except(GetIncludedFiles()).ToArray();
+        }
+        public string[] GetChangedFilesAfterLastCommit()
+        {
+            Commit lastCommit = HandleHistory().Last();
+
+            Dictionary<Guid, string> currentIndex =
+                    JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(FileSystemPaths.LfkIndexFile);
+
+            List<string> changedFilesAfterLastCommit = new List<string>();
+            foreach (var blobInfo in currentIndex)
+            {
+                if (!lastCommit.Index.RepoObjectId_FileName.ContainsKey(blobInfo.Key))
+                {
+                    changedFilesAfterLastCommit.Add(blobInfo.Value);
+                }
+            }
+
+            return changedFilesAfterLastCommit.ToArray();
         }
 
         #endregion
