@@ -55,7 +55,7 @@ namespace LfkClient.Repository.RepoAgent
                     if (deserializedIndex.ContainsValue(fileName))
                     {
                         deserializedIndex.Remove(
-                            deserializedIndex.Select(p => p).Where(p => p.Value == fileName).First().Key);                       
+                            deserializedIndex.Select(p => p).Where(p => p.Value == fileName).First().Key);
                     }
 
                     deserializedIndex.Add(id, fileName);
@@ -97,7 +97,7 @@ namespace LfkClient.Repository.RepoAgent
                 commits.Add(JsonDeserializer.DeserializeObjectFromFile<Commit>(fileName));
             }
 
-            commits.OrderBy(c => c.Date);
+            commits =  commits.OrderBy(c => c.Date).ToList();
 
             return commits;
         }
