@@ -10,9 +10,12 @@ namespace LfkClient.Serialization.Json
 {
     class JsonDeserializer
     {
+        public static Func<string, string> ReadMethod { get; set; }
+
         public static T DeserializeObjectFromFile<T>(string fileName)
         {
-            string oldData = FileSystem.ReadFileContent(fileName);
+            // Обработка исключения "делегат не установлен"
+            string oldData = ReadMethod(fileName);
             T deserializedOldData = DeserializeObject<T>(oldData);
             return deserializedOldData;
         }
