@@ -152,19 +152,29 @@ namespace LfkClient.Repository.RepoAgent
         {
             return GetWorkingDirectoryFiles().Except(GetIncludedFiles()).ToArray();
         }
+
         public string[] GetChangedFilesAfterLastCommit()
         {
-            Commit lastCommit = HandleHistory().Last();
+            List<string> changedFilesAfterLastCommit = new List<string>();
 
             Dictionary<Guid, string> currentIndex =
                     JsonDeserializer.DeserializeObjectFromFile<Dictionary<Guid, string>>(FileSystemPaths.LfkIndexFile);
 
-            List<string> changedFilesAfterLastCommit = new List<string>();
-            foreach (var blobInfo in currentIndex)
+            List<Commit> commits = HandleHistory();
+            if (commits.Count == 0)
             {
-                if (!lastCommit.Index.RepoObjectId_FileName.ContainsKey(blobInfo.Key))
+                changedFilesAfterLastCommit.AddRange(currentIndex.Values);
+            }
+            else
+            {
+                Commit lastCommit = HandleHistory().Last();
+
+                foreach (var blobInfo in currentIndex)
                 {
-                    changedFilesAfterLastCommit.Add(blobInfo.Value);
+                    if (!lastCommit.Index.RepoObjectId_FileName.ContainsKey(blobInfo.Key))
+                    {
+                        changedFilesAfterLastCommit.Add(blobInfo.Value);
+                    }
                 }
             }
 
