@@ -81,5 +81,10 @@ namespace LfkClient.Repository
         {
             return RepoAgent.GetIncludedFiles();
         }
+
+        public string[] GetChangedFilesAfterLastCommit()
+        {
+            return RepoAgent.GetChangedFilesAfterLastCommit();
+        }
     }
 }
