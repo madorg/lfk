@@ -37,7 +37,7 @@
     <system:String x:Key="CommitString">Commit</system:String>
     <system:String x:Key="HistoryString">History</system:String>
     <system:String x:Key="BackToRepositoryManagementString">Back to repository management</system:String>
-    <system:String x:Key="WorkingDirectoryString">Working directory</system:String>
+    <system:String x:Key="WorkingDirectoryString">Untracked files</system:String>
     <system:String x:Key="IncludedFilesString">Included files</system:String>
     <system:String x:Key="FilesCountString">Count of files: </system:String>
     <system:String x:Key="AddedFilesString">Added files</system:String>

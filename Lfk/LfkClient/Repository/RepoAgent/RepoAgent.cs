@@ -146,6 +146,11 @@ namespace LfkClient.Repository.RepoAgent
             return JsonDeserializer.DeserializeObjectFromFile<string[]>(FileSystemPaths.LfkIncludedFile);
         }
 
+        public string[] GetUnincludedFiles()
+        {
+            return GetWorkingDirectoryFiles().Except(GetIncludedFiles()).ToArray();
+        }
+
         #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace LfkGUI.Utility
     public static class CustomCommands
     {
         public static readonly RoutedCommand RemoveTreeViewItem = new RoutedCommand(
-            "Remove", typeof(RemovableTreeViewItem), new InputGestureCollection()
+            "Remove", typeof(TreeView), new InputGestureCollection()
             {
                 new KeyGesture(Key.Delete,ModifierKeys.Control)
             });

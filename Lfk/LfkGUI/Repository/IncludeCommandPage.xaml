@@ -8,9 +8,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="IncludeCommandPage">
-    <Page.CommandBindings>
-        <CommandBinding Command="commands:CustomCommands.RemoveTreeViewItem" Executed="CommandBinding_Executed"/>
-    </Page.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -27,6 +24,9 @@
             <TreeView  x:Name="WorkingDirectoryFilesTreeView"  Margin="3,3,3,3" AllowDrop="False"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"
                        MouseMove="FilesTreeView_MouseMove">
+                <TreeView.CommandBindings>
+                    <CommandBinding x:Name="WorkingDirectoryRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem" Executed="WorkingDirectoryRemoveCommand_Executed"/>
+                </TreeView.CommandBindings>
             </TreeView>
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Row="0" Grid.Column="1" Margin="10" >
@@ -41,6 +41,9 @@
             <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
                        Drop="TreeView_Drop"
                        >
+                <TreeView.CommandBindings>
+                    <CommandBinding x:Name="IncludedRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem" Executed="IncludedRemoveCommand_Executed"/>
+                </TreeView.CommandBindings>
             </TreeView>
         </DockPanel>
 

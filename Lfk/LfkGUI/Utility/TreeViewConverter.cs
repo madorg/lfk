@@ -32,6 +32,7 @@ namespace LfkGUI.Utility
             else if (j == 0)
             {
                 branch = BuildBranch(root, filenames, ref i, ref j);
+
                 if (!root.Items.Contains(branch))
                 {
                     root.Items.Add(branch);
@@ -58,8 +59,8 @@ namespace LfkGUI.Utility
                 string[] pathToFind = new string[j];
                 Array.Copy(filenames[i], pathToFind, j);
                 FindNode(root, pathToFind, 0, 0, ref branch);
-                if(!branch.Items.Contains(node))
-                branch.Items.Add(node);
+                if (!branch.Items.Contains(node))
+                    branch.Items.Add(node);
             }
             return branch;
         }
@@ -84,11 +85,11 @@ namespace LfkGUI.Utility
             }
         }
 
-        private static void GetParentPath(RemovableTreeViewItem node,ref StringBuilder path)
+        private static void GetParentPath(RemovableTreeViewItem node, ref StringBuilder path)
         {
             if (node.Parent is RemovableTreeViewItem)
             {
-                GetParentPath(node.Parent as RemovableTreeViewItem,ref path);
+                GetParentPath(node.Parent as RemovableTreeViewItem, ref path);
             }
             path.Append(string.Concat("\\" + node.Header.ToString()));
         }
@@ -98,11 +99,20 @@ namespace LfkGUI.Utility
             List<string> list = new List<string>();
             StringBuilder prefix = new StringBuilder();
             RemovableTreeViewItem parent = node.Parent as RemovableTreeViewItem;
-            if(parent != null) {
-                GetParentPath(parent,ref prefix);
+            if (parent != null)
+            {
+                GetParentPath(parent, ref prefix);
             }
             prefix.Append("\\" + node.Header.ToString());
-            ParseTreeViewItem(node as RemovableTreeViewItem, ref list, prefix.ToString());
+
+            if (node.HasItems)
+            {
+                ParseTreeViewItem(node as RemovableTreeViewItem, ref list, prefix.ToString());
+            }
+            else
+            {
+                list.Add(prefix.ToString());
+            }
             return list;
         }
         private static void ParseTreeViewItem(RemovableTreeViewItem root, ref List<string> files, string prefix)
@@ -115,9 +125,13 @@ namespace LfkGUI.Utility
                 }
                 ParseTreeViewItem(item as RemovableTreeViewItem, ref files, prefix + "\\" + (item as RemovableTreeViewItem).Header.ToString());
             }
-            if (!root.HasItems && files.Count == 0)
+            if ((root.Parent is TreeView) && files.Count == 0)
             {
                 files.Add("\\" + root.Header.ToString());
+            }
+            else
+            {
+                files.Add(prefix + "\\" + root.Header.ToString());
             }
         }
     }
