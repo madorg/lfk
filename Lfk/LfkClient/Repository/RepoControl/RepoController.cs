@@ -1,5 +1,8 @@
 ﻿using LfkClient.Models.Repository;
 using LfkClient.FileSystemControl;
+using LfkSharedResources.Networking;
+using LfkSharedResources.Networking.NetworkActions;
+using LfkClient.ServerConnection;
 
 namespace LfkClient.Repository.RepoControl
 {
@@ -15,7 +18,11 @@ namespace LfkClient.Repository.RepoControl
         {
             LocalRepository repo = abstractRepository as LocalRepository;
 
-            // TODO: проверить наличие схожего репо этого же юзера на сервере
+            NetworkPackageController npc = new NetworkPackageController();
+            byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
+            
+            // Проверка ответа сервера
+            ServerConnector.Create(data);
 
             FileSystem.Path = repo.Path;
 
@@ -28,6 +35,9 @@ namespace LfkClient.Repository.RepoControl
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "");
+
+            Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+            Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
         }
     }
 }

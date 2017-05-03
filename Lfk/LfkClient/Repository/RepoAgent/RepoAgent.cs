@@ -181,6 +181,20 @@ namespace LfkClient.Repository.RepoAgent
             return changedFilesAfterLastCommit.ToArray();
         }
 
+        public string[] GetChangedFiles()
+        {
+            List<string> includedFiles = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
+
+            foreach (string includedFile in includedFiles)
+            {
+                string fileContent = FileSystem.ReadFileContent(includedFile);
+
+
+            }
+
+            return new string[] { "" };
+        }
+
         #endregion
     }
 }

@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfkGUI", "LfkGUI\LfkGUI.csp
 		{BE365C44-5689-43EB-9911-C8E916A692CC} = {BE365C44-5689-43EB-9911-C8E916A692CC}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfkSharedResources", "LfkSharedResources\LfkSharedResources.csproj", "{1FAB1039-C8BF-4CB9-8372-F075C34DCD83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{D65BA871-95DC-42E7-A260-E7045471B5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D65BA871-95DC-42E7-A260-E7045471B5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D65BA871-95DC-42E7-A260-E7045471B5B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FAB1039-C8BF-4CB9-8372-F075C34DCD83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAB1039-C8BF-4CB9-8372-F075C34DCD83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAB1039-C8BF-4CB9-8372-F075C34DCD83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAB1039-C8BF-4CB9-8372-F075C34DCD83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -91,5 +91,14 @@ namespace LfkClient.Repository
         {
             return RepoAgent.GetChangedFilesAfterLastCommit();
         }
+
+        /// <summary>
+        /// Возвращает список всех изменных файлов после последней команды Add
+        /// </summary>
+        /// <returns>Список изменных файлов</returns>
+        public string[] GetChangedFiles()
+        {
+            return RepoAgent.GetChangedFiles();
+        }
     }
 }

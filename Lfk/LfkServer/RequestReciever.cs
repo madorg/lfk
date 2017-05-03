@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace LfkServer
 {
+    /*
+
+    Авторизация
+         
+
+    */
+
     /// <summary>
     /// Получает запросы клиента и перенаправляет их на необходимую обработку
     /// </summary>

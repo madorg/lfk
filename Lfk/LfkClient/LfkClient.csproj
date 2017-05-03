@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LfkSharedResources">
+      <HintPath>..\LfkSharedResources\bin\Debug\LfkSharedResources.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Packages\Newtonsoft\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -49,7 +52,6 @@
   <ItemGroup>
     <Compile Include="FileSystemControl\FileSystem.cs" />
     <Compile Include="FileSystemControl\FileSystemPaths.cs" />
-    <Compile Include="ServerConnection\ServerActionMode.cs" />
     <Compile Include="ServerConnection\ServerConnector.cs" />
     <Compile Include="Models\Repository\AbstractRepository.cs" />
     <Compile Include="Models\User\AbstractUser.cs" />
