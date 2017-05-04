@@ -28,25 +28,36 @@ namespace LfkClient.Repository.RepoAgent
 
         public void HandleInclude(IEnumerable<string> included)
         {
-            List<string> deserializedOldData =
+            List<string> deserializedIncludedFile =
                 JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
 
-            if (deserializedOldData != null)
+            deserializedIncludedFile.AddRange(included);
+            JsonSerializer.SerializeObjectToFile(deserializedIncludedFile, FileSystemPaths.LfkIncludedFile);
+
+            List<File> deserializedFilesInfo =
+                JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
+
+            foreach (string includedFile in deserializedIncludedFile)
             {
-                deserializedOldData.AddRange(included);
-                JsonSerializer.SerializeObjectToFile(deserializedOldData, FileSystemPaths.LfkIncludedFile);
+                if (!deserializedFilesInfo.Select(fileInfo => fileInfo.Filename).Contains(includedFile))
+                {
+                    deserializedFilesInfo.Add(new File() { Id = Guid.NewGuid(), Filename = includedFile });
+                }
             }
+
+            JsonSerializer.SerializeObjectToFile(deserializedFilesInfo, FileSystemPaths.LfkFilesFile);
         }
 
         public void HandleAdd(IEnumerable<string> added)
         {
+            List<File> deserializedFilesInfo =
+                JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
+
             foreach (string fileName in added)
             {
-                File file = new File() { Id = Guid.NewGuid(), Filename = fileName };
-
                 Guid id = Guid.NewGuid();
                 string hash = FileSystem.ReadFileContent(fileName);
-                Guid fileId = file.Id;
+                Guid fileId = deserializedFilesInfo.First(fileInfo => fileInfo.Filename == fileName).Id;
                 Guid indexId = currentIndexId;
 
                 RepoObject blob = new RepoObject() { Id = id, Hash = hash, FileId = fileId, IndexId = indexId };
@@ -66,13 +77,13 @@ namespace LfkClient.Repository.RepoAgent
                         deserializedIndex.Id = currentIndexId;
                     }
 
-                    if (deserializedIndex.RepoObjectId_FileName.ContainsValue(fileName))
+                    if (deserializedIndex.RepoObjectIdAndFileName.ContainsValue(fileName))
                     {
-                        deserializedIndex.RepoObjectId_FileName.Remove(
-                            deserializedIndex.RepoObjectId_FileName.Select(p => p).Where(p => p.Value == fileName).First().Key);                       
+                        deserializedIndex.RepoObjectIdAndFileName.Remove(
+                            deserializedIndex.RepoObjectIdAndFileName.Select(p => p).Where(p => p.Value == fileName).First().Key);
                     }
 
-                    deserializedIndex.RepoObjectId_FileName.Add(id, fileName);
+                    deserializedIndex.RepoObjectIdAndFileName.Add(id, fileName);
                     JsonSerializer.SerializeObjectToFile(deserializedIndex, FileSystemPaths.LfkIndexFile);
                 }
             }
@@ -97,7 +108,7 @@ namespace LfkClient.Repository.RepoAgent
             index.Id = currentIndexId;
 
             JsonSerializer.SerializeObjectToFile(index, FileSystemPaths.LfkIndexFile);
-        }
+       }
 
         public List<Commit> HandleHistory()
         {
@@ -124,7 +135,7 @@ namespace LfkClient.Repository.RepoAgent
         /// <param name="commit">Объект коммита, на который обеспечивается переключение</param>
         public void HandleSwitch(Commit commit)
         {
-            foreach (KeyValuePair<Guid, string> idFileNamePair in commit.Index.RepoObjectId_FileName)
+            foreach (KeyValuePair<Guid, string> idFileNamePair in commit.Index.RepoObjectIdAndFileName)
             {
                 RepoObject oldBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(
                     FileSystemPaths.LfkObjectsFolder + idFileNamePair.Key.ToString());
@@ -136,13 +147,17 @@ namespace LfkClient.Repository.RepoAgent
         public void HandleUninclude(IEnumerable<string> unincluded)
         {
             List<string> included = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
+            List<File> filesInfo =
+                JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
 
             foreach (string unincludedItem in unincluded)
             {
                 included.Remove(unincludedItem);
+                filesInfo.RemoveAll(fileInfo => fileInfo.Filename == unincludedItem);
             }
 
             JsonSerializer.SerializeObjectToFile(included, FileSystemPaths.LfkIncludedFile);
+            JsonSerializer.SerializeObjectToFile(filesInfo, FileSystemPaths.LfkFilesFile);
         }
 
         #endregion
@@ -173,15 +188,15 @@ namespace LfkClient.Repository.RepoAgent
             List<Commit> commits = HandleHistory();
             if (commits.Count == 0)
             {
-                changedFilesAfterLastCommit.AddRange(currentIndex.RepoObjectId_FileName.Values);
+                changedFilesAfterLastCommit.AddRange(currentIndex.RepoObjectIdAndFileName.Values);
             }
             else
             {
                 Commit lastCommit = HandleHistory().Last();
 
-                foreach (var blobInfo in currentIndex.RepoObjectId_FileName)
+                foreach (var blobInfo in currentIndex.RepoObjectIdAndFileName)
                 {
-                    if (!lastCommit.Index.RepoObjectId_FileName.ContainsKey(blobInfo.Key))
+                    if (!lastCommit.Index.RepoObjectIdAndFileName.ContainsKey(blobInfo.Key))
                     {
                         changedFilesAfterLastCommit.Add(blobInfo.Value);
                     }
@@ -228,9 +243,9 @@ namespace LfkClient.Repository.RepoAgent
             {
                 string fileContent = FileSystem.ReadFileContent(includedFile);
 
-                if (index.RepoObjectId_FileName.ContainsValue(includedFile))
+                if (index.RepoObjectIdAndFileName.ContainsValue(includedFile))
                 {
-                    Guid previosBlobId = index.RepoObjectId_FileName.First(i => i.Value == includedFile).Key;
+                    Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
                     RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
                     string previosFileContent = previosBlob.Hash;
 

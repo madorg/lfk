@@ -22,7 +22,7 @@ namespace LfkClient.Repository.RepoControl
             byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
 
             // TODO: Проверка ответа сервера
-            ServerConnector.Create(data);
+            //ServerConnector.Create(data);
 
             FileSystem.Path = repo.Path;
 

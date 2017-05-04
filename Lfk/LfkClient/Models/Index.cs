@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LfkClient.Models
 {
@@ -10,10 +7,11 @@ namespace LfkClient.Models
     {
         public Index()
         {
-            RepoObjectId_FileName = new Dictionary<Guid, string>();
+            RepoObjectIdAndFileName = new Dictionary<Guid, string>();
         }
 
         public Guid Id { get; set; }
-        public Dictionary<Guid, string> RepoObjectId_FileName { get; set; }
+        public Dictionary<Guid, string> RepoObjectIdAndFileName { get; set; }
+        public List<Guid> BlobsId { get; set; }
     }
 }
