@@ -37,7 +37,7 @@ namespace LfkGUI.Repository
                 Path = tempPath
             });
 
-            LfkClient.Repository.Repository.GetInstance().GetChangedFiles();
+            //LfkClient.Repository.Repository.GetInstance().GetChangedFiles();
         }
         private void IncludeCommandButton_Click(object sender, RoutedEventArgs e)
         {

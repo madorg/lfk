@@ -28,7 +28,7 @@ namespace LfkGUI.Repository
             InitializeComponent();
 
             TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView,
-                LfkClient.Repository.Repository.GetInstance().GetIncludedFiles());
+                LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
         }
 
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

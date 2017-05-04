@@ -17,7 +17,6 @@ namespace LfkClient.Authorization
         public static bool TryLogin(AbstractUser abstractUser)
         {
             string data = JsonSerializer.SerializeObject(abstractUser);
-            ServerConnector.Find(data, ServerActionMode.UserAction);
 
             return true;
         }
@@ -25,7 +24,6 @@ namespace LfkClient.Authorization
         public static bool TrySignup(AbstractUser abstractUser)
         {
             string data = JsonSerializer.SerializeObject(abstractUser);
-            ServerConnector.Create(data, ServerActionMode.UserAction);
 
             return true;
         }
