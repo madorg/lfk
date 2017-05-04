@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
          VerticalAlignment="Stretch" />
-        <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
+        <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True"  ToolTip="{DynamicResource ToolTipWorkinDirecktoryTreeViewString}">
             <TextBlock DockPanel.Dock="Top" Text="{DynamicResource WorkingDirectoryString}" TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <Label Content="{DynamicResource FilesCountString}"/>

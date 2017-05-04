@@ -29,6 +29,7 @@ namespace LfkGUI.Repository
         public IncludeCommandPage()
         {
             InitializeComponent();
+            
             TreeViewConverter.BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
                 LfkClient.Repository.Repository.GetInstance().GetUnincludedFiles());
             TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView,
