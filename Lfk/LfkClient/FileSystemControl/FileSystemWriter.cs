@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using System.IO;
 
 namespace LfkClient.FileSystemControl
 {
@@ -24,10 +19,7 @@ namespace LfkClient.FileSystemControl
 
         public void CreateFile(string fileName)
         {
-            using (File.Create(fileName))
-            {
-
-            }
+            using (File.Create(fileName)) { }
         }
 
         public void InitializeFile(string fileName, string data)
@@ -41,7 +33,7 @@ namespace LfkClient.FileSystemControl
 
         public void AppendToFile(string fileName, string data)
         {
-            using (StreamWriter sw = File.AppendText(fileName))
+            using (StreamWriter sw = new StreamWriter(fileName, true))
             {
                 sw.Write(data);
             }

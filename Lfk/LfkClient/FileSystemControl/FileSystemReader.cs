@@ -8,7 +8,7 @@ namespace LfkClient.FileSystemControl
     /// </summary>
     class FileSystemReader 
     {
-        public string[] ReadWorkingDirectory(string path)
+        public string[] ReadWorkingDirectoryFiles(string path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
             return directoryInfo
@@ -18,7 +18,7 @@ namespace LfkClient.FileSystemControl
                 .ToArray();
         }
 
-        public string[] ReadWorkingDirectory(string path, string folder)
+        public string[] ReadWorkingDirectoryFiles(string path, string folder)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(path + folder);
             return directoryInfo
@@ -30,11 +30,6 @@ namespace LfkClient.FileSystemControl
         public string ReadFileContent(string fileName)
         {
             return File.ReadAllText(fileName);
-        }
-
-        public bool FileExists(string fileName)
-        {
-            return File.Exists(fileName);
         }
     }
 }

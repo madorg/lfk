@@ -2,6 +2,9 @@
 
 namespace LfkClient.FileSystemControl
 {
+    /// <summary>
+    /// Битовая последовательность, представляющая все типы файлов, содержащихся в рабочем каталоге
+    /// </summary>
     [Flags]
     public enum FileTypes
     {
