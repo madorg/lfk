@@ -103,7 +103,7 @@ namespace LfkClient.Repository.RepoAgent
         {
             List<Commit> commits = new List<Commit>();
 
-            foreach (string fileName in FileSystem.ReadWorkingDirectory(FilesType.SystemCommits))
+            foreach (string fileName in FileSystem.ReadWorkingDirectory(FileTypes.SystemCommits))
             {
                 commits.Add(JsonDeserializer.DeserializeObjectFromFile<Commit>(fileName));
             }
@@ -151,7 +151,7 @@ namespace LfkClient.Repository.RepoAgent
 
         public string[] GetWorkingDirectoryFiles()
         {
-            return FileSystem.ReadWorkingDirectory(FilesType.Client);
+            return FileSystem.ReadWorkingDirectory(FileTypes.Client);
         }
 
         public string[] GetIncludedFiles()
