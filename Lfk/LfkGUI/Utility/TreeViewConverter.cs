@@ -19,11 +19,10 @@ namespace LfkGUI.Utility
                 filenames[i] = filespaths[i].Split('\\')
                     .Where(m => !string.IsNullOrWhiteSpace(m)).ToArray();
             }
-
-            BuildTreeView(tree, filenames, 0, 0);
+            BuildTreeView(tree, ref filenames, 0, 0);
         }
 
-        private static TreeViewItem BuildTreeView(ItemsControl root, string[][] filenames, int i, int j)
+        private static TreeViewItem BuildTreeView(ItemsControl root, ref string[][] filenames, int i, int j)
         {
             RemovableTreeViewItem branch = null;
 
@@ -33,7 +32,7 @@ namespace LfkGUI.Utility
             }
             else if (j == 0)
             {
-                branch = BuildBranch(root, filenames, ref i, ref j);
+                branch = BuildBranch(root, ref filenames, ref i, ref j);
 
                 if (!root.Items.Contains(branch))
                 {
@@ -42,21 +41,20 @@ namespace LfkGUI.Utility
             }
             else if (j == filenames[i].GetLength(0))
             {
-                BuildTreeView(root, filenames, ++i, 0);
+                BuildTreeView(root, ref filenames, ++i, 0);
             }
             else
             {
-                branch = BuildBranch(root, filenames, ref i, ref j);
+                branch = BuildBranch(root, ref filenames, ref i, ref j);
             }
 
             return branch;
         }
 
-        private static RemovableTreeViewItem BuildBranch(ItemsControl root, string[][] filenames, ref int i, ref int j)
+        private static RemovableTreeViewItem BuildBranch(ItemsControl root, ref string[][] filenames, ref int i, ref int j)
         {
             RemovableTreeViewItem branch = new RemovableTreeViewItem() { Header = filenames[i][j] };
-            RemovableTreeViewItem node = BuildTreeView(root, filenames, i, ++j) as RemovableTreeViewItem;
-
+            RemovableTreeViewItem node = BuildTreeView(root, ref filenames, i, ++j) as RemovableTreeViewItem;
             if (node != null)
             {
                 string[] pathToFind = new string[j];
@@ -142,10 +140,6 @@ namespace LfkGUI.Utility
             if ((root.Parent is TreeView) && files.Count == 0)
             {
                 files.Add("\\" + root.Header.ToString());
-            }
-            else
-            {
-                files.Add(prefix + "\\" + root.Header.ToString());
             }
         }
     }
