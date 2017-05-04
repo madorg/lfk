@@ -1,4 +1,6 @@
-﻿namespace LfkClient.FileSystemControl
+﻿using System.IO;
+
+namespace LfkClient.FileSystemControl
 {
     public enum FilesType
     {

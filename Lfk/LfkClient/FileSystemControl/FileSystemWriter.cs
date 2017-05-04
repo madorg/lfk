@@ -14,7 +14,12 @@ namespace LfkClient.FileSystemControl
     {
         public void CreateFolder(string folderName)
         {
-            Directory.CreateDirectory(folderName);   
+            DirectoryInfo directoryInfo = Directory.CreateDirectory(folderName);
+
+            if (folderName.EndsWith(FileSystemPaths.LfkMainFolder))
+            {
+                directoryInfo.Attributes = FileAttributes.Hidden;
+            }
         }
 
         public void CreateFile(string fileName)
