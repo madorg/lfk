@@ -13,10 +13,11 @@ namespace LfkClient.ServerConnection
     /// </summary>
     class ServerConnector
     {
-        private static TcpClient tcpClient = new TcpClient("localhost", 4300);
+        private static TcpClient tcpClient = null;
 
         public static void Create(byte[] data)
         {
+            tcpClient = new TcpClient();
             tcpClient.Connect("localhost", 4200);
             tcpClient.GetStream().Write(data, 0, data.Length);
         }

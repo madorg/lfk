@@ -20,9 +20,9 @@ namespace LfkClient.Repository.RepoControl
 
             NetworkPackageController npc = new NetworkPackageController();
             byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
-            
+
             // Проверка ответа сервера
-            //ServerConnector.Create(data);
+            ServerConnector.Create(data);
 
             FileSystem.Path = repo.Path;
 
