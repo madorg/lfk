@@ -20,7 +20,7 @@ namespace LfkServer
             {
                 TcpClient client = tcpl.AcceptTcpClient();
 
-
+                //byte[] data = client.GetStream().re
             }
         }
     }

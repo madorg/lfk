@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfkClient", "LfkClient\LfkClient.csproj", "{BE365C44-5689-43EB-9911-C8E916A692CC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1FAB1039-C8BF-4CB9-8372-F075C34DCD83} = {1FAB1039-C8BF-4CB9-8372-F075C34DCD83}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LfkServer", "LfkServer\LfkServer.csproj", "{2C8D6C96-0DC0-4B2C-8D0D-800F2BF4C380}"
 EndProject

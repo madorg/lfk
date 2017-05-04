@@ -22,7 +22,7 @@ namespace LfkClient.Repository.RepoControl
             byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
             
             // Проверка ответа сервера
-            ServerConnector.Create(data);
+            //ServerConnector.Create(data);
 
             FileSystem.Path = repo.Path;
 
@@ -38,6 +38,8 @@ namespace LfkClient.Repository.RepoControl
 
             Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
             Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+
+            Repository.GetInstance().RepoAgent.InitializeRepoAgent();
         }
     }
 }
