@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LfkServer
+namespace LfkServer.Client.Handlers
 {
     /// <summary>
     /// Отвечает за ответ клиенту
     /// </summary>
-    class ResponseSender
+    class ResponseHandler
     {
-
+        
     }
 }

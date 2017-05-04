@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="FileSystemControl\FileSystem.cs" />
     <Compile Include="FileSystemControl\FileSystemPaths.cs" />
+    <Compile Include="FileSystemControl\FileTypes.cs" />
     <Compile Include="ServerConnection\ServerConnector.cs" />
     <Compile Include="Models\Repository\AbstractRepository.cs" />
     <Compile Include="Models\User\AbstractUser.cs" />

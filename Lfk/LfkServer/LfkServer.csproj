@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LfkServer.Server</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,13 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Client\ClientController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\RepositoryController.cs" />
-    <Compile Include="RequestReciever.cs" />
-    <Compile Include="ResponseSender.cs" />
+    <Compile Include="Client\Handlers\RequestHandler.cs" />
+    <Compile Include="Client\Handlers\ResponseHandler.cs" />
     <Compile Include="Serialization\Json\JsonDeserializer.cs" />
     <Compile Include="Serialization\Json\JsonSerializer.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="User\UserController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LfkSharedResources\LfkSharedResources.csproj">
+      <Project>{1FAB1039-C8BF-4CB9-8372-F075C34DCD83}</Project>
+      <Name>LfkSharedResources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

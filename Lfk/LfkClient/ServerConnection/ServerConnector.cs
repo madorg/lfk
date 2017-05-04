@@ -9,11 +9,11 @@ using System.Net.Sockets;
 namespace LfkClient.ServerConnection
 { 
     /// <summary>
-    /// Фасад подключения в базе данных, отвечающий за запросы к серверу
+    /// Фасад подключения к серверу
     /// </summary>
     class ServerConnector
     {
-        private static TcpClient tcpClient = new TcpClient("localhost", 4300);
+        private static TcpClient tcpClient = new TcpClient();
 
         public static void Create(byte[] data)
         {
