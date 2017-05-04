@@ -14,12 +14,15 @@ namespace LfkSharedResources.Networking
         {
             NetworkPackage package = CreatePackage(destination, action, data);
             string serializedPackage = JsonSerializer.SerializeObject(package);
-            return Encoding.UTF8.GetBytes(serializedPackage);
+            List<byte> bytes = Encoding.UTF8.GetBytes(serializedPackage).ToList();
+            bytes.InsertRange(0, BitConverter.GetBytes(bytes.Count));
+            return bytes.ToArray();
         }
 
         public NetworkPackage ConvertBytesToPackage(byte[] data)
         {
             string serializedPackage = Encoding.UTF8.GetString(data);
+            Console.WriteLine(serializedPackage);
             NetworkPackage package = JsonDeserializer.DeserializeObject<NetworkPackage>(serializedPackage);
             return package;
         }
