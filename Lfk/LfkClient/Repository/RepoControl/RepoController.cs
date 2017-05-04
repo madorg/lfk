@@ -18,8 +18,8 @@ namespace LfkClient.Repository.RepoControl
         {
             LocalRepository repo = abstractRepository as LocalRepository;
 
-            NetworkPackageController npc = new NetworkPackageController();
-            byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
+            //NetworkPackageController npc = new NetworkPackageController();
+            //byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
 
             // TODO: Проверка ответа сервера
             //ServerConnector.Create(data);
@@ -34,10 +34,12 @@ namespace LfkClient.Repository.RepoControl
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
-            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
 
             Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
             Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+
+            Serialization.Json.JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
 
             Repository.GetInstance().RepoAgent.InitializeRepoAgent();
         }
