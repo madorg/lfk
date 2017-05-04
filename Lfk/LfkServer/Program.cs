@@ -32,7 +32,7 @@ namespace LfkServer
                 NetworkPackageController packageController = new NetworkPackageController();
                 NetworkPackage package = packageController.ConvertBytesToPackage(data);
 
-                Console.WriteLine("Client data: " + package.Action);
+                //Console.WriteLine("Client data: " + package.Action);
 
                 
 

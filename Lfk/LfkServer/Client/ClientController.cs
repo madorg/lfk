@@ -22,9 +22,13 @@ namespace LfkServer.Client
             responseHandler = new ResponseHandler();
         }
 
-        public async Task HandleClient(TcpClient client)
+        public async void HandleClient(TcpClient client)
         {
             Stream stream = client.GetStream();
+
+            // ------------------ START LOG ------------------ //
+            Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): принял клиентский поток");
+            // ------------------ END LOG ------------------ //
 
             NetworkPackage package = await requestHandler.HandleRequest(stream);
         }

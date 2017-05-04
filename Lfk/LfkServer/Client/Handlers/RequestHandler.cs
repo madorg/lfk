@@ -8,13 +8,6 @@ using System.IO;
 
 namespace LfkServer.Client.Handlers
 {
-    /*
-
-    Авторизация
-         
-
-    */
-
     /// <summary>
     /// Получает запросы клиента и перенаправляет их на необходимую обработку
     /// </summary>
@@ -22,14 +15,23 @@ namespace LfkServer.Client.Handlers
     {
         public async Task<NetworkPackage> HandleRequest(Stream stream)
         {
+            // ------------------ START LOG ------------------ //
+            Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): начал обработку клиентского потока");
+            // ------------------ END LOG ------------------ //
+
             byte[] dataLength = new byte[4];
-            stream.Read(dataLength, 0, dataLength.Length);
+            await stream.ReadAsync(dataLength, 0, dataLength.Length);
             int packageSize = BitConverter.ToInt32(dataLength, 0);
             byte[] data = new byte[packageSize];
-            stream.Read(data, 0, packageSize);
+
+            await stream.ReadAsync(data, 0, packageSize);
 
             NetworkPackageController packageController = new NetworkPackageController();
             NetworkPackage package = packageController.ConvertBytesToPackage(data);
+
+            // ------------------ START LOG ------------------ //
+            Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): закончил обработку клиентского потока");
+            // ------------------ END LOG ------------------ //
 
             return package;
         }
