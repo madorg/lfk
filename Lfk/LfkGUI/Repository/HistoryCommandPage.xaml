@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:local="clr-namespace:LfkGUI.Repository"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
@@ -15,7 +17,7 @@
                 <TextBlock Text="History of commits" Foreground="WhiteSmoke" FontSize="20" MinWidth="300" Margin="30,0,0,0"/>
                 <Button x:Name="SwitchCommandButton"   Content="Switch" Style="{StaticResource MaterialDesignFlatButton}"  Click="SwitchCommandButton_Click"/>
             </DockPanel>
-            <ListView x:Name="HistoryListView" ItemsSource="{DynamicResource ResourceKey=Commits}">
+            <ListView x:Name="HistoryListView" ItemsSource="{DynamicResource ResourceKey=Commits}" SelectionChanged="HistoryListView_Selected">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
@@ -29,6 +31,18 @@
                 </ListView.Resources>
             </ListView>
         </DockPanel>
+        <materialDesign:DialogHost x:Name="DialogHostCommit">
+            <materialDesign:DialogHost.DialogContent >
+                <materialDesign:Card  x:Name="DialogContent" Height="200" Width="200">
+                    <StackPanel>
+                        <TextBlock x:Name="ContentText">
+                               
+                        </TextBlock>
+                        <Button x:Name="CloseDialog" Click="CloseDialog_Click" >X</Button>
+                    </StackPanel>
+                </materialDesign:Card>
 
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
     </Grid>
 </Page>

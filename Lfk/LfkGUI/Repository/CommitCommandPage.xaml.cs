@@ -12,7 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 namespace LfkGUI.Repository
 {
     /// <summary>
@@ -20,14 +21,51 @@ namespace LfkGUI.Repository
     /// </summary>
     public partial class CommitCommandPage : Page
     {
+        private void UpdateChangedFilesListBox()
+        {
+            LastChangedFilesListBox.Items.Clear();
+            foreach (var item in LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit())
+            {
+                LastChangedFilesListBox.Items.Add(new ListBoxItem()
+                {
+                    Content = item,
+                    Foreground = Brushes.SpringGreen
+                });
+            }
+        }
         public CommitCommandPage()
         {
             InitializeComponent();
+            UpdateChangedFilesListBox();
+
         }
 
-        private void CommitButton_Click(object sender, RoutedEventArgs e)
+        private async void CommitButton_Click(object sender, RoutedEventArgs e)
         {
-            LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
+            if (!string.IsNullOrWhiteSpace(CommitMessageTextBox.Text)) { 
+                LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
+                UpdateChangedFilesListBox();
+                CommitMessageTextBox.Clear();
+            }
+            else if(LastChangedFilesListBox.Items.Count == 0)
+            {
+                DockPanel modalDialog = App.Current.Resources["ModalDialogWithText"] as DockPanel;
+                (modalDialog.Children[0] as TextBlock).Text = "Error!";
+                (modalDialog.Children[1] as TextBlock).Text = "No changes to make commit!";
+                DialogContent.Children.Add(modalDialog);
+                await DialogHost.Show(DialogContent);
+                DialogContent.Children.Remove(modalDialog);
+
+            }
+            else
+            {
+                DockPanel modalDialog = App.Current.Resources["ModalDialogWithText"] as DockPanel;
+                (modalDialog.Children[0] as TextBlock).Text = "Error!";
+                (modalDialog.Children[1] as TextBlock).Text = "Please insert commit message to make commit!";
+                DialogContent.Children.Add(modalDialog);
+                await DialogHost.Show(DialogContent);
+                DialogContent.Children.Remove(modalDialog);
+            }
         }
     }
 }

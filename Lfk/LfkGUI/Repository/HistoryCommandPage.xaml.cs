@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
-
+using MaterialDesignThemes.Wpf;
 namespace LfkGUI.Repository
 {
     /// <summary>
@@ -37,6 +37,22 @@ namespace LfkGUI.Repository
         {
             LfkClient.Models.Commit commit = HistoryListView.SelectedItem as LfkClient.Models.Commit;
             LfkClient.Repository.Repository.GetInstance().Switch(commit);
+        }
+
+        private async void HistoryListView_Selected(object sender, RoutedEventArgs e)
+        {
+            LfkClient.Models.Commit selectedCommit = HistoryListView.SelectedItem as LfkClient.Models.Commit;
+            ContentText.Text = "";
+            foreach (var item in selectedCommit.Index.RepoObjectIdAndFileName)
+            {
+                ContentText.Text += item.Value + "\n";
+            }
+            await DialogHost.Show(DialogContent);
+        }
+
+        private void CloseDialog_Click(object sender, RoutedEventArgs e)
+        {
+            DialogHostCommit.IsOpen = false;
         }
     }
 }

@@ -88,6 +88,7 @@ namespace LfkGUI.Repository
             List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
             TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView, files.ToArray());
             LfkClient.Repository.Repository.GetInstance().Include(files);
+
             ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
         }
 

@@ -36,11 +36,13 @@
     <system:String x:Key="AddString">Add</system:String>
     <system:String x:Key="CommitString">Commit</system:String>
     <system:String x:Key="HistoryString">History</system:String>
+    <system:String x:Key="ToolTipWorkinDirecktoryTreeViewString">It's files from working directory that you can add</system:String>
     <system:String x:Key="BackToRepositoryManagementString">Back to repository management</system:String>
     <system:String x:Key="WorkingDirectoryString">Untracked files</system:String>
-    <system:String x:Key="IncludedFilesString">Included files</system:String>
+    <system:String x:Key="IncludedFilesString">Tracked files</system:String>
+    <system:String x:Key="ChangedFilesString">Changes not staged for commit</system:String>
     <system:String x:Key="FilesCountString">Count of files: </system:String>
-    <system:String x:Key="AddedFilesString">Added files</system:String>
+    <system:String x:Key="AddedFilesString">Files to be commited</system:String>
 
 
 
