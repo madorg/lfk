@@ -46,5 +46,13 @@ namespace LfkClient.FileSystemControl
                 sw.Write(data);
             }
         }
+
+        public void DeleteFile(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+        }
     }
 }

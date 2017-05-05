@@ -77,6 +77,11 @@ namespace LfkClient.Repository
             RepoAgent.HandleUninclude(unincluded);
         }
 
+        public void Reset(IEnumerable<string> reseted)
+        {
+            RepoAgent.HandleReset(reseted);
+        }
+
         public string[] GetWorkingDirectoryFiles()
         {
             return RepoAgent.GetWorkingDirectoryFiles();

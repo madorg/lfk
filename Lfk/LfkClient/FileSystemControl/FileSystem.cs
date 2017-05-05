@@ -104,5 +104,13 @@
         }
 
         #endregion
+
+        #region Методы удаления / Нужно обсудить еще
+
+        public static void DeleteFile(string fileName)
+        {
+            writer.DeleteFile(Path + fileName);
+        } 
+        #endregion
     }
 }

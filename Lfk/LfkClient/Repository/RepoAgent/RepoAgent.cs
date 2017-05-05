@@ -160,6 +160,35 @@ namespace LfkClient.Repository.RepoAgent
             JsonSerializer.SerializeObjectToFile(filesInfo, FileSystemPaths.LfkFilesFile);
         }
 
+        /// <summary>
+        /// Обеспечивает удаление ошибочно созданного блоба
+        /// </summary>
+        public void HandleReset(IEnumerable<string> reseted)
+        {
+            Index deserializedIndex = JsonDeserializer.DeserializeObjectFromFile<Index>(FileSystemPaths.LfkIndexFile);
+
+            foreach (string fileName in reseted)
+            {
+                Guid blobId = deserializedIndex.RepoObjectIdAndFileName.First(repoObject => repoObject.Value == fileName).Key;
+                FileSystem.DeleteFile(FileSystemPaths.LfkObjectsFolder + blobId.ToString());
+                deserializedIndex.RepoObjectIdAndFileName.Remove(blobId);
+
+                Commit previousCommit = HandleHistory().LastOrDefault();
+
+                if (previousCommit != null)
+                {
+                    Index previousIndex = previousCommit.Index;
+
+                    var previousBlobInfo = previousIndex.RepoObjectIdAndFileName.SingleOrDefault(repoObject => repoObject.Value == fileName);
+                    if (previousBlobInfo.Key != Guid.Empty)
+                    {
+                        deserializedIndex.RepoObjectIdAndFileName.Add(previousBlobInfo.Key, previousBlobInfo.Value);
+                    }
+                }
+                JsonSerializer.SerializeObjectToFile(deserializedIndex, FileSystemPaths.LfkIndexFile);
+            }
+        }
+
         #endregion
 
         #region Обработчики служебных команд (Get)

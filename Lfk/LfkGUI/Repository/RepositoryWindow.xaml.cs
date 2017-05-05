@@ -28,7 +28,7 @@ namespace LfkGUI.Repository
             InitializeComponent();
             App.Current.Resources["AppUser"] = new User();
 
-            string tempPath = @"F:\book";
+            string tempPath = @"D:\lfk_tests";
             LfkClient.Repository.Repository.GetInstance().Init(new LocalRepository()
             {
                 Id = Guid.NewGuid(),
@@ -36,8 +36,10 @@ namespace LfkGUI.Repository
                 UserId = (App.Current.Resources["AppUser"] as User).Id,
                 Path = tempPath
             });
-
-            //LfkClient.Repository.Repository.GetInstance().GetChangedFiles();
+        }
+        public RepositoryWindow(string s)
+        {
+            InitializeComponent();
         }
         private void IncludeCommandButton_Click(object sender, RoutedEventArgs e)
         {
@@ -61,8 +63,7 @@ namespace LfkGUI.Repository
 
         private void NavigateToRepositoryManagementWindowButton_Click(object sender, RoutedEventArgs e)
         {
-            RepositoryManagement.RepositoryManagementWindow rmw = new RepositoryManagement.RepositoryManagementWindow();
-            rmw.Show();
+            new RepositoryManagement.RepositoryManagementWindow().Show();
             this.Close();
         }
 

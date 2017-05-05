@@ -8,9 +8,6 @@
       mc:Ignorable="d"                 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="AddCommandPage">
-    <Page.CommandBindings>
-        <CommandBinding Command="commands:CustomCommands.RemoveTreeViewItem" Executed="CommandBinding_Executed"/>
-    </Page.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -19,20 +16,23 @@
         <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
          VerticalAlignment="Stretch" />
         <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
-            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource IncludedFilesString}" 
+            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ChangedFilesString}" 
                        TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <Label Content="{DynamicResource FilesCountString}"/>
-                <Label x:Name="IncludedFilesCount" Content="0"/>
+                <Label x:Name="ChangedFilesCount" Content="0"/>
             </StackPanel>
 
-            <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" Drop="TreeView_Drop"
-                       MouseDown="FilesTreeView_MouseLeftButtonDown"
-                       MouseMove="FilesTreeView_MouseMove"
-                       >
+            <TreeView  x:Name="ChangedFilesTreeView"  Margin="3,3,3,3" Drop="TreeView_Drop"
+                       MouseDown="ChangedFilesTreeView_MouseLeftButtonDown"
+                       MouseMove="ChangedFilesTreeView_MouseMove">
+                <TreeView.CommandBindings>
+                    <CommandBinding x:Name="ChangedFilesRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem"
+                                    Executed="ChangedFilesRemoveCommand_Executed"/>
+                </TreeView.CommandBindings>
             </TreeView>
         </DockPanel>
-        <DockPanel  Grid.Row="0" Grid.Column="1" Margin="10" >
+        <DockPanel  Grid.Row="0" Grid.Column="1" Margin="10" ToolTip="To reset file remove it by right click menu" >
             <TextBlock DockPanel.Dock="Top" Text="{DynamicResource AddedFilesString}" 
                        TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
@@ -40,7 +40,11 @@
                 <Label x:Name="AddedFilesCount" Content="0"/>
             </StackPanel>
             <TreeView  x:Name="AddedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
-                           Drop="TreeView_Drop" >
+                       Drop="TreeView_Drop" >
+                <TreeView.CommandBindings>
+                    <CommandBinding x:Name="AddedFilesRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem"
+                                    Executed="AddedFilesRemoveCommand_Executed" />
+                </TreeView.CommandBindings>
             </TreeView>
         </DockPanel>
 
