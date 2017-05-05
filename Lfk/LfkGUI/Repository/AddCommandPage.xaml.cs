@@ -41,7 +41,7 @@ namespace LfkGUI.Repository
         {
             TreeView treeView = sender as TreeView;
             isDrag = true;
-            if (treeView.Items.Count > 0)
+            if (treeView != null && treeView.Items.Count > 0)
             {
 
                 object temp = treeView.SelectedItem;
@@ -79,18 +79,25 @@ namespace LfkGUI.Repository
         private void TreeView_Drop(object sender, DragEventArgs e)
         {
             TreeViewItem item = e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem;
-            List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
-            TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
+            if (item != null)
+            {
+                List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
+                TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
 
-            LfkClient.Repository.Repository.GetInstance()
-                .Add(files);
+                LfkClient.Repository.Repository.GetInstance()
+                    .Add(files);
 
-            ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
+                ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
+            }
         }
 
         private void ChangedFilesRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            Base.RemovableTreeViewItem item = e.OriginalSource as Base.RemovableTreeViewItem;
+            if(item!= null)
+            {
+                item.ContextMenu.IsOpen = false;
+            }
         }
 
         private void AddedFilesRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)

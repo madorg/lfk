@@ -29,13 +29,12 @@ namespace LfkGUI.Repository
         public IncludeCommandPage()
         {
             InitializeComponent();
-            
+
             TreeViewConverter.BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
                 LfkClient.Repository.Repository.GetInstance().GetUnincludedFiles());
             TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView,
                 LfkClient.Repository.Repository.GetInstance().GetIncludedFiles());
         }
-
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             startDragPoint = e.GetPosition(null);
@@ -44,13 +43,14 @@ namespace LfkGUI.Repository
         private void StartDrag(object sender, MouseEventArgs e)
         {
             TreeView treeView = sender as TreeView;
+
             isDrag = true;
-            if (treeView.Items.Count > 0)
+            if (treeView != null && treeView.Items.Count > 0)
             {
 
                 object temp = treeView.SelectedItem;
                 DataObject data = null;
-                
+
                 if (temp != null)
                     data = new DataObject(typeof(TreeViewItem), temp);
                 if (data != null)
@@ -85,17 +85,20 @@ namespace LfkGUI.Repository
         private void TreeView_Drop(object sender, DragEventArgs e)
         {
             TreeViewItem item = e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem;
-            List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
-            TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView, files.ToArray());
-            LfkClient.Repository.Repository.GetInstance().Include(files);
+            if (item != null)
+            {
+                List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
+                TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView, files.ToArray());
+                LfkClient.Repository.Repository.GetInstance().Include(files);
 
-            ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
+                ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
+            }
         }
 
         private async void WorkingDirectoryRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             MetroWindow mw = App.Current.MainWindow as MetroWindow;
-            MessageDialogResult result = 
+            MessageDialogResult result =
                 await mw.ShowMessageAsync("You can't do this", "delete files from explore",
                                MessageDialogStyle.Affirmative);
         }
