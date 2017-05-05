@@ -108,7 +108,7 @@ namespace LfkClient.Repository.RepoAgent
             index.Id = currentIndexId;
 
             JsonSerializer.SerializeObjectToFile(index, FileSystemPaths.LfkIndexFile);
-       }
+        }
 
         public List<Commit> HandleHistory()
         {
@@ -253,6 +253,10 @@ namespace LfkClient.Repository.RepoAgent
                     {
                         changedFiles.Add(includedFile);
                     }
+                }
+                else
+                {
+                    changedFiles.Add(includedFile);
                 }
             }
 
