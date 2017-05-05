@@ -42,6 +42,11 @@ namespace LfkClient.Repository
             RepoController.Init(abstractRepository);
         }
 
+        public void OpenLocal(string path)
+        {
+            RepoController.OpenLocal(path);
+        }
+
         public void Include(IEnumerable<string> included)
         {
             RepoAgent.HandleInclude(included);

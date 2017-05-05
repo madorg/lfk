@@ -17,6 +17,8 @@ using LfkClient.Models.User;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using LfkGUI.Repository;
+
+
 namespace LfkGUI.RepositoryManagement
 {
     /// <summary>
@@ -31,7 +33,7 @@ namespace LfkGUI.RepositoryManagement
 
         private void OnOpenRepository(object sender, EventArgs e)
         {
-            RepositoryWindow rw = new RepositoryWindow();
+            RepositoryWindow rw = new RepositoryWindow("");
             rw.Show();
         }
 
@@ -49,9 +51,32 @@ namespace LfkGUI.RepositoryManagement
             }
         }
 
-        private void OpenLocalRepositoryButton_Click(object sender, RoutedEventArgs e)
+        private async void OpenLocalRepositoryButton_Click(object sender, RoutedEventArgs e)
         {
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog() {
+                ShowNewFolderButton = true,
+                RootFolder = Environment.SpecialFolder.MyComputer
+            };
+           
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    LfkClient.Repository.Repository.GetInstance().OpenLocal(
+                        fbd.SelectedPath);
+                    MessageDialogResult result = await this.ShowMessageAsync("You open repository!", "Let's start working with it",
+                             MessageDialogStyle.Affirmative);
 
+                    this.Closing += OnOpenRepository;
+                    this.Close();
+                }
+                catch (System.IO.DirectoryNotFoundException ex)
+                {
+                    MessageDialogResult result = await this.ShowMessageAsync("ERROR!", "Can't find initialization file: \n" + ex.Message,
+                             MessageDialogStyle.Affirmative);
+                }
+
+            }
         }
 
         private void OpenRemoteRepositoryButton_Click(object sender, RoutedEventArgs e)

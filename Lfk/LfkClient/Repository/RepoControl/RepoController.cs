@@ -23,7 +23,6 @@ namespace LfkClient.Repository.RepoControl
 
             // TODO: Проверка ответа сервера
             //ServerConnector.Create(data);
-
             FileSystem.Path = repo.Path;
 
             FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
@@ -42,6 +41,25 @@ namespace LfkClient.Repository.RepoControl
             Serialization.Json.JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
 
             Repository.GetInstance().RepoAgent.InitializeRepoAgent();
+        }
+
+        /// <summary>
+        /// Открывает каталог содержащий репозиторий 
+        /// </summary>
+        public void OpenLocal(string path)
+        {
+            FileSystem.Path = path;
+            Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+            Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+            try
+            {
+                LocalRepository repo = Serialization.Json.JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                //Если файла не существует то обрабатывается исключение и дальше выбрасывается с информацией о том что не найден файл инициализации
+                throw;
+            }
         }
     }
 }
