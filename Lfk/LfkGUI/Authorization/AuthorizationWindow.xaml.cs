@@ -13,9 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LfkClient.Authorization;
 using LfkClient.Models.User;
-
+using System.ComponentModel.DataAnnotations;
 using MahApps.Metro.Controls;
 using LfkGUI.RepositoryManagement;
+using LfkGUI.Utility.Validation;
 
 namespace LfkGUI.Authorization
 {
@@ -26,7 +27,6 @@ namespace LfkGUI.Authorization
     {
         public AuthorizationWindow()
         {
-
             InitializeComponent();
             AuthorizationFrame.Content = Resources["WelcomeTextBlock"];
         }
@@ -44,23 +44,30 @@ namespace LfkGUI.Authorization
             LoginPage loginPage = AuthorizationFrame.Content as LoginPage;
             if (loginPage != null)
             {
-                bool rc = Authorizator.TryLogin(new LoginUser()
+                LoginUser loginUser = new LoginUser()
                 {
-                    username = loginPage.LoginUsernameTextBox.Text,
-                    password = loginPage.LoginPasswordTextBox.Password
-                });
+                    Email = loginPage.LoginEmailTextBox.Text,
+                    Password = loginPage.LoginPasswordTextBox.Password
+                };
 
-                if (rc)
+                if (!EmailValidation.IsValid(loginPage.LoginEmailTextBox.Text))
                 {
-                    App.Current.Resources["AppUser"] = new User();
-                 
-                    this.Closing += OnSuccessAuthorization;
-                    this.Close();
+                  
                 }
-                else
-                {
-                    MessageBox.Show("Неверный ввод!");
-                }
+
+
+
+                //if (rc)
+                //{
+                //    App.Current.Resources["AppUser"] = new User();
+
+                //    this.Closing += OnSuccessAuthorization;
+                //    this.Close();
+                //}
+                //else
+                //{
+                //    MessageBox.Show("Неверный ввод!");
+                //}
 
             }
         }
@@ -71,7 +78,6 @@ namespace LfkGUI.Authorization
 
             if (registrationPage != null)
             {
-
                 bool rc = Authorizator.TrySignup(new SignupUser()
                 {
                     Name = registrationPage.SignupNameTextBox.Text,

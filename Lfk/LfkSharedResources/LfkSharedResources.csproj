@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LfkClient">
+      <HintPath>..\LfkClient\bin\Debug\LfkClient.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Packages\Newtonsoft\Newtonsoft.Json.dll</HintPath>
     </Reference>
