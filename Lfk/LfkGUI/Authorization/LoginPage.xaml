@@ -16,11 +16,15 @@
             <StackPanel  DockPanel.Dock="Bottom" Orientation="Vertical"  VerticalAlignment="Stretch">
                 <DockPanel Width="300" LastChildFill="False" HorizontalAlignment="Center" >
                     <Label DockPanel.Dock="Left" Content="{DynamicResource EmailString}" FontWeight="Bold"/>
-                    <TextBox DockPanel.Dock="Right"  Width="200" x:Name="LoginUsernameTextBox" TabIndex="0"/>
+                    <TextBox DockPanel.Dock="Right"  Width="200" 
+                             x:Name="LoginEmailTextBox" Foreground="{DynamicResource MaterialDesignBody}"
+                             TabIndex="0" >
+                    </TextBox>
                 </DockPanel>
                 <DockPanel Width="300" LastChildFill="False" HorizontalAlignment="Center" >
                     <Label DockPanel.Dock="Left"  Content="{DynamicResource PasswordString}" FontWeight="Bold"/>
-                    <PasswordBox  DockPanel.Dock="Right" Width="200" x:Name="LoginPasswordTextBox" MaxLength="24" TabIndex="1"/>
+                    <PasswordBox  DockPanel.Dock="Right" Width="200" x:Name="LoginPasswordTextBox" 
+                                  Foreground="{DynamicResource MaterialDesignBody}" MaxLength="24" TabIndex="1"/>
                 </DockPanel>
 
             </StackPanel>

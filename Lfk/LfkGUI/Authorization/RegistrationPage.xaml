@@ -17,22 +17,26 @@
             <StackPanel  DockPanel.Dock="Bottom" Orientation="Vertical"  VerticalAlignment="Stretch">
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
                     <Label DockPanel.Dock="Left" Content="{DynamicResource NameString}" FontWeight="Bold"/>
-                    <TextBox DockPanel.Dock="Right"  Width="200" x:Name="SignupNameTextBox"/>
+                    <TextBox DockPanel.Dock="Right"  Width="200" x:Name="SignupNameTextBox"
+                             Foreground="{DynamicResource MaterialDesignBody}"/>
                 </DockPanel>
                 
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
                     <Label DockPanel.Dock="Left"  Content="{DynamicResource EmailString}" FontWeight="Bold"/>
-                    <TextBox  DockPanel.Dock="Right" Width="200" x:Name="SignupEmailTextBox" MaxLength="24"/>
+                    <TextBox  DockPanel.Dock="Right" Width="200" x:Name="SignupEmailTextBox" MaxLength="24"
+                              Foreground="{DynamicResource MaterialDesignBody}"/>
                 </DockPanel>
                 
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
                     <Label DockPanel.Dock="Left" Content="{DynamicResource PasswordString}" FontWeight="Bold"/>
-                    <PasswordBox DockPanel.Dock="Right"  Width="200" x:Name="SignupPasswordTextBox"/>
+                    <PasswordBox DockPanel.Dock="Right"  Width="200" x:Name="SignupPasswordTextBox"
+                                 Foreground="{DynamicResource MaterialDesignBody}"/>
                 </DockPanel>
 
                 <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
                     <Label DockPanel.Dock="Left"  Content="{DynamicResource PasswordConfirmString}" FontWeight="Bold"/>
-                    <PasswordBox  DockPanel.Dock="Right" Width="200" x:Name="SignupConfirmPasswordTextBox" MaxLength="24"/>
+                    <PasswordBox  DockPanel.Dock="Right" Width="200" x:Name="SignupConfirmPasswordTextBox" MaxLength="24"
+                                  Foreground="{DynamicResource MaterialDesignBody}"/>
                 </DockPanel>
 
             </StackPanel>
