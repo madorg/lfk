@@ -9,6 +9,8 @@ using LfkSharedResources.Networking;
 using LfkServer.Client.Handlers;
 using System.IO;
 using LfkSharedResources.Networking.NetworkDiagnostics;
+using LfkSharedResources.Models.Repository;
+using LfkSharedResources.Serialization.Json;
 
 namespace LfkServer.Client
 {
@@ -33,14 +35,15 @@ namespace LfkServer.Client
 
             NetworkPackage package = await requestHandler.HandleRequest(client);
 
-            // Обработка запроса
+            LocalRepository lp = JsonDeserializer.DeserializeObject<LocalRepository>(package.Data.ToString());
+
+
             byte[] responseData = NetworkPackageController.ConvertDataToBytes(default(NetworkPackageDestinations), null, new NetworkOperationInfo() {
-                Code = NetworkStatusCodes.Fail,
+                Code = NetworkStatusCodes.Ok,
                 Message = "Все равно хороший ответ!!!"
             });
 
             ResponseHandler.HandleResponse(stream, responseData);
-
         }
     }
 }

@@ -7,7 +7,8 @@ using System.IO;
 using System.Net.Sockets;
 using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkSharedResources.Networking;
-using LfkClient.Serialization.Json;
+using LfkSharedResources.Serialization.Json;
+
 namespace LfkClient.ServerConnection.Handlers
 {
     class CreateHandler

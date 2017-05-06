@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using LfkClient.FileSystemControl;
-using LfkClient.Serialization.Json;
-using LfkClient.Models;
+using LfkSharedResources.Serialization.Json;
+using LfkSharedResources.Models;
 
 namespace LfkClient.Repository.RepoAgent
 {
@@ -33,34 +33,17 @@ namespace LfkClient.Repository.RepoAgent
 
             deserializedIncludedFile.AddRange(included);
             JsonSerializer.SerializeObjectToFile(deserializedIncludedFile, FileSystemPaths.LfkIncludedFile);
-
-            List<File> deserializedFilesInfo =
-                JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
-
-            foreach (string includedFile in deserializedIncludedFile)
-            {
-                if (!deserializedFilesInfo.Select(fileInfo => fileInfo.Filename).Contains(includedFile))
-                {
-                    deserializedFilesInfo.Add(new File() { Id = Guid.NewGuid(), Filename = includedFile });
-                }
-            }
-
-            JsonSerializer.SerializeObjectToFile(deserializedFilesInfo, FileSystemPaths.LfkFilesFile);
         }
 
         public void HandleAdd(IEnumerable<string> added)
         {
-            List<File> deserializedFilesInfo =
-                JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
-
             foreach (string fileName in added)
             {
                 Guid id = Guid.NewGuid();
                 string hash = FileSystem.ReadFileContent(fileName);
-                Guid fileId = deserializedFilesInfo.First(fileInfo => fileInfo.Filename == fileName).Id;
                 Guid indexId = currentIndexId;
 
-                RepoObject blob = new RepoObject() { Id = id, Hash = hash, FileId = fileId, IndexId = indexId };
+                RepoObject blob = new RepoObject() { Id = id, Hash = hash, IndexId = indexId };
                 string serizalizedBlob = JsonSerializer.SerializeObject(blob);
 
                 string blobFileName = id.ToString();
@@ -147,17 +130,13 @@ namespace LfkClient.Repository.RepoAgent
         public void HandleUninclude(IEnumerable<string> unincluded)
         {
             List<string> included = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
-            List<File> filesInfo =
-                JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
 
             foreach (string unincludedItem in unincluded)
             {
                 included.Remove(unincludedItem);
-                filesInfo.RemoveAll(fileInfo => fileInfo.Filename == unincludedItem);
             }
 
             JsonSerializer.SerializeObjectToFile(included, FileSystemPaths.LfkIncludedFile);
-            JsonSerializer.SerializeObjectToFile(filesInfo, FileSystemPaths.LfkFilesFile);
         }
 
         /// <summary>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LfkClient.Models.User
+namespace LfkSharedResources.Models.User
 {
     /// <summary>
     /// Модель экземпляра конкретного пользователя

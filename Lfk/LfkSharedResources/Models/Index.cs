@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LfkClient.Models
+namespace LfkSharedResources.Models
 {
     public class Index
     {

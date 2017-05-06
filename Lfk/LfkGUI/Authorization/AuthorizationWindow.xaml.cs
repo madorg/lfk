@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LfkClient.Authorization;
-using LfkClient.Models.User;
+using LfkSharedResources.Models.User;
 using System.ComponentModel.DataAnnotations;
 using MahApps.Metro.Controls;
 using LfkGUI.RepositoryManagement;

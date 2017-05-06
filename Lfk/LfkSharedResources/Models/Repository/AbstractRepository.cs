@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LfkClient.Models.Repository
+namespace LfkSharedResources.Models.Repository
 {
     /// <summary>
     /// Модель потенциально возможного репозиторияы

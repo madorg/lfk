@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace LfkSharedResources.Serialization.Json
 {
-    class JsonDeserializer
+    public class JsonDeserializer
     {
         public static Func<string, string> ReadMethod { get; set; }
 

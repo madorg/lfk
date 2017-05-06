@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LfkClient.Models
+namespace LfkSharedResources.Models
 {
     public class Commit
     {

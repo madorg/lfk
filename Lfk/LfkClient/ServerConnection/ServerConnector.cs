@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using LfkSharedResources.Networking.NetworkDiagnostics;
+
 namespace LfkClient.ServerConnection
 { 
     /// <summary>

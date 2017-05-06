@@ -46,6 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Commit.cs" />
+    <Compile Include="Models\Index.cs" />
+    <Compile Include="Models\RepoObject.cs" />
+    <Compile Include="Models\Repository\AbstractRepository.cs" />
+    <Compile Include="Models\Repository\LocalRepository.cs" />
+    <Compile Include="Models\User\AbstractUser.cs" />
+    <Compile Include="Models\User\LoginUser.cs" />
+    <Compile Include="Models\User\SignupUser.cs" />
+    <Compile Include="Models\User\User.cs" />
     <Compile Include="Networking\NetworkActions\RepositoryNetworkActions.cs" />
     <Compile Include="Networking\NetworkActions\UserNetworkActions.cs" />
     <Compile Include="Networking\NetworkDiagnostics\NetworkOperationInfo.cs" />

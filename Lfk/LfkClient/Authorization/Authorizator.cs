@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LfkClient.Models.User;
-using LfkClient.Serialization.Json;
+using LfkSharedResources.Models.User;
+using LfkSharedResources.Serialization.Json;
 using LfkClient.ServerConnection;
 
 namespace LfkClient.Authorization

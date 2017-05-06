@@ -1,9 +1,11 @@
-﻿using LfkClient.Models.Repository;
+﻿using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkActions;
 using LfkClient.ServerConnection;
 using LfkSharedResources.Networking.NetworkDiagnostics;
+using LfkSharedResources.Serialization.Json;
+
 namespace LfkClient.Repository.RepoControl
 {
     /// <summary>
@@ -31,15 +33,14 @@ namespace LfkClient.Repository.RepoControl
                 FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
                 FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
 
-                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
                 FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
                 FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
                 FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
 
-                Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-                Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+                JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+                JsonSerializer.WriteMethod = FileSystem.WriteToFile;
 
-                Serialization.Json.JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
+                JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
 
                 Repository.GetInstance().RepoAgent.InitializeRepoAgent();
             }
@@ -56,11 +57,12 @@ namespace LfkClient.Repository.RepoControl
         public void OpenLocal(string path)
         {
             FileSystem.Path = path;
-            Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-            Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+
             try
             {
-                LocalRepository repo = Serialization.Json.JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+                LocalRepository repo = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {

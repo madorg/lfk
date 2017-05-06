@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using LfkClient.Repository.RepoAgent;
 using LfkClient.Repository.RepoControl;
-using LfkClient.Models.Repository;
+using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
-using LfkClient.Models;
+using LfkSharedResources.Models;
 
 namespace LfkClient.Repository
 {

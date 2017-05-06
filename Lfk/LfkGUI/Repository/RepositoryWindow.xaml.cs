@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Documents;
-using LfkClient.Models.User;
-using LfkClient.Models.Repository;
-using LfkClient.Models;
+using LfkSharedResources.Models.User;
+using LfkSharedResources.Models.Repository;
+using LfkSharedResources.Models;
 using MahApps.Metro.Controls;
 
 namespace LfkGUI.Repository
@@ -28,7 +28,7 @@ namespace LfkGUI.Repository
             InitializeComponent();
             App.Current.Resources["AppUser"] = new User();
 
-            string tempPath = @"D:\lfk_tests";
+            string tempPath = @"F:\lfk_tests";
             LfkClient.Repository.Repository.GetInstance().Init(new LocalRepository()
             {
                 Id = Guid.NewGuid(),

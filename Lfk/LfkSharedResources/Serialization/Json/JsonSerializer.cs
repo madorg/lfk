@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace LfkSharedResources.Serialization.Json
 {
-    class JsonSerializer
+    public class JsonSerializer
     {
         public static Action<string, string> WriteMethod { get; set; }
 

@@ -35,13 +35,13 @@ namespace LfkGUI.Repository
 
         private void SwitchCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            LfkClient.Models.Commit commit = HistoryListView.SelectedItem as LfkClient.Models.Commit;
+            LfkSharedResources.Models.Commit commit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
             LfkClient.Repository.Repository.GetInstance().Switch(commit);
         }
 
         private async void HistoryListView_Selected(object sender, RoutedEventArgs e)
         {
-            LfkClient.Models.Commit selectedCommit = HistoryListView.SelectedItem as LfkClient.Models.Commit;
+            LfkSharedResources.Models.Commit selectedCommit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
             ContentText.Text = "";
             foreach (var item in selectedCommit.Index.RepoObjectIdAndFileName)
             {
