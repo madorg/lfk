@@ -40,7 +40,6 @@ namespace LfkServer.Client
             });
 
             ResponseHandler.HandleResponse(stream, responseData);
-            client.Close();
 
         }
     }

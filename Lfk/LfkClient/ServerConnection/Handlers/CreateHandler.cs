@@ -7,6 +7,7 @@ using System.IO;
 using System.Net.Sockets;
 using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkSharedResources.Networking;
+using LfkClient.Serialization.Json;
 namespace LfkClient.ServerConnection.Handlers
 {
     class CreateHandler
@@ -26,8 +27,7 @@ namespace LfkClient.ServerConnection.Handlers
                 }
             }
             NetworkPackage np = NetworkPackageController.ConvertBytesToPackage(readedData);
-            NetworkOperationInfo info = np.Data as NetworkOperationInfo;
-            return info;
+            return JsonDeserializer.DeserializeObject<NetworkOperationInfo>(np.Data.ToString());
         }
     }
 }
