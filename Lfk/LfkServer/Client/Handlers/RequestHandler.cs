@@ -19,8 +19,7 @@ namespace LfkServer.Client.Handlers
             Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): начал обработку клиентского потока");
             // ------------------ END LOG ------------------ //
 
-            byte[] data;
-            data = new byte[client.Available];
+            byte[] data = new byte[client.Available];
             await client.GetStream().ReadAsync(data, 0, data.Length);
 
             NetworkPackage package = NetworkPackageController.ConvertBytesToPackage(data);

@@ -8,6 +8,7 @@ namespace LfkSharedResources.Networking
 {
     public enum NetworkPackageDestinations
     {
+        None,
         User,
         Repository
     }

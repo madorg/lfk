@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.Sockets;
 using LfkSharedResources.Networking;
 using LfkServer.Client.Handlers;
-using System.IO;
 using LfkSharedResources.Networking.NetworkDiagnostics;
-using LfkSharedResources.Models.Repository;
-using LfkSharedResources.Serialization.Json;
+using LfkServer.Repository;
+using LfkServer.User;
 
 namespace LfkServer.Client
 {
@@ -35,15 +29,26 @@ namespace LfkServer.Client
 
             NetworkPackage package = await requestHandler.HandleRequest(client);
 
-            LocalRepository lp = JsonDeserializer.DeserializeObject<LocalRepository>(package.Data.ToString());
+            NetworkOperationInfo operationInfo = null;
+            switch (package.Destination)
+            {
+                case NetworkPackageDestinations.User:
+                    operationInfo = UserController.HandleRequest(package.Action, package.Data);
+                    break;
 
+                case NetworkPackageDestinations.Repository:
+                    operationInfo = RepositoryController.HandleRequest(package.Action, package.Data);
+                    break;
 
-            byte[] responseData = NetworkPackageController.ConvertDataToBytes(default(NetworkPackageDestinations), null, new NetworkOperationInfo() {
-                Code = NetworkStatusCodes.Ok,
-                Message = "Все равно хороший ответ!!!"
-            });
+                default:
+                    break;
+            }
 
-            ResponseHandler.HandleResponse(stream, responseData);
+            await ResponseHandler.HandleResponse(client, operationInfo);
+
+            // ------------------ START LOG ------------------ //
+            Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): закончил свою работу с клиентским потоком");
+            // ------------------ END LOG ------------------ //
         }
     }
 }

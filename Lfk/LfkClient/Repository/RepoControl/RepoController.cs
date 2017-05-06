@@ -21,9 +21,8 @@ namespace LfkClient.Repository.RepoControl
             LocalRepository repo = abstractRepository as LocalRepository;
 
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
-
-            // TODO: Проверка ответа сервера
             NetworkOperationInfo responseInfo = ServerConnector.Create(data);
+
             if (responseInfo.Code == NetworkStatusCodes.Ok)
             {
                 FileSystem.Path = repo.Path;
