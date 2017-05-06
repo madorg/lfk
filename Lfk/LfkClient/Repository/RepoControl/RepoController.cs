@@ -3,7 +3,7 @@ using LfkClient.FileSystemControl;
 using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkActions;
 using LfkClient.ServerConnection;
-
+using LfkSharedResources.Networking.NetworkDiagnostics;
 namespace LfkClient.Repository.RepoControl
 {
     /// <summary>
@@ -18,29 +18,36 @@ namespace LfkClient.Repository.RepoControl
         {
             LocalRepository repo = abstractRepository as LocalRepository;
 
-            //NetworkPackageController npc = new NetworkPackageController();
-            //byte[] data = npc.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
 
             // TODO: Проверка ответа сервера
-            //ServerConnector.Create(data);
-            FileSystem.Path = repo.Path;
+            NetworkOperationInfo responseInfo = ServerConnector.Create(data);
+            if (responseInfo.Code == NetworkStatusCodes.Ok)
+            {
+                FileSystem.Path = repo.Path;
 
-            FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
+                FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
 
-            FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
-            FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
+                FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
+                FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
 
-            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
-            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
-            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
-            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
+                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
+                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
+                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
+                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
 
-            Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-            Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+                Serialization.Json.JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+                Serialization.Json.JsonSerializer.WriteMethod = FileSystem.WriteToFile;
 
-            Serialization.Json.JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
+                Serialization.Json.JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
 
-            Repository.GetInstance().RepoAgent.InitializeRepoAgent();
+                Repository.GetInstance().RepoAgent.InitializeRepoAgent();
+            }
+            else if(responseInfo.Code == NetworkStatusCodes.Fail)
+            {
+                //Очень опасно !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                throw new System.Exception(responseInfo.Message);
+            }
         }
 
         /// <summary>

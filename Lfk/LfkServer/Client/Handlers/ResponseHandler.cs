@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 namespace LfkServer.Client.Handlers
 {
     /// <summary>
@@ -11,6 +11,9 @@ namespace LfkServer.Client.Handlers
     /// </summary>
     class ResponseHandler
     {
-        
+        public static void HandleResponse(Stream stream,byte[] data)
+        {
+            stream.Write(data, 0, data.Length);
+        }
     }
 }

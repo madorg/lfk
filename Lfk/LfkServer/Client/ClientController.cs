@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using LfkSharedResources.Networking;
 using LfkServer.Client.Handlers;
 using System.IO;
+using LfkSharedResources.Networking.NetworkDiagnostics;
 
 namespace LfkServer.Client
 {
@@ -31,6 +32,15 @@ namespace LfkServer.Client
             // ------------------ END LOG ------------------ //
 
             NetworkPackage package = await requestHandler.HandleRequest(stream);
+
+            // Обработка запроса
+            byte[] responseData = NetworkPackageController.ConvertDataToBytes(default(NetworkPackageDestinations), null, new NetworkOperationInfo() {
+                Code = NetworkStatusCodes.Fail,
+                Message = "Все равно хороший ответ!!!"
+            });
+
+            ResponseHandler.HandleResponse(stream, responseData);
+
         }
     }
 }

@@ -19,15 +19,15 @@ namespace LfkServer.Client.Handlers
             Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): начал обработку клиентского потока");
             // ------------------ END LOG ------------------ //
 
-            byte[] dataLength = new byte[4];
-            await stream.ReadAsync(dataLength, 0, dataLength.Length);
-            int packageSize = BitConverter.ToInt32(dataLength, 0);
-            byte[] data = new byte[packageSize];
+            byte[] data;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                data = new byte[memoryStream.Length];
+                await memoryStream.ReadAsync(data, 0, data.Length);
+            }
 
-            await stream.ReadAsync(data, 0, packageSize);
-
-            NetworkPackageController packageController = new NetworkPackageController();
-            NetworkPackage package = packageController.ConvertBytesToPackage(data);
+            NetworkPackage package = NetworkPackageController.ConvertBytesToPackage(data);
 
             // ------------------ START LOG ------------------ //
             Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): закончил обработку клиентского потока");

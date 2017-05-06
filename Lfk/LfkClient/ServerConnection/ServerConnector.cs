@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-
+using LfkSharedResources.Networking.NetworkDiagnostics;
 namespace LfkClient.ServerConnection
 { 
     /// <summary>
@@ -15,15 +15,29 @@ namespace LfkClient.ServerConnection
     {
         private static TcpClient tcpClient = new TcpClient();
 
-        public static void Create(byte[] data)
+        public static NetworkOperationInfo Create(byte[] data)
         {
-            tcpClient.Connect("localhost", 4200);
-            tcpClient.GetStream().Write(data, 0, data.Length);
+            NetworkOperationInfo operationInfo = null;
+            operationInfo = Handlers.CreateHandler.Create(tcpClient, data);
+            return operationInfo;
         }
 
-        public static void Find(string data)
+        public static NetworkOperationInfo Read(byte[] data)
         {
+            NetworkOperationInfo operationInfo = null;
+            return operationInfo;
+        }
 
+        public static NetworkOperationInfo Update(byte[] data)
+        {
+            NetworkOperationInfo operationInfo = null;
+            return operationInfo;
+        }
+
+        public static NetworkOperationInfo Delete(byte[] data)
+        {
+            NetworkOperationInfo operationInfo = null;
+            return operationInfo;
         }
     }
 }

@@ -10,16 +10,14 @@ namespace LfkSharedResources.Networking
 {
     public class NetworkPackageController
     {
-        public byte[] ConvertDataToBytes(NetworkPackageDestinations destination, string action, object data)
+        public static byte[] ConvertDataToBytes(NetworkPackageDestinations destination, string action, object data)
         {
             NetworkPackage package = CreatePackage(destination, action, data);
             string serializedPackage = JsonSerializer.SerializeObject(package);
-            List<byte> bytes = Encoding.UTF8.GetBytes(serializedPackage).ToList();
-            bytes.InsertRange(0, BitConverter.GetBytes(bytes.Count));
-            return bytes.ToArray();
+            return Encoding.UTF8.GetBytes(serializedPackage);
         }
 
-        public NetworkPackage ConvertBytesToPackage(byte[] data)
+        public static NetworkPackage ConvertBytesToPackage(byte[] data)
         {
             string serializedPackage = Encoding.UTF8.GetString(data);
             Console.WriteLine(serializedPackage);
@@ -27,7 +25,7 @@ namespace LfkSharedResources.Networking
             return package;
         }
 
-        private NetworkPackage CreatePackage(NetworkPackageDestinations destination, string action, object data)
+        private static NetworkPackage CreatePackage(NetworkPackageDestinations destination, string action, object data)
         {
             NetworkPackage package = new NetworkPackage()
             {

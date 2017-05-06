@@ -45,9 +45,11 @@
   <ItemGroup>
     <Compile Include="Networking\NetworkActions\RepositoryNetworkActions.cs" />
     <Compile Include="Networking\NetworkActions\UserNetworkActions.cs" />
+    <Compile Include="Networking\NetworkDiagnostics\NetworkOperationInfo.cs" />
     <Compile Include="Networking\NetworkPackage.cs" />
     <Compile Include="Networking\NetworkPackageController.cs" />
     <Compile Include="Networking\NetworkPackageDestinations.cs" />
+    <Compile Include="Networking\NetworkDiagnostics\NetworkStatusCodes.cs" />
     <Compile Include="Networking\ServerInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\Json\JsonDeserializer.cs" />
