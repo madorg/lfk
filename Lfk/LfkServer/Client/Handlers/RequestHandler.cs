@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LfkSharedResources.Networking;
 using System.IO;
-
+using System.Net.Sockets;
 namespace LfkServer.Client.Handlers
 {
     /// <summary>
@@ -13,19 +13,15 @@ namespace LfkServer.Client.Handlers
     /// </summary>
     class RequestHandler
     {
-        public async Task<NetworkPackage> HandleRequest(Stream stream)
+        public async Task<NetworkPackage> HandleRequest(TcpClient client)
         {
             // ------------------ START LOG ------------------ //
             Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): начал обработку клиентского потока");
             // ------------------ END LOG ------------------ //
 
             byte[] data;
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                stream.CopyTo(memoryStream);
-                data = new byte[memoryStream.Length];
-                await memoryStream.ReadAsync(data, 0, data.Length);
-            }
+            data = new byte[client.Available];
+            await client.GetStream().ReadAsync(data, 0, data.Length);
 
             NetworkPackage package = NetworkPackageController.ConvertBytesToPackage(data);
 

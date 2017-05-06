@@ -25,13 +25,13 @@ namespace LfkServer.Client
 
         public async void HandleClient(TcpClient client)
         {
-            Stream stream = client.GetStream();
+            NetworkStream stream = client.GetStream();
 
             // ------------------ START LOG ------------------ //
             Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): принял клиентский поток");
             // ------------------ END LOG ------------------ //
 
-            NetworkPackage package = await requestHandler.HandleRequest(stream);
+            NetworkPackage package = await requestHandler.HandleRequest(client);
 
             // Обработка запроса
             byte[] responseData = NetworkPackageController.ConvertDataToBytes(default(NetworkPackageDestinations), null, new NetworkOperationInfo() {
@@ -40,6 +40,7 @@ namespace LfkServer.Client
             });
 
             ResponseHandler.HandleResponse(stream, responseData);
+            client.Close();
 
         }
     }

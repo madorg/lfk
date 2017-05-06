@@ -16,12 +16,18 @@ namespace LfkClient.ServerConnection.Handlers
             tcpClient.Connect(ServerInformation.Hostname, ServerInformation.Port);
             tcpClient.GetStream().Write(data, 0, data.Length);
             byte[] readedData = null;
-            using (MemoryStream memoryStream = new MemoryStream())
+            while (tcpClient.Connected)
             {
-                tcpClient.GetStream().CopyTo(memoryStream);
-                readedData = memoryStream.ToArray();
+                if (tcpClient.Available != 0)
+                {
+                    readedData = new byte[tcpClient.Available];
+                    tcpClient.GetStream().Read(readedData, 0, readedData.Length);
+                    break;
+                }
             }
-            return NetworkPackageController.ConvertBytesToPackage(readedData).Data as NetworkOperationInfo;
+            NetworkPackage np = NetworkPackageController.ConvertBytesToPackage(readedData);
+            NetworkOperationInfo info = np.Data as NetworkOperationInfo;
+            return info;
         }
     }
 }

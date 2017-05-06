@@ -42,7 +42,6 @@ namespace LfkServer
                 // ------------------ START LOG ------------------ //
                 Console.WriteLine("Server (поток " + Environment.CurrentManagedThreadId + "): принял клиента с ip = " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
                 // ------------------ END LOG ------------------ //
-
                 clientController.HandleClient(client);
 
                 // ------------------ START LOG ------------------ //
