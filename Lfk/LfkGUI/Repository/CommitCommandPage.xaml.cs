@@ -42,12 +42,7 @@ namespace LfkGUI.Repository
 
         private async void CommitButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(CommitMessageTextBox.Text)) { 
-                LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
-                UpdateChangedFilesListBox();
-                CommitMessageTextBox.Clear();
-            }
-            else if(LastChangedFilesListBox.Items.Count == 0)
+            if (LastChangedFilesListBox.Items.Count == 0)
             {
                 DockPanel modalDialog = App.Current.Resources["ModalDialogWithText"] as DockPanel;
                 (modalDialog.Children[0] as TextBlock).Text = "Error!";
@@ -55,7 +50,12 @@ namespace LfkGUI.Repository
                 DialogContent.Children.Add(modalDialog);
                 await DialogHost.Show(DialogContent);
                 DialogContent.Children.Remove(modalDialog);
-
+            }
+            else if (!string.IsNullOrWhiteSpace(CommitMessageTextBox.Text))
+            {
+                LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
+                UpdateChangedFilesListBox();
+                CommitMessageTextBox.Clear();
             }
             else
             {
