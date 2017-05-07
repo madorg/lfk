@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coding\HuffmanCoding\HuffmanTree.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\RepoObject.cs" />

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Serialization.Json;
 using LfkSharedResources.Models;
+using LfkSharedResources.Coding.HuffmanCoding;
 
 namespace LfkClient.Repository.RepoAgent
 {
@@ -40,16 +42,37 @@ namespace LfkClient.Repository.RepoAgent
             foreach (string fileName in added)
             {
                 Guid id = Guid.NewGuid();
+
                 string hash = FileSystem.ReadFileContent(fileName);
+
+                // -----
+
+                string addedFileContent = FileSystem.ReadFileContent(fileName);
+
+                HuffmanTree huffmanTree = new HuffmanTree();
+
+                huffmanTree.BuildHuffmanTree(addedFileContent);
+                byte[] encodedFileContent = huffmanTree.EncodeDataBasedOnHuffmanTree(addedFileContent);
+                byte[] encodedHuffmanTree = huffmanTree.EncodeHuffmanTree();
+
+                // -----
+
                 Guid indexId = currentIndexId;
 
-                RepoObject blob = new RepoObject() { Id = id, Hash = hash, IndexId = indexId };
+                RepoObject blob = new RepoObject() { Id = id, /*Hash = hash, */IndexId = indexId, ByteHash = encodedFileContent, HuffmanTree = encodedHuffmanTree };
                 string serizalizedBlob = JsonSerializer.SerializeObject(blob);
 
                 string blobFileName = id.ToString();
 
                 FileSystem.CreateFile(FileSystemPaths.LfkObjectsFolder + blobFileName);
                 FileSystem.WriteToFile(FileSystemPaths.LfkObjectsFolder + blobFileName, serizalizedBlob);
+
+                // -----
+
+                huffmanTree.DecodeHuffmanTree(encodedHuffmanTree);
+                string decodedFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(encodedFileContent);
+
+                // -----
 
                 Index deserializedIndex = JsonDeserializer.DeserializeObjectFromFile<Index>(FileSystemPaths.LfkIndexFile);
 
@@ -123,7 +146,10 @@ namespace LfkClient.Repository.RepoAgent
                 RepoObject oldBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(
                     FileSystemPaths.LfkObjectsFolder + idFileNamePair.Key.ToString());
 
-                FileSystem.WriteToFile(idFileNamePair.Value, oldBlob.Hash);
+                HuffmanTree huffmanTree = new HuffmanTree();
+                huffmanTree.DecodeHuffmanTree(oldBlob.HuffmanTree);
+                string decodedFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(oldBlob.ByteHash);
+                FileSystem.WriteToFile(idFileNamePair.Value, decodedFileContent);
             }
         }
 
@@ -255,7 +281,12 @@ namespace LfkClient.Repository.RepoAgent
                 {
                     Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
                     RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
-                    string previosFileContent = previosBlob.Hash;
+
+                    HuffmanTree huffmanTree = new HuffmanTree();
+                    huffmanTree.DecodeHuffmanTree(previosBlob.HuffmanTree);
+                    string previosFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(previosBlob.ByteHash);
+
+                    //string previosFileContent = previosBlob.Hash;
 
                     if (fileContent != previosFileContent)
                     {

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LfkSharedResources.Coding.HuffmanCoding
 {
@@ -33,6 +33,11 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             public HuffmanTreeNodeInfo Data { get; set; }
             public HuffmanTreeNode Left { set; get; }
             public HuffmanTreeNode Right { set; get; }
+        }
+
+        public HuffmanTree()
+        {
+            Nodes = new List<HuffmanTreeNode>();
         }
 
         /// <summary>
@@ -84,6 +89,85 @@ namespace LfkSharedResources.Coding.HuffmanCoding
 
                 Nodes.Insert(0, newNode);
             }
+        }
+
+        /// <summary>
+        /// Осуществляет кодировку указанной строки на основе дереве Хаффмана
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public byte[] EncodeDataBasedOnHuffmanTree(string source)
+        {
+            List<bool> encoded = new List<bool>();
+
+            Traverse(Nodes.First());
+
+            foreach (char symbol in source)
+            {
+                encoded.AddRange(Find(Nodes.First(), symbol).Data.Code);
+            }
+
+            BitArray encodedBits = new BitArray(encoded.ToArray());
+
+            byte[] encodedBytes = new byte[(encodedBits.Length / 8) + (encodedBits.Length % 8 == 0 ? 0 : 1)];
+            encodedBits.CopyTo(encodedBytes, 0);
+
+            return encodedBytes;
+        }
+
+        public string DecodeDataBasedOnHuffmanTree(byte[] encodedData)
+        {
+            HuffmanTreeNode currentNode = Nodes.First();
+            BitArray encodedBits = new BitArray(encodedData);
+            string decodedData = string.Empty;
+
+            foreach (bool bit in encodedBits)
+            {
+                if (bit)
+                {
+                    if (currentNode.Right != null)
+                    {
+                        currentNode = currentNode.Right;
+                    }
+                }
+                else
+                {
+                    if (currentNode.Left != null)
+                    {
+                        currentNode = currentNode.Left;
+                    }
+                }
+
+                if (currentNode.Left == null && currentNode.Right == null)
+                {
+                    decodedData += currentNode.Data.Symbol;
+                    currentNode = Nodes.First();
+                }
+            }
+
+            return decodedData;
+        }
+
+        /// <summary>
+        /// Осуществляет кодировку дерева Хаффмана в битовую последовательность
+        /// </summary>
+        /// <returns></returns>
+        public byte[] EncodeHuffmanTree()
+        {
+            StringBuilder encodedTree = new StringBuilder();
+            EncodeNode(Nodes.First(), ref encodedTree);
+            return Encoding.UTF8.GetBytes(encodedTree.ToString());
+        }
+
+        /// <summary>
+        /// Осуществляет декодировку дерева Хаффмана
+        /// </summary>
+        /// <param name="encodedHuffmanTree">Закодированное дерево Хаффмана</param>
+        public void DecodeHuffmanTree(byte[] encodedHuffmanTree)
+        {
+            string encodedHuffmanTreeInString = Encoding.UTF8.GetString(encodedHuffmanTree);
+            Nodes.Clear();
+            Nodes.Add(DecodeNode(ref encodedHuffmanTreeInString));
         }
 
         /// <summary>
@@ -140,6 +224,60 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             return null;
         }
 
+        private void EncodeNode(HuffmanTreeNode node, ref StringBuilder encodedTree)
+        {
+            if (node.Left == null && node.Right == null)
+            {
+                encodedTree.Append('1');
+                encodedTree.Append(node.Data.Symbol);
+            }
+            else
+            {
+                encodedTree.Append('0');
+                EncodeNode(node.Left, ref encodedTree);
+                EncodeNode(node.Right, ref encodedTree);
+            }
+        }
 
+        private HuffmanTreeNode DecodeNode(ref string encodedHuffmanTree)
+        {
+            if (encodedHuffmanTree != string.Empty)
+            {
+                char symbol = encodedHuffmanTree.First();
+                encodedHuffmanTree = encodedHuffmanTree.Remove(0, 1);
+
+                if (symbol == '1')
+                {
+                    symbol = encodedHuffmanTree.First();
+                    encodedHuffmanTree = encodedHuffmanTree.Remove(0, 1);
+                    return new HuffmanTreeNode()
+                    {
+                        Left = null,
+                        Right = null,
+                        Data = new HuffmanTreeNodeInfo()
+                        {
+                            Symbol = symbol
+                        }
+                    };
+                }
+                else
+                {
+                    HuffmanTreeNode leftNode = DecodeNode(ref encodedHuffmanTree);
+                    HuffmanTreeNode rightNode = DecodeNode(ref encodedHuffmanTree);
+
+                    return new HuffmanTreeNode()
+                    {
+                        Left = leftNode,
+                        Right = rightNode,
+                        Data = new HuffmanTreeNodeInfo()
+                        {
+                            Symbol = '\0'
+                        }
+                    };
+                }
+            }
+
+            return null;
+        }
     }
 }
