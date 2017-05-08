@@ -8,7 +8,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
 {
     public class HuffmanTree
     {
-        public List<HuffmanTreeNode> Nodes { get; private set; }
+        private List<HuffmanTreeNode> nodes;
 
         /// <summary>
         /// Информация об узле дерева Хаффмана, хранит символ, число вхождений и кодировку
@@ -35,76 +35,45 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             public HuffmanTreeNode Right { set; get; }
         }
 
-        public HuffmanTree()
+        private HuffmanTree()
         {
-            Nodes = new List<HuffmanTreeNode>();
+            nodes = new List<HuffmanTreeNode>();
         }
 
         /// <summary>
-        /// Строит дерево Хаффмана на основе указанной строки
+        /// Создаёт и строит дерево Хаффмана на основе исходного текста
         /// </summary>
-        /// <param name="input">Входная строка, на основе которой будет строится дерево Хаффмана</param>
-        public void BuildHuffmanTree(string input)
+        /// <param name="source">Исходный текст, на основе которого строится дерево Хаффмана</param>
+        public HuffmanTree(string source) : this()
         {
-            Nodes = new List<HuffmanTreeNode>();
-
-            foreach (char symbol in input)
-            {
-                if (Nodes.Any(item => item.Data.Symbol == symbol))
-                {
-                    Nodes.First(item => item.Data.Symbol == symbol).Data.Occurrences++;
-                }
-                else
-                {
-                    Nodes.Add(new HuffmanTreeNode()
-                    {
-                        Data = new HuffmanTreeNodeInfo()
-                        {
-                            Symbol = symbol,
-                            Occurrences = 1
-                        }
-                    });
-                }
-            }
-
-            while (Nodes.Count > 1)
-            {
-                Nodes = Nodes.OrderBy(item => item.Data.Occurrences).ToList();
-
-                HuffmanTreeNode tmpNodeLeft = Nodes[0];
-                HuffmanTreeNode tmpNodeRight = Nodes[1];
-
-                Nodes.RemoveRange(0, 2);
-
-                HuffmanTreeNode newNode = new HuffmanTreeNode()
-                {
-                    Left = tmpNodeLeft,
-                    Right = tmpNodeRight,
-                    Data = new HuffmanTreeNodeInfo()
-                    {
-                        Symbol = '\0',
-                        Occurrences = tmpNodeLeft.Data.Occurrences + tmpNodeRight.Data.Occurrences
-                    }
-                };
-
-                Nodes.Insert(0, newNode);
-            }
+            BuildHuffmanTree(source);
         }
+
+        /// <summary>
+        /// Создаёт и строит дерево Хаффмана на основе закодированного дерева Хаффмана
+        /// </summary>
+        /// <param name="source">Закодированное дерево Хаффмана</param>
+        public HuffmanTree(byte[] source) : this()
+        {
+            DecodeHuffmanTree(source);
+        }
+
+        #region API
 
         /// <summary>
         /// Осуществляет кодировку указанной строки на основе дереве Хаффмана
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">Строка, для которой будет осуществляться кодировка</param>
         /// <returns></returns>
-        public byte[] EncodeDataBasedOnHuffmanTree(string source)
+        public byte[] EncodeData(string source)
         {
             List<bool> encoded = new List<bool>();
 
-            Traverse(Nodes.First());
+            Traverse(nodes.First());
 
             foreach (char symbol in source)
             {
-                encoded.AddRange(Find(Nodes.First(), symbol).Data.Code);
+                encoded.AddRange(Find(nodes.First(), symbol).Data.Code);
             }
 
             BitArray encodedBits = new BitArray(encoded.ToArray());
@@ -122,9 +91,13 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             return encodedBytes;
         }
 
-        public string DecodeDataBasedOnHuffmanTree(byte[] encodedData)
+        /// <summary>
+        /// Осуществляет декодировку указанных данных на основе дерева Хаффмана
+        /// </summary>
+        /// <param name="encodedData">Данные для декодировки</param>
+        public string DecodeData(byte[] encodedData)
         {
-            HuffmanTreeNode currentNode = Nodes.First();
+            HuffmanTreeNode currentNode = nodes.First();
 
             byte[] sizeInBytes = new byte[4];
             for (int i = 0; i < 4; i++)
@@ -156,7 +129,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
                 if (currentNode.Left == null && currentNode.Right == null)
                 {
                     decodedData += currentNode.Data.Symbol;
-                    currentNode = Nodes.First();
+                    currentNode = nodes.First();
                 }
             }
 
@@ -167,12 +140,64 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         /// <summary>
         /// Осуществляет кодировку дерева Хаффмана в битовую последовательность
         /// </summary>
-        /// <returns></returns>
         public byte[] EncodeHuffmanTree()
         {
             StringBuilder encodedTree = new StringBuilder();
-            EncodeNode(Nodes.First(), ref encodedTree);
+            EncodeNode(nodes.First(), ref encodedTree);
             return Encoding.UTF8.GetBytes(encodedTree.ToString());
+        }        
+
+        #endregion
+
+        #region Служебные (приватные) методы
+
+        /// <summary>
+        /// Строит дерево Хаффмана на основе указанной строки
+        /// </summary>
+        /// <param name="input">Входная строка, на основе которой будет строится дерево Хаффмана</param>
+        private void BuildHuffmanTree(string input)
+        {
+            foreach (char symbol in input)
+            {
+                if (nodes.Any(item => item.Data.Symbol == symbol))
+                {
+                    nodes.First(item => item.Data.Symbol == symbol).Data.Occurrences++;
+                }
+                else
+                {
+                    nodes.Add(new HuffmanTreeNode()
+                    {
+                        Data = new HuffmanTreeNodeInfo()
+                        {
+                            Symbol = symbol,
+                            Occurrences = 1
+                        }
+                    });
+                }
+            }
+
+            while (nodes.Count > 1)
+            {
+                nodes = nodes.OrderBy(item => item.Data.Occurrences).ToList();
+
+                HuffmanTreeNode tmpNodeLeft = nodes[0];
+                HuffmanTreeNode tmpNodeRight = nodes[1];
+
+                nodes.RemoveRange(0, 2);
+
+                HuffmanTreeNode newNode = new HuffmanTreeNode()
+                {
+                    Left = tmpNodeLeft,
+                    Right = tmpNodeRight,
+                    Data = new HuffmanTreeNodeInfo()
+                    {
+                        Symbol = '\0',
+                        Occurrences = tmpNodeLeft.Data.Occurrences + tmpNodeRight.Data.Occurrences
+                    }
+                };
+
+                nodes.Insert(0, newNode);
+            }
         }
 
         /// <summary>
@@ -182,14 +207,10 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         public void DecodeHuffmanTree(byte[] encodedHuffmanTree)
         {
             string encodedHuffmanTreeInString = Encoding.UTF8.GetString(encodedHuffmanTree);
-            Nodes.Clear();
-            Nodes.Add(DecodeNode(ref encodedHuffmanTreeInString));
+            nodes.Clear();
+            nodes.Add(DecodeNode(ref encodedHuffmanTreeInString));
         }
 
-        /// <summary>
-        /// Осуществляет проход по дереву Хаффмана с целью задать каждому листу свой код
-        /// </summary>
-        /// <param name="node">Узел, относительно которого строится кодировка</param>
         private void Traverse(HuffmanTreeNode node)
         {
             if (node != null)
@@ -210,11 +231,6 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             }
         }
 
-        /// <summary>
-        /// Осуществляет поиск узла в дереве Хаффмана, содержащего указанный символ
-        /// </summary>
-        /// <param name="node">Узел, относительно которого осуществляется поиск</param>
-        /// <param name="symbol">Искомый символ</param>
         private HuffmanTreeNode Find(HuffmanTreeNode node, char symbol)
         {
             if (node != null)
@@ -295,5 +311,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
 
             return null;
         }
+
+        #endregion
     }
 }

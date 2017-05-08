@@ -46,15 +46,13 @@ namespace LfkClient.Repository.RepoAgent
 
                 string addedFileContent = FileSystem.ReadFileContent(fileName);
 
-                HuffmanTree huffmanTree = new HuffmanTree();
-
-                huffmanTree.BuildHuffmanTree(addedFileContent);
-                byte[] encodedFileContent = huffmanTree.EncodeDataBasedOnHuffmanTree(addedFileContent);
+                HuffmanTree huffmanTree = new HuffmanTree(addedFileContent);
+                byte[] encodedFileContent = huffmanTree.EncodeData(addedFileContent);
                 byte[] encodedHuffmanTree = huffmanTree.EncodeHuffmanTree();
 
                 Guid indexId = currentIndexId;
 
-                RepoObject blob = new RepoObject() { Id = id, IndexId = indexId, ByteHash = encodedFileContent, HuffmanTree = encodedHuffmanTree };
+                RepoObject blob = new RepoObject() { Id = id, IndexId = indexId, Hash = encodedFileContent, HuffmanTree = encodedHuffmanTree };
                 string serizalizedBlob = JsonSerializer.SerializeObject(blob);
 
                 string blobFileName = id.ToString();
@@ -134,9 +132,8 @@ namespace LfkClient.Repository.RepoAgent
                 RepoObject oldBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(
                     FileSystemPaths.LfkObjectsFolder + idFileNamePair.Key.ToString());
 
-                HuffmanTree huffmanTree = new HuffmanTree();
-                huffmanTree.DecodeHuffmanTree(oldBlob.HuffmanTree);
-                string decodedFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(oldBlob.ByteHash);
+                HuffmanTree huffmanTree = new HuffmanTree(oldBlob.HuffmanTree);
+                string decodedFileContent = huffmanTree.DecodeData(oldBlob.Hash);
                 FileSystem.WriteToFile(idFileNamePair.Value, decodedFileContent);
             }
         }
@@ -178,6 +175,7 @@ namespace LfkClient.Repository.RepoAgent
                         deserializedIndex.RepoObjectIdAndFileName.Add(previousBlobInfo.Key, previousBlobInfo.Value);
                     }
                 }
+
                 JsonSerializer.SerializeObjectToFile(deserializedIndex, FileSystemPaths.LfkIndexFile);
             }
         }
@@ -260,72 +258,23 @@ namespace LfkClient.Repository.RepoAgent
         {
             List<string> changedFiles = new List<string>();
             List<string> includedFiles = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
-
-            HuffmanTree huffmanTree = new HuffmanTree();
+            
             foreach (string includedFile in includedFiles)
             {
                 string fileContent = FileSystem.ReadFileContent(includedFile);
-                huffmanTree.BuildHuffmanTree(fileContent);
-                byte[] b = huffmanTree.EncodeDataBasedOnHuffmanTree(fileContent);
 
                 if (index.RepoObjectIdAndFileName.ContainsValue(includedFile))
                 {
                     Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
                     RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
 
-                    string s1 = Encoding.UTF8.GetString(b);
-                    string s2 = Encoding.UTF8.GetString(previosBlob.ByteHash);
+                    HuffmanTree huffmanTree = new HuffmanTree(previosBlob.HuffmanTree);
+                    string previousFileContent = huffmanTree.DecodeData(previosBlob.Hash);
 
-                    if (s1 != s2)
+                    if (fileContent != previousFileContent)
                     {
                         changedFiles.Add(includedFile);
                     }
-
-                    //if (!b.SequenceEqual(previosBlob.ByteHash))
-                    //{
-                    //    changedFiles.Add(includedFile);
-                    //}
-
-                    //huffmanTree.DecodeHuffmanTree(previosBlob.HuffmanTree);
-                    //string previosFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(previosBlob.ByteHash);
-
-                    //string previosFileContent = previosBlob.Hash;
-
-                    // --- КОСТЫЛЬ ИСПРАВИТЬ ---
-
-                    //byte[] bytes1 = Encoding.UTF8.GetBytes(fileContent);
-                    //byte[] bytes2 = Encoding.UTF8.GetBytes(previosFileContent);
-
-                    //BitArray ba1 = new BitArray(bytes1);
-                    //BitArray ba2 = new BitArray(bytes2);
-
-                    //bool rc = true;
-
-                    //if (!bytes1.SequenceEqual(bytes2))
-                    //{
-                    //    rc = false;
-                    //}
-
-                    //for (int i = 0; i < (bytes1.Length > bytes2.Length ? bytes1.Length : bytes2.Length); i++)
-                    //{
-                    //    if (bytes1[i] != bytes2[i])
-                    //    {
-                    //        rc = false;
-                    //        break;
-                    //    }
-                    //}
-
-                    //if (!rc)
-                    //{
-                    //    changedFiles.Add(includedFile);
-                    //}
-
-                    // --- ----
-
-                    //if (fileContent != previosFileContent)
-                    //{
-                    //    changedFiles.Add(includedFile);
-                    //}
                 }
                 else
                 {
