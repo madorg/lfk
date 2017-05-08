@@ -265,37 +265,60 @@ namespace LfkClient.Repository.RepoAgent
             foreach (string includedFile in includedFiles)
             {
                 string fileContent = FileSystem.ReadFileContent(includedFile);
+                huffmanTree.BuildHuffmanTree(fileContent);
+                byte[] b = huffmanTree.EncodeDataBasedOnHuffmanTree(fileContent);
 
                 if (index.RepoObjectIdAndFileName.ContainsValue(includedFile))
                 {
                     Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
                     RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
 
-                    
-                    huffmanTree.DecodeHuffmanTree(previosBlob.HuffmanTree);
-                    string previosFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(previosBlob.ByteHash);
+                    string s1 = Encoding.UTF8.GetString(b);
+                    string s2 = Encoding.UTF8.GetString(previosBlob.ByteHash);
+
+                    if (s1 != s2)
+                    {
+                        changedFiles.Add(includedFile);
+                    }
+
+                    //if (!b.SequenceEqual(previosBlob.ByteHash))
+                    //{
+                    //    changedFiles.Add(includedFile);
+                    //}
+
+                    //huffmanTree.DecodeHuffmanTree(previosBlob.HuffmanTree);
+                    //string previosFileContent = huffmanTree.DecodeDataBasedOnHuffmanTree(previosBlob.ByteHash);
 
                     //string previosFileContent = previosBlob.Hash;
 
                     // --- КОСТЫЛЬ ИСПРАВИТЬ ---
 
-                    byte[] bytes1 = Encoding.UTF8.GetBytes(fileContent);
-                    byte[] bytes2 = Encoding.UTF8.GetBytes(previosFileContent);
+                    //byte[] bytes1 = Encoding.UTF8.GetBytes(fileContent);
+                    //byte[] bytes2 = Encoding.UTF8.GetBytes(previosFileContent);
 
-                    bool rc = true;
-                    for (int i = 0; i < bytes1.Length; i++)
-                    {
-                        if (bytes1[i] != bytes2[i])
-                        {
-                            rc = false;
-                            break;
-                        }
-                    }
+                    //BitArray ba1 = new BitArray(bytes1);
+                    //BitArray ba2 = new BitArray(bytes2);
 
-                    if (!rc)
-                    {
-                        changedFiles.Add(includedFile);
-                    }
+                    //bool rc = true;
+
+                    //if (!bytes1.SequenceEqual(bytes2))
+                    //{
+                    //    rc = false;
+                    //}
+
+                    //for (int i = 0; i < (bytes1.Length > bytes2.Length ? bytes1.Length : bytes2.Length); i++)
+                    //{
+                    //    if (bytes1[i] != bytes2[i])
+                    //    {
+                    //        rc = false;
+                    //        break;
+                    //    }
+                    //}
+
+                    //if (!rc)
+                    //{
+                    //    changedFiles.Add(includedFile);
+                    //}
 
                     // --- ----
 

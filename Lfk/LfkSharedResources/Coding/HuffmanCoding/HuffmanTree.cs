@@ -109,8 +109,15 @@ namespace LfkSharedResources.Coding.HuffmanCoding
 
             BitArray encodedBits = new BitArray(encoded.ToArray());
 
-            byte[] encodedBytes = new byte[(encodedBits.Length / 8) + (encodedBits.Length % 8 == 0 ? 0 : 1)];
-            encodedBits.CopyTo(encodedBytes, 0);
+            byte[] size = new byte[4];
+            size = BitConverter.GetBytes(source.Length);
+
+            byte[] encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];
+            for (int i = 0; i < 4; i++)
+            {
+                encodedBytes[i] = size[i];
+            }
+            encodedBits.CopyTo(encodedBytes, 4);
 
             return encodedBytes;
         }
@@ -118,12 +125,20 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         public string DecodeDataBasedOnHuffmanTree(byte[] encodedData)
         {
             HuffmanTreeNode currentNode = Nodes.First();
+
+            byte[] sizeInBytes = new byte[4];
+            for (int i = 0; i < 4; i++)
+            {
+                sizeInBytes[i] = encodedData[i];
+            }
+            int size = BitConverter.ToInt32(sizeInBytes, 0);
+
             BitArray encodedBits = new BitArray(encodedData);
             string decodedData = string.Empty;
 
-            foreach (bool bit in encodedBits)
+            for (int i = 32; i < encodedBits.Length; i++)
             {
-                if (bit)
+                if (encodedBits[i])
                 {
                     if (currentNode.Right != null)
                     {
@@ -145,6 +160,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
                 }
             }
 
+            decodedData = decodedData.Substring(0, size);
             return decodedData;
         }
 
