@@ -2,12 +2,15 @@
 using LfkSharedResources.Models.Repository;
 using LfkSharedResources.Serialization.Json;
 using LfkSharedResources.Networking.NetworkDiagnostics;
+using LfkSharedResources.Networking.NetworkPackages;
+using System.Data.SqlClient;
+using System;
 
 namespace LfkServer.Repository
 {
     class RepositoryController
     {
-        public static NetworkOperationInfo HandleRequest(string action, object data)
+        public static ResponseNetworkPackage HandleRequest(string action, object data)
         {
             LocalRepository localRepository = JsonDeserializer.DeserializeObject<LocalRepository>(data.ToString());
 
@@ -33,11 +36,14 @@ namespace LfkServer.Repository
                     break;
             }
 
-            NetworkOperationInfo operationInfo = new NetworkOperationInfo()
-            {
-                Code = NetworkStatusCodes.Ok,
-                Message = "Это сообщение для пользователя"
-            };
+            ResponseNetworkPackage operationInfo = new ResponseNetworkPackage();
+            //{
+            //    OperationInfo = new NetworkOperationInfo()
+            //    {
+            //        Code = NetworkStatusCodes.Ok,
+            //        Message = "Это сообщение для пользователя"
+            //    }
+            //};
 
             return operationInfo;
         }

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using LfkSharedResources.Networking;
 using LfkServer.Client;
+using System.Diagnostics;
+using System.IO;
 
 // TODO: убрать консоль-логгирование, обсудить и разработать адекватную файловую систему логгирования
 
@@ -58,8 +60,18 @@ namespace LfkServer
 
         public static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_DomainUnload;
+            Process.GetCurrentProcess().Exited += CurrentDomain_DomainUnload;
+            //AppDomain.CurrentDomain.
+
             Server server = new Server();
             server.Start();
+        }
+
+        private static void CurrentDomain_DomainUnload(object sender, EventArgs e)
+        {
+            File.WriteAllText(@"F:\err.txt", "qwe");
         }
     }
 }

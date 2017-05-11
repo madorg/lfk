@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using LfkSharedResources.Networking;
 using System.IO;
 using System.Net.Sockets;
+using LfkSharedResources.Networking.NetworkPackages;
+
 namespace LfkServer.Client.Handlers
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace LfkServer.Client.Handlers
     /// </summary>
     class RequestHandler
     {
-        public async Task<NetworkPackage> HandleRequest(TcpClient client)
+        public async Task<RequestNetworkPackage> HandleRequest(TcpClient client)
         {
             // ------------------ START LOG ------------------ //
             Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): начал обработку клиентского потока");
@@ -22,7 +24,7 @@ namespace LfkServer.Client.Handlers
             byte[] data = new byte[client.Available];
             await client.GetStream().ReadAsync(data, 0, data.Length);
 
-            NetworkPackage package = NetworkPackageController.ConvertBytesToPackage(data);
+            RequestNetworkPackage package = NetworkPackageController.ConvertBytesToPackage<RequestNetworkPackage>(data);
 
             // ------------------ START LOG ------------------ //
             Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): закончил обработку клиентского потока");

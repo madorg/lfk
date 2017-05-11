@@ -4,6 +4,7 @@ using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkActions;
 using LfkClient.ServerConnection;
 using LfkSharedResources.Networking.NetworkDiagnostics;
+using LfkSharedResources.Networking.NetworkPackages;
 using LfkSharedResources.Serialization.Json;
 
 namespace LfkClient.Repository.RepoControl
@@ -21,9 +22,9 @@ namespace LfkClient.Repository.RepoControl
             LocalRepository repo = abstractRepository as LocalRepository;
 
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
-            NetworkOperationInfo responseInfo = ServerConnector.Create(data);
+            ResponseNetworkPackage responsePackage = ServerConnector.Create(data);
 
-            if (responseInfo.Code == NetworkStatusCodes.Ok)
+            if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
                 FileSystem.Path = repo.Path;
 
@@ -43,10 +44,10 @@ namespace LfkClient.Repository.RepoControl
 
                 Repository.GetInstance().RepoAgent.InitializeRepoAgent();
             }
-            else if(responseInfo.Code == NetworkStatusCodes.Fail)
+            else if(responsePackage.OperationInfo.Code == NetworkStatusCodes.Fail)
             {
                 //Очень опасно !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                throw new System.Exception(responseInfo.Message);
+                throw new System.Exception(responsePackage.OperationInfo.Message);
             }
         }
 

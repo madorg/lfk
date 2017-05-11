@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using LfkExceptions;
 
 namespace LfkSharedResources.Serialization.Json
 {
@@ -21,7 +22,19 @@ namespace LfkSharedResources.Serialization.Json
         {
             string result = string.Empty;
 
-            result = JsonConvert.SerializeObject(obj, Formatting.Indented);
+            if (obj == null)
+            {
+                throw new JsonSerializerNullArgumentException("Невозможна сериализация объектов, указывающих на null");
+            }
+
+            try
+            {
+                result = JsonConvert.SerializeObject(obj, Formatting.Indented);
+            }
+            catch (JsonException)
+            {
+                throw new JsonSerializerInvalidDataException("Данные не подлежат сериализации");
+            }
 
             return result;
         }

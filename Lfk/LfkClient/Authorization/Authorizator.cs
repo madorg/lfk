@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using LfkSharedResources.Models.User;
 using LfkSharedResources.Serialization.Json;
 using LfkClient.ServerConnection;
+using LfkSharedResources.Networking;
+using LfkSharedResources.Networking.NetworkPackages;
+using LfkSharedResources.Networking.NetworkActions;
+using LfkSharedResources.Networking.NetworkDiagnostics;
+using LfkExceptions;
 
 namespace LfkClient.Authorization
 {
@@ -14,18 +19,45 @@ namespace LfkClient.Authorization
     /// </summary>
     public class Authorizator
     {
-        public static bool TryLogin(AbstractUser abstractUser)
+        public static bool TryLogin(AbstractUser abstractUser, out string message)
         {
-            string data = JsonSerializer.SerializeObject(abstractUser);
+            bool rc = false;
 
-            return true;
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.User, UserNetworkActions.Login, abstractUser);
+            ResponseNetworkPackage responsePackage = ServerConnector.Read(data);
+
+            if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
+            {
+                rc = true;
+            }
+
+            message = responsePackage.OperationInfo.Message;
+
+            return rc;
         }
 
-        public static bool TrySignup(AbstractUser abstractUser)
+        public static bool TrySignup(AbstractUser abstractUser, out string message)
         {
-            string data = JsonSerializer.SerializeObject(abstractUser);
+            bool rc = false;
 
-            return true;
+            try
+            {
+                byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.User, UserNetworkActions.Signup, abstractUser);
+                ResponseNetworkPackage responsePackage = ServerConnector.Create(data);
+
+                if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
+                {
+                    rc = true;
+                }
+
+                message = responsePackage.OperationInfo.Message;
+            }
+            catch (JsonSerializerException jse)
+            {
+                message = "Возникла ошибка при формировании сетевого пакета. Пожалуйста, проверьте правильность введёных данных и попробуйте ещё раз!";
+            }
+
+            return rc;
         }
     }
 }

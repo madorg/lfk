@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using LfkSharedResources.Networking.NetworkPackages;
 using LfkSharedResources.Networking.NetworkDiagnostics;
 
 namespace LfkClient.ServerConnection
@@ -14,19 +15,29 @@ namespace LfkClient.ServerConnection
     /// </summary>
     class ServerConnector
     {
-        private static TcpClient tcpClient = new TcpClient();
-
-        public static NetworkOperationInfo Create(byte[] data)
+        public static ResponseNetworkPackage Create(byte[] data)
         {
-            NetworkOperationInfo operationInfo = null;
-            operationInfo = Handlers.CreateHandler.Create(tcpClient, data);
-            return operationInfo;
+            ResponseNetworkPackage responsePackage = null;
+
+            using (TcpClient tcpClient = new TcpClient())
+            {
+                tcpClient.ReceiveTimeout = 1000;
+                responsePackage = Handlers.CreateHandler.Create(tcpClient, data);
+            }
+            
+            return responsePackage;
         }
 
-        public static NetworkOperationInfo Read(byte[] data)
+        public static ResponseNetworkPackage Read(byte[] data)
         {
-            NetworkOperationInfo operationInfo = null;
-            return operationInfo;
+            ResponseNetworkPackage responsePackage = null;
+
+            using (TcpClient tcpClient = new TcpClient())
+            {
+                responsePackage = Handlers.ReadHandler.Read(tcpClient, data);
+            }
+
+            return responsePackage;
         }
 
         public static NetworkOperationInfo Update(byte[] data)

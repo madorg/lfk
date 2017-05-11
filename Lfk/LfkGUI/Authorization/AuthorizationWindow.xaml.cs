@@ -17,6 +17,8 @@ using System.ComponentModel.DataAnnotations;
 using MahApps.Metro.Controls;
 using LfkGUI.RepositoryManagement;
 using LfkGUI.Utility.Validation;
+using LfkSharedResources.Serialization.Json;
+using LfkClient.FileSystemControl;
 
 namespace LfkGUI.Authorization
 {
@@ -50,11 +52,20 @@ namespace LfkGUI.Authorization
                     Password = loginPage.LoginPasswordTextBox.Password
                 };
 
-                if (!EmailValidation.IsValid(loginPage.LoginEmailTextBox.Text))
-                {
-                  
-                }
+                JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+                JsonSerializer.WriteMethod = FileSystem.WriteToFile;
 
+                string message;
+                if (Authorizator.TryLogin(loginUser, out message))
+                {
+                    MessageBox.Show(message);
+                    this.Closing += OnSuccessAuthorization;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show(message);
+                }
 
 
                 //if (rc)
@@ -78,22 +89,24 @@ namespace LfkGUI.Authorization
 
             if (registrationPage != null)
             {
+                string message;
                 bool rc = Authorizator.TrySignup(new SignupUser()
                 {
                     Name = registrationPage.SignupNameTextBox.Text,
                     Email = registrationPage.SignupEmailTextBox.Text,
                     Password = registrationPage.SignupPasswordTextBox.Password
-                });
+                }, out message);
 
                 if (rc)
                 {
+                    MessageBox.Show(message);
                     App.Current.Resources["AppUser"] = new User();
                     this.Closing += OnSuccessAuthorization;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Неверный ввод!");
+                    MessageBox.Show(message);
                 }
             }
         }

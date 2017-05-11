@@ -6,7 +6,7 @@
              xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
-             StartupUri="Repository/RepositoryWindow.xaml">
+             StartupUri="Authorization/AuthorizationWindow.xaml">
     
     <Application.Resources>
         <ResourceDictionary>

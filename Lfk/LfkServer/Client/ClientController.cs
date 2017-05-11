@@ -5,6 +5,7 @@ using LfkServer.Client.Handlers;
 using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkServer.Repository;
 using LfkServer.User;
+using LfkSharedResources.Networking.NetworkPackages;
 
 namespace LfkServer.Client
 {
@@ -21,30 +22,28 @@ namespace LfkServer.Client
 
         public async void HandleClient(TcpClient client)
         {
-            NetworkStream stream = client.GetStream();
-
             // ------------------ START LOG ------------------ //
             Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): принял клиентский поток");
             // ------------------ END LOG ------------------ //
 
-            NetworkPackage package = await requestHandler.HandleRequest(client);
+            RequestNetworkPackage requestPackage = await requestHandler.HandleRequest(client);
 
-            NetworkOperationInfo operationInfo = null;
-            switch (package.Destination)
+            ResponseNetworkPackage responsePackage = null;
+            switch (requestPackage.Destination)
             {
                 case NetworkPackageDestinations.User:
-                    operationInfo = UserController.HandleRequest(package.Action, package.Data);
+                    responsePackage = UserController.HandleRequest(requestPackage.Action, requestPackage.Data);
                     break;
 
                 case NetworkPackageDestinations.Repository:
-                    operationInfo = RepositoryController.HandleRequest(package.Action, package.Data);
+                    responsePackage = RepositoryController.HandleRequest(requestPackage.Action, requestPackage.Data);
                     break;
 
                 default:
                     break;
             }
 
-            await ResponseHandler.HandleResponse(client, operationInfo);
+            await ResponseHandler.HandleResponse(client, responsePackage);
 
             // ------------------ START LOG ------------------ //
             Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): закончил свою работу с клиентским потоком");

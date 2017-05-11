@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using LfkSharedResources.Networking.NetworkActions;
 using LfkSharedResources.Serialization.Json;
+using LfkSharedResources.Networking.NetworkPackages;
+using LfkSharedResources.Networking.NetworkDiagnostics;
 
 namespace LfkSharedResources.Networking
 {
@@ -12,25 +14,53 @@ namespace LfkSharedResources.Networking
     {
         public static byte[] ConvertDataToBytes(NetworkPackageDestinations destination, string action, object data)
         {
-            NetworkPackage package = CreatePackage(destination, action, data);
+            string serializedPackage = string.Empty;
+
+            try
+            {
+                NetworkPackage package = CreateRequestPackage(destination, action, data);
+                serializedPackage = JsonSerializer.SerializeObject(package);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return Encoding.UTF8.GetBytes(serializedPackage);
+        }
+
+        public static byte[] ConvertDataToBytes(NetworkOperationInfo operationInfo, object data)
+        {
+            NetworkPackage package = CreateResponsePackage(operationInfo, data);
             string serializedPackage = JsonSerializer.SerializeObject(package);
             return Encoding.UTF8.GetBytes(serializedPackage);
         }
 
-        public static NetworkPackage ConvertBytesToPackage(byte[] data)
+        public static T ConvertBytesToPackage<T>(byte[] data)
         {
             string serializedPackage = Encoding.UTF8.GetString(data);
             Console.WriteLine(serializedPackage);
-            NetworkPackage package = JsonDeserializer.DeserializeObject<NetworkPackage>(serializedPackage);
+            T package = JsonDeserializer.DeserializeObject<T>(serializedPackage);
             return package;
         }
 
-        private static NetworkPackage CreatePackage(NetworkPackageDestinations destination, string action, object data)
+        private static NetworkPackage CreateRequestPackage(NetworkPackageDestinations destination, string action, object data)
         {
-            NetworkPackage package = new NetworkPackage()
+            NetworkPackage package = new RequestNetworkPackage()
             {
                 Destination = destination,
                 Action = action,
+                Data = data
+            };
+
+            return package;
+        }
+
+        private static NetworkPackage CreateResponsePackage(NetworkOperationInfo operationInfo, object data)
+        {
+            NetworkPackage package = new ResponseNetworkPackage()
+            {
+                OperationInfo = operationInfo,
                 Data = data
             };
 
