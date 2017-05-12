@@ -10,6 +10,7 @@ using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkPackages;
 using LfkSharedResources.Serialization.Json;
 using LfkExceptions;
+using LfkSharedResources.Extensions;
 
 namespace LfkClient.ServerConnection.Handlers
 {
@@ -25,7 +26,7 @@ namespace LfkClient.ServerConnection.Handlers
                 tcpClient.GetStream().Write(data, 0, data.Length);
 
                 byte[] readedData = null;
-                while (tcpClient.Connected)
+                while (tcpClient.IsConnected())
                 {
                     if (tcpClient.Available != 0)
                     {

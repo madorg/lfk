@@ -50,10 +50,13 @@
     <Compile Include="Exceptions\ClientExceptions\ClientException.cs" />
     <Compile Include="Exceptions\ClientExceptions\ServerExceptions\ServerConnectionException.cs" />
     <Compile Include="Exceptions\LfkException.cs" />
+    <Compile Include="Exceptions\ServerExceptions\DuplicateEmailException.cs" />
+    <Compile Include="Exceptions\ServerExceptions\ServerException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\LfkSharedResourcesException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerInvalidDataException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerNullArgumentException.cs" />
+    <Compile Include="Extensions\NetworkExtensions.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\RepoObject.cs" />
@@ -79,7 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\GUIExceptions\" />
-    <Folder Include="Exceptions\ServerExceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

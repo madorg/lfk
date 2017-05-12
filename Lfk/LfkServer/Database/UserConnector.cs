@@ -26,11 +26,11 @@ namespace LfkServer.Database
                     guid = Guid.Empty;
                 }
             }
-            catch (SqlException sqlex)
+            catch (SqlException sqlex) when (sqlex.Number == 2601)
             {
                 Console.WriteLine("Исключение: " + sqlex.Message);
                 guid = Guid.Empty;
-                throw;
+                //throw;
             }
 
             this.CloseConnection();
