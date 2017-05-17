@@ -1,4 +1,5 @@
-﻿using LfkSharedResources.Models.Repository;
+﻿using System.Collections.Generic;
+using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkActions;
@@ -6,6 +7,7 @@ using LfkClient.ServerConnection;
 using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkSharedResources.Networking.NetworkPackages;
 using LfkSharedResources.Serialization.Json;
+using LfkSharedResources.Models;
 
 namespace LfkClient.Repository.RepoControl
 {
@@ -17,12 +19,18 @@ namespace LfkClient.Repository.RepoControl
         /// <summary>
         /// Инициализирует системный каталог lfk необходимыми файлами и папками
         /// </summary>
-        public void Init(AbstractRepository abstractRepository)
+        public bool Init(AbstractRepository abstractRepository, out string message)
         {
             LocalRepository repo = abstractRepository as LocalRepository;
+            ServerRepository serverRepository = new ServerRepository()
+            {
+                LocalRepository = repo,
+                Commits = new List<Commit>(),
+                Objects = new List<RepoObject>()
+            };
 
-            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, repo);
-            ResponseNetworkPackage responsePackage = ServerConnector.Create(data);
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, serverRepository);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
@@ -44,11 +52,9 @@ namespace LfkClient.Repository.RepoControl
 
                 Repository.GetInstance().RepoAgent.InitializeRepoAgent();
             }
-            else if(responsePackage.OperationInfo.Code == NetworkStatusCodes.Fail)
-            {
-                //Очень опасно !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                throw new System.Exception(responsePackage.OperationInfo.Message);
-            }
+
+            message = responsePackage.OperationInfo.Message;
+            return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
         }
 
         /// <summary>
@@ -69,6 +75,30 @@ namespace LfkClient.Repository.RepoControl
                 //Если файла не существует то обрабатывается исключение и дальше выбрасывается с информацией о том что не найден файл инициализации
                 throw;
             }
+        }
+
+        public void Upload()
+        {
+            LocalRepository localRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+            List<Commit> commits = Repository.GetInstance().History();
+            List<RepoObject> objects = new List<RepoObject>();
+            foreach (string filename in FileSystem.ReadWorkingDirectoryFiles(FileTypes.SystemObjects))
+            {
+                RepoObject repoObject = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(filename);
+                objects.Add(repoObject);
+            }
+
+            ServerRepository serverRepository = new ServerRepository()
+            {
+                LocalRepository = localRepository,
+                Commits = commits,
+                Objects = objects
+            };
+
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, serverRepository);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+
+            System.Windows.Forms.MessageBox.Show(responsePackage.OperationInfo.Message);
         }
     }
 }

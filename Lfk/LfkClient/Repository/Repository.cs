@@ -37,9 +37,9 @@ namespace LfkClient.Repository
             return repository;
         }
 
-        public void Init(AbstractRepository abstractRepository)
+        public bool TryInit(AbstractRepository abstractRepository, out string message)
         {
-            RepoController.Init(abstractRepository);
+            return RepoController.Init(abstractRepository, out message);
         }
 
         public void OpenLocal(string path)
@@ -65,6 +65,11 @@ namespace LfkClient.Repository
         public List<Commit> History()
         {
             return RepoAgent.HandleHistory();
+        }
+
+        public void Upload()
+        {
+            RepoController.Upload();
         }
 
         public void Switch(Commit commit)

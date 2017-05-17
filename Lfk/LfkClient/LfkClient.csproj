@@ -53,10 +53,7 @@
     <Compile Include="FileSystemControl\FileSystem.cs" />
     <Compile Include="FileSystemControl\FileSystemPaths.cs" />
     <Compile Include="FileSystemControl\FileTypes.cs" />
-    <Compile Include="ServerConnection\Handlers\CreateHandler.cs" />
-    <Compile Include="ServerConnection\Handlers\DeleteHandler.cs" />
-    <Compile Include="ServerConnection\Handlers\ReadHandler.cs" />
-    <Compile Include="ServerConnection\Handlers\UpdateHandler.cs" />
+    <Compile Include="ServerConnection\DataSender.cs" />
     <Compile Include="ServerConnection\ServerConnector.cs" />
     <Compile Include="Validation\AuthorizationValidator.cs" />
     <Compile Include="Authorization\Authorizator.cs" />

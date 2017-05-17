@@ -67,6 +67,11 @@
             writer.WriteToFile(Path + fileName, data);
         }
 
+        public static void CreateFileWithFolders(string filename)
+        {
+            writer.CreateFileWithFolders(Path + filename);
+        }
+
         #endregion
 
         #region Методы чтения

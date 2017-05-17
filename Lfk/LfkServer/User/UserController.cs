@@ -7,6 +7,7 @@ using LfkSharedResources.Networking.NetworkPackages;
 using LfkServer.Database;
 using System.Data.SqlClient;
 using System;
+using LfkExceptions;
 
 namespace LfkServer.User
 {
@@ -15,32 +16,49 @@ namespace LfkServer.User
         public static ResponseNetworkPackage HandleRequest(string action, object data)
         {
             ResponseNetworkPackage responsePackage = new ResponseNetworkPackage();
+            UserConnector userConnector = new UserConnector();
 
             Guid guid = Guid.Empty;
-            NetworkOperationInfo operationInfo = new NetworkOperationInfo();
+            NetworkOperationInfo operationInfo = null;
 
-            switch (action)
+            try
             {
-                case UserNetworkActions.Login:
-                    LoginUser loginUser = JsonDeserializer.DeserializeObject<LoginUser>(data.ToString());
-                    break;
+                switch (action)
+                {
+                    case UserNetworkActions.Login:
+                        LoginUser loginUser = JsonDeserializer.DeserializeObject<LoginUser>(data.ToString());
+                        guid = userConnector.Read(loginUser);
+                        break;
 
-                case UserNetworkActions.Signup:
-                    SignupUser signupUser = JsonDeserializer.DeserializeObject<SignupUser>(data.ToString());
-                    UserConnector userConnector = new UserConnector();
-                    guid = userConnector.Create(signupUser);
-                    operationInfo.Code = NetworkStatusCodes.Ok;
-                    operationInfo.Message = "Вы успешно зарегистрировались!";
-                    break;
+                    case UserNetworkActions.Signup:
+                        SignupUser signupUser = JsonDeserializer.DeserializeObject<SignupUser>(data.ToString());       
+                        guid = userConnector.Create(signupUser);
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+
+                operationInfo = new NetworkOperationInfo()
+                {
+                    Code = NetworkStatusCodes.Ok,
+                    Message = "OK"
+                };
             }
-
-
-            // finaly {
-            //responsePackage = NetworkPackageController.ConvertDataToBytes(operationInfo, guid);
-            // }
+            catch (ServerException serverException)
+            {
+                operationInfo = new NetworkOperationInfo()
+                {
+                    Code = NetworkStatusCodes.Fail,
+                    Message = serverException.Message
+                };
+            }
+            finally
+            {
+                responsePackage = 
+                    NetworkPackageController.ConvertBytesToPackage<ResponseNetworkPackage>(
+                        NetworkPackageController.ConvertDataToBytes(operationInfo, guid));
+            }
 
             return responsePackage;
         }

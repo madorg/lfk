@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections.ObjectModel;
 using MahApps.Metro.Controls;
+using LfkSharedResources.Models.User;
+
 namespace LfkGUI
 {
     /// <summary>
@@ -14,6 +16,6 @@ namespace LfkGUI
     /// </summary>
     public partial class App : Application
     {
-
+        public static User User { get; set; }
     }
 }

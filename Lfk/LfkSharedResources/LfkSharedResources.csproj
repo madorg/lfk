@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,17 +52,25 @@
     <Compile Include="Exceptions\ClientExceptions\ServerExceptions\ServerConnectionException.cs" />
     <Compile Include="Exceptions\LfkException.cs" />
     <Compile Include="Exceptions\ServerExceptions\DuplicateEmailException.cs" />
+    <Compile Include="Exceptions\ServerExceptions\DuplicateRepositoryTitleException.cs" />
     <Compile Include="Exceptions\ServerExceptions\ServerException.cs" />
+    <Compile Include="Exceptions\ServerExceptions\WrongUserCredentialsException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\LfkSharedResourcesException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerInvalidDataException.cs" />
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerNullArgumentException.cs" />
     <Compile Include="Extensions\NetworkExtensions.cs" />
     <Compile Include="Models\Commit.cs" />
+    <Compile Include="Models\DatabaseModels\Commit.cs" />
+    <Compile Include="Models\DatabaseModels\File.cs" />
+    <Compile Include="Models\DatabaseModels\RepoObject.cs" />
+    <Compile Include="Models\DatabaseModels\Repository.cs" />
+    <Compile Include="Models\DatabaseModels\User.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\RepoObject.cs" />
     <Compile Include="Models\Repository\AbstractRepository.cs" />
     <Compile Include="Models\Repository\LocalRepository.cs" />
+    <Compile Include="Models\Repository\ServerRepository.cs" />
     <Compile Include="Models\User\AbstractUser.cs" />
     <Compile Include="Models\User\LoginUser.cs" />
     <Compile Include="Models\User\SignupUser.cs" />

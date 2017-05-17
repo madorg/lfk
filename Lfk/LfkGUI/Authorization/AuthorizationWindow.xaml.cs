@@ -52,13 +52,21 @@ namespace LfkGUI.Authorization
                     Password = loginPage.LoginPasswordTextBox.Password
                 };
 
-                JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-                JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+                //JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+                //JsonSerializer.WriteMethod = FileSystem.WriteToFile;
 
                 string message;
-                if (Authorizator.TryLogin(loginUser, out message))
+                Guid userId;
+
+                if (Authorizator.TryLogin(loginUser, out message, out userId))
                 {
                     MessageBox.Show(message);
+
+                    App.User = new User()
+                    {
+                        Id = userId
+                    };
+
                     this.Closing += OnSuccessAuthorization;
                     this.Close();
                 }
@@ -66,20 +74,6 @@ namespace LfkGUI.Authorization
                 {
                     MessageBox.Show(message);
                 }
-
-
-                //if (rc)
-                //{
-                //    App.Current.Resources["AppUser"] = new User();
-
-                //    this.Closing += OnSuccessAuthorization;
-                //    this.Close();
-                //}
-                //else
-                //{
-                //    MessageBox.Show("Неверный ввод!");
-                //}
-
             }
         }
 
@@ -90,23 +84,35 @@ namespace LfkGUI.Authorization
             if (registrationPage != null)
             {
                 string message;
+                Guid userId;
+
                 bool rc = Authorizator.TrySignup(new SignupUser()
                 {
                     Name = registrationPage.SignupNameTextBox.Text,
                     Email = registrationPage.SignupEmailTextBox.Text,
                     Password = registrationPage.SignupPasswordTextBox.Password
-                }, out message);
+                }, out message, out userId);
 
                 if (rc)
                 {
                     MessageBox.Show(message);
-                    App.Current.Resources["AppUser"] = new User();
+
+                    App.User = new User()
+                    {
+                        Id = userId
+
+                        // ОСТАЮТСЯ ПУСТЫЕ ПОЛЯ (???)
+                    };
+
                     this.Closing += OnSuccessAuthorization;
                     this.Close();
                 }
                 else
                 {
                     MessageBox.Show(message);
+
+                    AuthorizationFrame.Content = new RegistrationPage();
+                    SetActionButton("SignupButton");
                 }
             }
         }

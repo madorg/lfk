@@ -28,14 +28,14 @@ namespace LfkGUI.Repository
             InitializeComponent();
             App.Current.Resources["AppUser"] = new User();
 
-            string tempPath = @"F:\lfk_tests";
-            LfkClient.Repository.Repository.GetInstance().Init(new LocalRepository()
-            {
-                Id = Guid.NewGuid(),
-                Title = tempPath.Split('\\').Last(),
-                UserId = (App.Current.Resources["AppUser"] as User).Id,
-                Path = tempPath
-            });
+            //string tempPath = @"F:\lfk_tests";
+            //LfkClient.Repository.Repository.GetInstance().TryInit(new LocalRepository()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    Title = tempPath.Split('\\').Last(),
+            //    UserId = (App.Current.Resources["AppUser"] as User).Id,
+            //    Path = tempPath
+            //});
         }
         public RepositoryWindow(string s)
         {
@@ -67,5 +67,9 @@ namespace LfkGUI.Repository
             this.Close();
         }
 
+        private void UploadCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            LfkClient.Repository.Repository.GetInstance().Upload();
+        }
     }
 }

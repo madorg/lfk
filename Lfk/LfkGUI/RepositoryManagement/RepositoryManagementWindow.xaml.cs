@@ -89,36 +89,35 @@ namespace LfkGUI.RepositoryManagement
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.RootFolder = Environment.SpecialFolder.MyComputer;
 
-
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                try
-                {
-                    LfkClient.Repository.Repository repo = LfkClient.Repository.Repository.GetInstance();
-                    repo.Init(new LocalRepository()
-                    {
-                        Id = Guid.NewGuid(),
-                        Title = fbd.SelectedPath.Split('\\').Last(),
-                        UserId = (App.Current.Resources["AppUser"] as User).Id,
-                        Path = fbd.SelectedPath
-                    });
-                    MessageDialogResult result = await this.ShowMessageAsync("New repository!", "Do you want to open it?",
-                             MessageDialogStyle.AffirmativeAndNegative);
+                string message;
 
-                    if(result == MessageDialogResult.Affirmative)
+                LfkClient.Repository.Repository repo = LfkClient.Repository.Repository.GetInstance();
+                bool created = repo.TryInit(new LocalRepository()
+                {
+                    Id = Guid.NewGuid(),
+                    Title = fbd.SelectedPath.Split('\\').Last(),
+                    UserId = App.User.Id,
+                    Path = fbd.SelectedPath
+                }, out message);
+
+                if (created)
+                {
+                    MessageDialogResult result = await this.ShowMessageAsync("New repository!", "Do you want to open it?",
+                         MessageDialogStyle.AffirmativeAndNegative);
+
+                    if (result == MessageDialogResult.Affirmative)
                     {
                         this.Closing += OnOpenRepository;
                         this.Close();
                     }
-
                 }
-                catch
+                else
                 {
-                    throw;
+                    MessageBox.Show(message, "Ошибка при создании репозитория", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
             }
-
         }
     }
 }

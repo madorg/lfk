@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 
 namespace LfkClient.FileSystemControl
 {
@@ -52,6 +53,31 @@ namespace LfkClient.FileSystemControl
             if (File.Exists(fileName))
             {
                 File.Delete(fileName);
+            }
+        }
+
+        public void CreateFileWithFolders(string filename)
+        {
+            try
+            {
+                CreateFile(filename);
+            }
+            catch (DirectoryNotFoundException dnfe)
+            {
+                List<string> paths = new List<string>(filename.Split('\\'));
+                paths.RemoveAt(paths.Count - 1);
+
+                string fullPath = string.Empty;
+                foreach (string folder in paths)
+                {
+                    fullPath += folder + '\\';
+                    if (!Directory.Exists(fullPath))
+                    {
+                        Directory.CreateDirectory(fullPath);
+                    }
+                }
+
+                CreateFile(filename);
             }
         }
     }

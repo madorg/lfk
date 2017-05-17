@@ -8,6 +8,5 @@ namespace LfkSharedResources.Models
         public Index Index { get; set; }
         public DateTime Date { get; set; }
         public string Comment { get; set; }
-        public Commit Parent { get; set; }
     }
 }

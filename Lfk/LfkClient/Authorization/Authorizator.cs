@@ -19,16 +19,18 @@ namespace LfkClient.Authorization
     /// </summary>
     public class Authorizator
     {
-        public static bool TryLogin(AbstractUser abstractUser, out string message)
+        public static bool TryLogin(AbstractUser abstractUser, out string message, out Guid userId)
         {
             bool rc = false;
+            userId = Guid.Empty;
 
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.User, UserNetworkActions.Login, abstractUser);
-            ResponseNetworkPackage responsePackage = ServerConnector.Read(data);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
                 rc = true;
+                userId = Guid.Parse(responsePackage.Data.ToString());
             }
 
             message = responsePackage.OperationInfo.Message;
@@ -36,18 +38,20 @@ namespace LfkClient.Authorization
             return rc;
         }
 
-        public static bool TrySignup(AbstractUser abstractUser, out string message)
+        public static bool TrySignup(AbstractUser abstractUser, out string message, out Guid userId)
         {
             bool rc = false;
+            userId = Guid.Empty;
 
             try
             {
                 byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.User, UserNetworkActions.Signup, abstractUser);
-                ResponseNetworkPackage responsePackage = ServerConnector.Create(data);
+                ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
 
                 if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
                 {
                     rc = true;
+                    userId = Guid.Parse(responsePackage.Data.ToString());
                 }
 
                 message = responsePackage.OperationInfo.Message;

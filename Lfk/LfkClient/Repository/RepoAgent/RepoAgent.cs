@@ -90,8 +90,7 @@ namespace LfkClient.Repository.RepoAgent
                 Id = Guid.NewGuid(),
                 Index = index,
                 Date = DateTime.Now,
-                Comment = message,
-                Parent = null
+                Comment = message
             };
 
             JsonSerializer.SerializeObjectToFile(commit, FileSystemPaths.LfkCommitsFolder + commit.Id.ToString());
@@ -116,11 +115,6 @@ namespace LfkClient.Repository.RepoAgent
             return commits;
         }
 
-        public void HandleUpload()
-        {
-
-        }
-
         /// <summary>
         /// Обеспечивает переключение состояний файлов в соответствии с указанным коммитом
         /// </summary>
@@ -134,6 +128,9 @@ namespace LfkClient.Repository.RepoAgent
 
                 HuffmanTree huffmanTree = new HuffmanTree(oldBlob.HuffmanTree);
                 string decodedFileContent = huffmanTree.DecodeData(oldBlob.Hash);
+                //FileSystem.CreateFile(idFileNamePair.Value);
+                
+                FileSystem.CreateFileWithFolders(idFileNamePair.Value);
                 FileSystem.WriteToFile(idFileNamePair.Value, decodedFileContent);
             }
         }

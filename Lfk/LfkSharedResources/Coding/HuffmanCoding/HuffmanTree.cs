@@ -69,7 +69,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         {
             List<bool> encoded = new List<bool>();
 
-            Traverse(nodes.First());
+            Traverse(nodes.First());  // DANGROUORS!!
 
             foreach (char symbol in source)
             {

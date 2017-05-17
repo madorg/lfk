@@ -36,6 +36,8 @@
                     Style="{StaticResource MaterialDesignFlatButton}" Click="CommitCommandButton_Click" />
             <Button x:Name="HistoryCommandButton"   Content="{DynamicResource HistoryString}"
                     Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
+            <Button x:Name="UploadCommandButton"   Content="Upload"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="UploadCommandButton_Click"/>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="1" x:Name="NavigationStackPanel" Margin="5">
             <Button x:Name="NavigateToRepositoryManagementWindowButton" Content="{DynamicResource BackToRepositoryManagementString}"

@@ -15,41 +15,16 @@ namespace LfkClient.ServerConnection
     /// </summary>
     class ServerConnector
     {
-        public static ResponseNetworkPackage Create(byte[] data)
+        public static ResponseNetworkPackage Send(byte[] data)
         {
             ResponseNetworkPackage responsePackage = null;
 
             using (TcpClient tcpClient = new TcpClient())
             {
-                tcpClient.ReceiveTimeout = 1000;
-                responsePackage = Handlers.CreateHandler.Create(tcpClient, data);
-            }
-            
-            return responsePackage;
-        }
-
-        public static ResponseNetworkPackage Read(byte[] data)
-        {
-            ResponseNetworkPackage responsePackage = null;
-
-            using (TcpClient tcpClient = new TcpClient())
-            {
-                responsePackage = Handlers.ReadHandler.Read(tcpClient, data);
+                responsePackage = DataSender.Send(tcpClient, data);
             }
 
             return responsePackage;
-        }
-
-        public static NetworkOperationInfo Update(byte[] data)
-        {
-            NetworkOperationInfo operationInfo = null;
-            return operationInfo;
-        }
-
-        public static NetworkOperationInfo Delete(byte[] data)
-        {
-            NetworkOperationInfo operationInfo = null;
-            return operationInfo;
         }
     }
 }
