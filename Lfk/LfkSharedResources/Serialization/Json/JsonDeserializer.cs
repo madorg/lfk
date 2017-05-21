@@ -21,7 +21,7 @@ namespace LfkSharedResources.Serialization.Json
 
         public static T DeserializeObject<T>(string data)
         {
-            return JsonConvert.DeserializeObject<T>(data);
+            return JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
         }
     }
 }

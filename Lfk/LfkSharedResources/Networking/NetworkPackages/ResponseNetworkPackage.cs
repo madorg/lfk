@@ -13,8 +13,6 @@ namespace LfkSharedResources.Networking.NetworkPackages
     {
         [JsonProperty]
         public NetworkOperationInfo OperationInfo { get; internal set; }
-        [JsonProperty]
-        public object Data { get; internal set; }
 
         public ResponseNetworkPackage()
         {

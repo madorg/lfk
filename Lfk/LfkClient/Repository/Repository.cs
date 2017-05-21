@@ -115,5 +115,15 @@ namespace LfkClient.Repository
         {
             return RepoAgent.GetChangedFiles();
         }
+
+        public List<LocalRepository> GetManagedRepositories(string userId)
+        {
+            return RepoController.GetManagedRepositories(userId);
+        }
+
+        public void Download(string repositoryId)
+        {
+            RepoController.Download(repositoryId);
+        }
     }
 }

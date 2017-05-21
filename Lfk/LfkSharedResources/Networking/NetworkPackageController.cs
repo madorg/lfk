@@ -29,6 +29,13 @@ namespace LfkSharedResources.Networking
             return Encoding.UTF8.GetBytes(serializedPackage);
         }
 
+        public static T ConvertDataToPackage<T>(NetworkOperationInfo operationInfo, object data)
+        {
+            byte[] byteData = ConvertDataToBytes(operationInfo, data);
+            T package = ConvertBytesToPackage<T>(byteData);
+            return package;
+        }
+
         public static byte[] ConvertDataToBytes(NetworkOperationInfo operationInfo, object data)
         {
             NetworkPackage package = CreateResponsePackage(operationInfo, data);

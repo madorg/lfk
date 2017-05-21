@@ -26,12 +26,12 @@ namespace LfkServer.User
                 switch (action)
                 {
                     case UserNetworkActions.Login:
-                        LoginUser loginUser = JsonDeserializer.DeserializeObject<LoginUser>(data.ToString());
+                        LoginUser loginUser = data as LoginUser;
                         guid = userConnector.Read(loginUser);
                         break;
 
                     case UserNetworkActions.Signup:
-                        SignupUser signupUser = JsonDeserializer.DeserializeObject<SignupUser>(data.ToString());       
+                        SignupUser signupUser = data as SignupUser;       
                         guid = userConnector.Create(signupUser);
                         break;
 

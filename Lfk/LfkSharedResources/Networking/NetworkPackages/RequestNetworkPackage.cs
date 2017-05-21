@@ -18,7 +18,5 @@ namespace LfkSharedResources.Networking.NetworkPackages
         public NetworkPackageDestinations Destination { get; internal set; }
         [JsonProperty]
         public string Action { get; internal set; }
-        [JsonProperty]
-        public object Data { get; internal set; }
     }
 }

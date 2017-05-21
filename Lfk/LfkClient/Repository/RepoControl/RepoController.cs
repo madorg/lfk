@@ -100,5 +100,21 @@ namespace LfkClient.Repository.RepoControl
 
             System.Windows.Forms.MessageBox.Show(responsePackage.OperationInfo.Message);
         }
+
+        public List<LocalRepository> GetManagedRepositories(string userId)
+        {
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.View, userId);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            List<LocalRepository> repositories = responsePackage.Data as List<LocalRepository>;
+            return repositories;
+        }
+
+        public void Download(string repositoryId)
+        {
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Read, repositoryId);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            ServerRepository serverRepository = responsePackage.Data as ServerRepository;
+            ////////////
+        }
     }
-}
+}   

@@ -18,7 +18,6 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using LfkGUI.Repository;
 
-
 namespace LfkGUI.RepositoryManagement
 {
     /// <summary>
@@ -118,6 +117,22 @@ namespace LfkGUI.RepositoryManagement
                     MessageBox.Show(message, "Ошибка при создании репозитория", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void ShowAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<LocalRepository> repositories = LfkClient.Repository.Repository.GetInstance().GetManagedRepositories(App.User.Id.ToString());
+            repositories.ForEach(r => System.Windows.Forms.MessageBox.Show(r.Title));
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DownloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            LfkClient.Repository.Repository.GetInstance().Download("f8aa4309-7517-4c80-9eb7-49f9a8364404");
         }
     }
 }

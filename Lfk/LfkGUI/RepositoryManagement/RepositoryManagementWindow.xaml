@@ -43,7 +43,9 @@
 
         <DockPanel Grid.Column="1" LastChildFill="True">
             <StackPanel  DockPanel.Dock="Top" VerticalAlignment="Top" Height="25" Orientation="Horizontal" >
-                <Button Content="Show All"  Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+                <Button x:Name="ShowAllButton" Click="ShowAllButton_Click" Content="Show All" Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+                <Button x:Name="DeleteButton" Click="DeleteButton_Click"  Content="Show All" Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+                <Button x:Name="DownloadButton" Click="DownloadButton_Click"  Content="Show All" Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
             </StackPanel>
             <DataGrid>
 

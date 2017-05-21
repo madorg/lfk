@@ -8,6 +8,7 @@ using System;
 using LfkServer.Database;
 using LfkSharedResources.Networking;
 using LfkExceptions;
+using System.Collections.Generic;
 
 namespace LfkServer.Repository
 {
@@ -15,29 +16,38 @@ namespace LfkServer.Repository
     {
         public static ResponseNetworkPackage HandleRequest(string action, object data)
         {
-            ServerRepository serverRepository = JsonDeserializer.DeserializeObject<ServerRepository>(data.ToString());
-
+            ServerRepository serverRepository = null;
             RepositoryConnector repositoryConnector = new RepositoryConnector();
+
             NetworkOperationInfo operationInfo = null;
+            ResponseNetworkPackage responsePackage = null;
+            object responseData = null;
 
             try
             {
                 switch (action)
                 {
                     case RepositoryNetworkActions.Create:
+                        serverRepository = data as ServerRepository;
                         repositoryConnector.HandleCreate(serverRepository);
                         break;
 
                     case RepositoryNetworkActions.Read:
-                        // подключение к БД, поиск соответсвующей записи, формирование ответа
+                        repositoryConnector.HandleRead(data.ToString());
                         break;
 
                     case RepositoryNetworkActions.Update:
+                        serverRepository = data as ServerRepository;
                         repositoryConnector.HandleUpdate(serverRepository);
                         break;
 
                     case RepositoryNetworkActions.Delete:
                         // подключение к БД, поиск соответсвующей записи, формирование ответа
+                        break;
+
+                    case RepositoryNetworkActions.View:
+                        List<LocalRepository> repositories = repositoryConnector.HandleView(data.ToString());
+                        responseData = repositories;
                         break;
 
                     default:
@@ -59,9 +69,9 @@ namespace LfkServer.Repository
                 };
             }
 
-            ResponseNetworkPackage responsePackage = 
-                NetworkPackageController.ConvertBytesToPackage<ResponseNetworkPackage>(
-                    NetworkPackageController.ConvertDataToBytes(operationInfo, null));
+            responsePackage =
+                    NetworkPackageController.ConvertBytesToPackage<ResponseNetworkPackage>(
+                        NetworkPackageController.ConvertDataToBytes(operationInfo, responseData));
 
             return responsePackage;
         }

@@ -29,7 +29,7 @@ namespace LfkSharedResources.Serialization.Json
 
             try
             {
-                result = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                result = JsonConvert.SerializeObject(obj, new JsonSerializerSettings() { Formatting = Formatting.Indented, TypeNameHandling = TypeNameHandling.All });
             }
             catch (JsonException)
             {
