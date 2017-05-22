@@ -193,5 +193,40 @@ namespace LfkServer.Database
 
             return managedRepositories;
         }
+
+        public void HandleDelete(string repositoryId)
+        {
+            this.OpenConnection();
+            Guid guid = Guid.Parse(repositoryId);
+            DataContext dataContext = new DataContext(sqlConnection);
+
+            Table<DBRepository> repositoryTable = dataContext.GetTable<DBRepository>();
+            Table<DBCommit> commitsTable = dataContext.GetTable<DBCommit>();
+            Table<DBRepoObject> repoObjectsTable = dataContext.GetTable<DBRepoObject>();
+            Table<DBFile> filesTable = dataContext.GetTable<DBFile>();
+
+            List<DBCommit> commits = commitsTable.Where(commit => commit.RepositoryId == guid).ToList();
+            List<DBRepoObject> repoObjects = new List<DBRepoObject>();
+            List<DBFile> files = new List<DBFile>();
+
+            foreach (DBCommit commit in commits)
+            {
+                repoObjects.AddRange(repoObjectsTable.Where(r => r.IndexId == commit.IndexId));
+            }
+
+            foreach (DBRepoObject repoObject in repoObjects)
+            {
+                files.AddRange(filesTable.Where(f => f.Id == repoObject.FileId));
+            }
+
+            filesTable.DeleteAllOnSubmit(files);
+            repoObjectsTable.DeleteAllOnSubmit(repoObjects);
+            commitsTable.DeleteAllOnSubmit(commits);
+            repositoryTable.DeleteOnSubmit(repositoryTable.FirstOrDefault(m => m.Id == guid));
+            
+            dataContext.SubmitChanges();
+
+            this.CloseConnection();
+        }
     }
 }

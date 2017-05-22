@@ -43,7 +43,7 @@ namespace LfkGUI.Repository
             try
             {
                 LfkClient.Repository.Repository.GetInstance().Switch(commit);
-                await window.ShowMessageAsync("Success","Успешное переключение на коммит : " + 
+                await window.ShowMessageAsync("Success","Успешное переключение на коммит : \n" + 
                     commit.Id.ToString() + 
                     "\n" + "Сообщение : " +
                     commit.Comment ,MessageDialogStyle.Affirmative, new MetroDialogSettings() {ColorScheme = MetroDialogColorScheme.Accented });

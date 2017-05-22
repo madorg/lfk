@@ -44,6 +44,7 @@ namespace LfkServer.Repository
 
                     case RepositoryNetworkActions.Delete:
                         // подключение к БД, поиск соответсвующей записи, формирование ответа
+                        repositoryConnector.HandleDelete(data.ToString());
                         break;
 
                     case RepositoryNetworkActions.View:

@@ -125,9 +125,9 @@ namespace LfkGUI.RepositoryManagement
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             LocalRepository lr = (UserRepositoriesListView.SelectedItem as LocalRepository);
-            string message;
             if (lr != null)
             {
+                LfkClient.Repository.Repository.GetInstance().Delete(lr.Id.ToString());
             }
         }
 

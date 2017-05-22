@@ -112,6 +112,22 @@ namespace LfkClient.Repository.RepoControl
             return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
         }
 
+        public void Delete(string repositoryId)
+        {
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Delete, repositoryId);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            ServerRepository serverRepository = responsePackage.Data as ServerRepository;
+            if(responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
+            {
+
+            }
+            else
+            {
+
+            }
+
+
+        }
         private void Initialization(LocalRepository repo)
         {
             FileSystem.Path = repo.Path;

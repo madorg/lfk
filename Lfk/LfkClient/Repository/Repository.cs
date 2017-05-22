@@ -87,6 +87,11 @@ namespace LfkClient.Repository
             RepoAgent.HandleReset(reseted);
         }
 
+        public void Delete(string repositoryId)
+        {
+            RepoController.Delete(repositoryId);
+        }
+
         public string[] GetWorkingDirectoryFiles()
         {
             return RepoAgent.GetWorkingDirectoryFiles();
