@@ -73,19 +73,20 @@ namespace LfkGUI.RepositoryManagement
         {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.RootFolder = Environment.SpecialFolder.MyComputer;
-
+            LocalRepository localRepository = null;
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string message;
 
                 LfkClient.Repository.Repository repo = LfkClient.Repository.Repository.GetInstance();
-                bool created = repo.TryInit(new LocalRepository()
+                localRepository = new LocalRepository()
                 {
                     Id = Guid.NewGuid(),
                     Title = fbd.SelectedPath.Split('\\').Last(),
                     UserId = App.User.Id,
                     Path = fbd.SelectedPath
-                }, out message);
+                };
+                bool created = repo.TryInit(localRepository, out message);
 
                 if (created)
                 {
@@ -101,7 +102,11 @@ namespace LfkGUI.RepositoryManagement
                 else
                 {
                     MessageDialogResult result = await this.ShowMessageAsync("Ошибка", message,
-                         MessageDialogStyle.Affirmative);
+                         MessageDialogStyle.AffirmativeAndNegative);
+                    if(result == MessageDialogResult.Negative)
+                    {
+                        LfkClient.Repository.Repository.GetInstance().Delete(localRepository.Id.ToString());
+                    }
                 }
             }
         }
@@ -144,7 +149,6 @@ namespace LfkGUI.RepositoryManagement
                 {
                     bool downloaded =
                         LfkClient.Repository.Repository.GetInstance().Download(fbd.SelectedPath, lr.Id.ToString(), out message);
-
 
                     if (downloaded)
                     {

@@ -45,9 +45,9 @@ namespace LfkClient.Repository.RepoControl
                 catch (FolderAlreadyContainRepositoryException facre)
                 {
                     message = facre.Message;
+                    responsePackage.OperationInfo.Code = NetworkStatusCodes.Fail;
                 }
             }
-
           
             return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
         }
@@ -58,8 +58,6 @@ namespace LfkClient.Repository.RepoControl
         public void OpenLocal(string path,Guid userId)
         {
             FileSystem.Path = path;
-            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
             try
             {
                 LocalRepository repo = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
@@ -135,17 +133,28 @@ namespace LfkClient.Repository.RepoControl
 
             }
 
-
         }
         private void Initialization(LocalRepository repo)
         {
             FileSystem.Path = repo.Path;
-            LocalRepository localRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+            LocalRepository localRepository = null;
 
-            if(localRepository != null)
+            try
             {
-                throw new FolderAlreadyContainRepositoryException("В папке " + repo.Path + " уже содержится репозиторий.\n Вы уверены что он вам безразличен?");
+                localRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+                if (localRepository != null)
+                {
+                    throw new FolderAlreadyContainRepositoryException("В папке " + repo.Path + " уже содержится репозиторий.\n Вы уверены что он вам безразличен?");
+                }
             }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+
+            }
+
+           
             FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
 
             FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
