@@ -133,5 +133,9 @@ namespace LfkClient.Repository
 
             return rc;
         }
+        public string GetCurrentRepositoryName()
+        {
+            return RepoAgent.GetCurrentRepositoryPath();
+        }
     }
 }

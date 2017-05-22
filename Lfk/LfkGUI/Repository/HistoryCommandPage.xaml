@@ -23,6 +23,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Date}">Date</GridViewColumn>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Comment}">Comment</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Index.RepoObjectIdAndFileName.Count}">Количество включенных файлов</GridViewColumn>
                     </GridView>
                 </ListView.View>
                 <ListView.Resources>

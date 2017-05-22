@@ -14,6 +14,8 @@ using LfkSharedResources.Models.User;
 using LfkSharedResources.Models.Repository;
 using LfkSharedResources.Models;
 using MahApps.Metro.Controls;
+using LfkExceptions;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace LfkGUI.Repository
 {
@@ -26,20 +28,9 @@ namespace LfkGUI.Repository
         public RepositoryWindow()
         {
             InitializeComponent();
-            App.Current.Resources["AppUser"] = new User();
+            string repositoryPath = LfkClient.Repository.Repository.GetInstance().GetCurrentRepositoryName();
+            this.Title = " [ " + repositoryPath+ " ] ";
 
-            //string tempPath = @"F:\lfk_tests";
-            //LfkClient.Repository.Repository.GetInstance().TryInit(new LocalRepository()
-            //{
-            //    Id = Guid.NewGuid(),
-            //    Title = tempPath.Split('\\').Last(),
-            //    UserId = (App.Current.Resources["AppUser"] as User).Id,
-            //    Path = tempPath
-            //});
-        }
-        public RepositoryWindow(string s)
-        {
-            InitializeComponent();
         }
         private void IncludeCommandButton_Click(object sender, RoutedEventArgs e)
         {
@@ -68,9 +59,17 @@ namespace LfkGUI.Repository
         }
 
 
-        private void UpdateCommandButton_Click(object sender, RoutedEventArgs e)
+        private async void UpdateCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            LfkClient.Repository.Repository.GetInstance().Update();
+            try
+            {
+                LfkClient.Repository.Repository.GetInstance().Update();
+            }
+            catch (RepositoryUpdateWithoutCommitsException ruwce)
+            {
+                await this.ShowMessageAsync("Ошибка", ruwce.Message,
+                             MessageDialogStyle.Affirmative);
+            }
         }
     }
 }

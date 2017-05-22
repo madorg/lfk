@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:LfkGUI"
         xmlns:base="clr-namespace:LfkGUI.Base"
         mc:Ignorable="d"
-        Title="{DynamicResource RepositoryWindowTitle}" Height="500" Width="800"
+        Title="{DynamicResource RepositoryWindowTitle}" Height="500" Width="900"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}" >
     <Grid>
         <Grid.RowDefinitions>

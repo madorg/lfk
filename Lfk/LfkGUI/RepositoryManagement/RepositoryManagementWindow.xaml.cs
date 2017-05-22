@@ -32,7 +32,7 @@ namespace LfkGUI.RepositoryManagement
 
         private void OnOpenRepository(object sender, EventArgs e)
         {
-            LfkGUI.Repository.RepositoryWindow rw = new LfkGUI.Repository.RepositoryWindow("");
+            LfkGUI.Repository.RepositoryWindow rw = new LfkGUI.Repository.RepositoryWindow();
             rw.Show();
         }
         private async void OpenLocalRepositoryButton_Click(object sender, RoutedEventArgs e)

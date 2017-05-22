@@ -36,13 +36,6 @@
                       MaxHeight="200" >
                 </TextBox>
                 <Button x:Name="CommitButton" Content="Commit" HorizontalAlignment="Right"  Margin="10" Click="CommitButton_Click"/>
-                <materialDesign:DialogHost x:Name="DialogHostCommit">
-                    <materialDesign:DialogHost.DialogContent >
-                        <DockPanel x:Name="DialogContent">
-                            
-                        </DockPanel>
-                    </materialDesign:DialogHost.DialogContent>
-                </materialDesign:DialogHost>
             </StackPanel>
 
             <!--</materialDesign:Card>-->

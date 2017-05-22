@@ -12,6 +12,7 @@ using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkActions;
 using LfkClient.ServerConnection;
 using LfkSharedResources.Networking.NetworkPackages;
+using LfkExceptions;
 
 namespace LfkClient.Repository.RepoAgent
 {
@@ -210,6 +211,12 @@ namespace LfkClient.Repository.RepoAgent
             List<Commit> commits = Repository.GetInstance().History();
             List<RepoObject> objects = new List<RepoObject>();
             List<File> files = JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
+            
+            if(commits.Count == 0)
+            {
+                throw new RepositoryUpdateWithoutCommitsException("Перед загрузкой на сервер сделайте хотя бы один коммит");
+            }
+
             foreach (string filename in FileSystem.ReadWorkingDirectoryFiles(FileTypes.SystemObjects))
             {
                 RepoObject repoObject = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(filename);
@@ -227,7 +234,6 @@ namespace LfkClient.Repository.RepoAgent
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Update, serverRepository);
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
 
-            System.Windows.Forms.MessageBox.Show(responsePackage.OperationInfo.Message);
         }
 
         #endregion
@@ -335,6 +341,11 @@ namespace LfkClient.Repository.RepoAgent
             return changedFiles;
         }
 
+        public string GetCurrentRepositoryPath()
+        {
+            LocalRepository localRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+            return localRepository.Path;
+        }
         #endregion
     }
 }
