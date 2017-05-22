@@ -39,25 +39,33 @@ namespace LfkGUI.Repository
 
         private void StartDrag(object sender, MouseEventArgs e)
         {
-            TreeView treeView = sender as TreeView;
-            isDrag = true;
-            if (treeView != null && treeView.Items.Count > 0)
+            try
             {
-
-                object temp = treeView.SelectedItem;
-                DataObject data = null;
-                data = new DataObject(typeof(TreeViewItem), temp);
-                if (data != null)
+                TreeView treeView = sender as TreeView;
+                isDrag = true;
+                if (treeView != null && treeView.Items.Count > 0)
                 {
-                    DragDropEffects effects = DragDropEffects.Move;
-                    if (e.RightButton == MouseButtonState.Pressed)
+
+                    object temp = treeView.SelectedItem;
+                    DataObject data = null;
+                    data = new DataObject(typeof(TreeViewItem), temp);
+                    if (data != null)
                     {
-                        effects = DragDropEffects.All;
+                        DragDropEffects effects = DragDropEffects.Move;
+                        if (e.RightButton == MouseButtonState.Pressed)
+                        {
+                            effects = DragDropEffects.All;
+                        }
+                        DragDropEffects de = DragDrop.DoDragDrop(treeView, data, effects);
                     }
-                    DragDropEffects de = DragDrop.DoDragDrop(treeView, data, effects);
+                    isDrag = false;
                 }
-                isDrag = false;
             }
+            catch (Exception)
+            {
+               
+            }
+           
         }
 
         private void ChangedFilesTreeView_MouseMove(object sender, MouseEventArgs e)

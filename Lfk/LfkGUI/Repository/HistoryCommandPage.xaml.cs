@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using MaterialDesignThemes.Wpf;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+
 namespace LfkGUI.Repository
 {
     /// <summary>
@@ -25,34 +28,44 @@ namespace LfkGUI.Repository
         {
             InitializeComponent();
             var history = LfkClient.Repository.Repository.GetInstance().History();
-            if(history != null && history.Count != 0)
-            { 
-            (HistoryListView.Resources["Commits"] as ArrayList).AddRange(
-                history
-                );
+            if (history != null && history.Count != 0)
+            {
+                (HistoryListView.Resources["Commits"] as ArrayList).AddRange(
+                    history
+                    );
             }
         }
 
-        private void SwitchCommandButton_Click(object sender, RoutedEventArgs e)
+        private async void SwitchCommandButton_Click(object sender, RoutedEventArgs e)
         {
+            MetroWindow window = App.Current.MainWindow as MetroWindow; 
             LfkSharedResources.Models.Commit commit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
-            LfkClient.Repository.Repository.GetInstance().Switch(commit);
+            try
+            {
+                LfkClient.Repository.Repository.GetInstance().Switch(commit);
+                await window.ShowMessageAsync("Success","Успешное переключение на коммит : " + 
+                    commit.Id.ToString() + 
+                    "\n" + "Сообщение : " +
+                    commit.Comment ,MessageDialogStyle.Affirmative, new MetroDialogSettings() {ColorScheme = MetroDialogColorScheme.Accented });
+            }
+            catch
+            {
+
+            } 
         }
 
         private async void HistoryListView_Selected(object sender, RoutedEventArgs e)
         {
-            LfkSharedResources.Models.Commit selectedCommit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
-            ContentText.Text = "";
-            foreach (var item in selectedCommit.Index.RepoObjectIdAndFileName)
-            {
-                ContentText.Text += item.Value + "\n";
-            }
-            await DialogHost.Show(DialogContent);
+            //LfkSharedResources.Models.Commit selectedCommit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
+
+
+            //ContentText.Text = "";
+            //foreach (var item in selectedCommit.Index.RepoObjectIdAndFileName)
+            //{
+            //    ContentText.Text += item.Value + "\n";
+            //}
+            //await DialogHost.Show(DialogContent);
         }
 
-        private void CloseDialog_Click(object sender, RoutedEventArgs e)
-        {
-            DialogHostCommit.IsOpen = false;
-        }
     }
 }

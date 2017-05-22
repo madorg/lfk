@@ -42,9 +42,9 @@ namespace LfkClient.Repository
             return RepoController.Create(abstractRepository, out message);
         }
 
-        public void OpenLocal(string path)
+        public void OpenLocal(string path,Guid userId)
         {
-            RepoController.OpenLocal(path);
+            RepoController.OpenLocal(path, userId);
         }
 
         public void Include(IEnumerable<string> included)

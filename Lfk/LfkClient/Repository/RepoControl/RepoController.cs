@@ -9,6 +9,8 @@ using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkSharedResources.Networking.NetworkPackages;
 using LfkSharedResources.Serialization.Json;
 using LfkSharedResources.Models;
+using System;
+using LfkExceptions;
 
 namespace LfkClient.Repository.RepoControl
 {
@@ -45,15 +47,15 @@ namespace LfkClient.Repository.RepoControl
         /// <summary>
         /// Открывает каталог содержащий репозиторий 
         /// </summary>
-        public void OpenLocal(string path)
+        public void OpenLocal(string path,Guid userId)
         {
             FileSystem.Path = path;
             JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
             JsonSerializer.WriteMethod = FileSystem.WriteToFile;
-
             try
             {
                 LocalRepository repo = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+                if (repo.UserId != userId) throw new NotAllowedOpenRepository("Извините, но это не ваш репозиторий");
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {

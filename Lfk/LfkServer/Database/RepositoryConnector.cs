@@ -78,7 +78,8 @@ namespace LfkServer.Database
                         {
                             Id = commit.IndexId,
                             RepoObjectIdAndFileName = new Dictionary<Guid, string>(
-                            repoObjectTable.Join(filesTable,
+                            repoObjectTable.Where(repo=>repo.IndexId == commit.IndexId)
+                            .Join(filesTable,
                             r => r.FileId,
                             f => f.Id,
                             (r, f) => new { Key = r.Id, Value = f.Filename }
@@ -164,6 +165,7 @@ namespace LfkServer.Database
                 Id = f.Id,
                 Filename = f.Filename
             }).Where(m => !filesTable.Any(df => df.Id == m.Id));
+
             filesTable.InsertAllOnSubmit(newFiles);
             dataContext.SubmitChanges();
 

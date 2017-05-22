@@ -16,7 +16,7 @@ using LfkSharedResources.Models.Repository;
 using LfkSharedResources.Models.User;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-
+using LfkExceptions;
 
 namespace LfkGUI.RepositoryManagement
 {
@@ -48,7 +48,7 @@ namespace LfkGUI.RepositoryManagement
                 try
                 {
                     LfkClient.Repository.Repository.GetInstance().OpenLocal(
-                        fbd.SelectedPath);
+                        fbd.SelectedPath,App.User.Id);
                     MessageDialogResult result = await this.ShowMessageAsync("You open repository!", "Let's start working with it",
                              MessageDialogStyle.Affirmative);
 
@@ -58,6 +58,11 @@ namespace LfkGUI.RepositoryManagement
                 catch (System.IO.DirectoryNotFoundException ex)
                 {
                     MessageDialogResult result = await this.ShowMessageAsync("ERROR!", "Can't find initialization file: \n" + ex.Message,
+                             MessageDialogStyle.Affirmative);
+                }
+                catch(NotAllowedOpenRepository naop)
+                {
+                    MessageDialogResult result = await this.ShowMessageAsync("ERROR!", naop.Message,
                              MessageDialogStyle.Affirmative);
                 }
 
