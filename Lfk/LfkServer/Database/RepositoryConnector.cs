@@ -78,7 +78,7 @@ namespace LfkServer.Database
                         {
                             Id = commit.IndexId,
                             RepoObjectIdAndFileName = new Dictionary<Guid, string>(
-                            repoObjectTable.Where(repo=>repo.IndexId == commit.IndexId)
+                            repoObjectTable.Where(repo => repo.IndexId == commit.IndexId)
                             .Join(filesTable,
                             r => r.FileId,
                             f => f.Id,
@@ -145,8 +145,8 @@ namespace LfkServer.Database
                 Date = commit.Date,
                 Comment = commit.Comment
             })
-            .Where(newc=> 
-            !commitsTable.Any(c=>c.Id == newc.Id)
+            .Where(newc =>
+            !commitsTable.Any(c => c.Id == newc.Id)
             );
             commitsTable.InsertAllOnSubmit(newCommits);
 
@@ -223,7 +223,7 @@ namespace LfkServer.Database
             repoObjectsTable.DeleteAllOnSubmit(repoObjects);
             commitsTable.DeleteAllOnSubmit(commits);
             repositoryTable.DeleteOnSubmit(repositoryTable.FirstOrDefault(m => m.Id == guid));
-            
+
             dataContext.SubmitChanges();
 
             this.CloseConnection();
