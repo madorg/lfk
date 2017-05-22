@@ -34,13 +34,21 @@ namespace LfkClient.Repository.RepoControl
 
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, serverRepository);
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            message = responsePackage.OperationInfo.Message;
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
-                Initialization(repo);
+                try
+                {
+                    Initialization(repo);
+                }
+                catch (FolderAlreadyContainRepositoryException facre)
+                {
+                    message = facre.Message;
+                }
             }
 
-            message = responsePackage.OperationInfo.Message;
+          
             return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
         }
 
@@ -55,7 +63,8 @@ namespace LfkClient.Repository.RepoControl
             try
             {
                 LocalRepository repo = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
-                if (repo.UserId != userId) throw new NotAllowedOpenRepository("Извините, но это не ваш репозиторий");
+                if (repo.UserId != userId)
+                    throw new NotAllowedOpenRepository("Извините, но это не ваш репозиторий");
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
@@ -131,7 +140,12 @@ namespace LfkClient.Repository.RepoControl
         private void Initialization(LocalRepository repo)
         {
             FileSystem.Path = repo.Path;
+            LocalRepository localRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
 
+            if(localRepository != null)
+            {
+                throw new FolderAlreadyContainRepositoryException("В папке " + repo.Path + " уже содержится репозиторий.\n Вы уверены что он вам безразличен?");
+            }
             FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
 
             FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);

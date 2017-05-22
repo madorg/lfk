@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Coding\HuffmanCoding\HuffmanTree.cs" />
     <Compile Include="Exceptions\ClientExceptions\ClientException.cs" />
+    <Compile Include="Exceptions\ClientExceptions\FolderAlreadyContainRepository.cs" />
     <Compile Include="Exceptions\ClientExceptions\NotAllowedOpenRepository.cs" />
     <Compile Include="Exceptions\ClientExceptions\RepositoryUpdateWithoutCommitsException.cs" />
     <Compile Include="Exceptions\ClientExceptions\ServerExceptions\ServerConnectionException.cs" />

@@ -62,7 +62,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\RepoAgent\RepoAgent.cs" />
     <Compile Include="Validation\RepoControlValidator.cs" />
-    <Compile Include="Repository\RepoAgent\RepoControl\RepoController.cs" />
+    <Compile Include="Repository\RepoControl\RepoController.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Validation\Validator.cs" />
   </ItemGroup>
