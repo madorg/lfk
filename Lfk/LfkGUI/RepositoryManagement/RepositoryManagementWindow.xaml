@@ -9,48 +9,60 @@
         xmlns:local="clr-namespace:LfkGUI"
         xmlns:base="clr-namespace:LfkGUI.Base"
         mc:Ignorable="d"
-        Title="RepositoryManagementWindow" Height="300" Width="500"
+        Title="RepositoryManagementWindow" Height="500" Width="800"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}">
     <Window.Resources>
-        <Button x:Key="OpenLocalRepositoryButton" x:Name="OpenLocalRepositoryButton" Content="From folder"  
-                Style="{DynamicResource MaterialDesignFlatButton }"  Height="25" BorderThickness="1,1,1,1"
-                Margin="3,0,3,0"
-                Background="{DynamicResource AccentColorBrush}"
-                Click="OpenLocalRepositoryButton_Click"
-                />
-        <Button x:Key="OpenRemoteRepositoryButton" x:Name="OpenRemoteRepositoryButton" Content="From server"
-                Style="{DynamicResource MaterialDesignFlatButton }" Height="25" BorderThickness="1,1,1,1"
-                Margin="3,0,3,0"
-                Background="{DynamicResource AccentColorBrush}"
-                Click="OpenRemoteRepositoryButton_Click"/>
+        <Style x:Key="BottomHeaderBorder" TargetType="{x:Type Border}">
+            <Setter Property="BorderThickness" Value="0,0,0,2" />
+            <Setter Property="Margin" Value="3,0,3,0" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}" />
+        </Style>
     </Window.Resources>
-
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120*" MinWidth="120"/>
-            <ColumnDefinition Width="223*"/>
+            <ColumnDefinition Width="120*" MinWidth="200"/>
+            <ColumnDefinition Width="223*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Column="0" ShowsPreview="False" Width="5"
+        <GridSplitter Grid.Column="0" ShowsPreview="False" Width="5" Background="{DynamicResource PrimaryHueDarkBrush}" Panel.ZIndex="1"
          VerticalAlignment="Stretch" />
-        <StackPanel x:Name="MenuStackPanel" Grid.Column="0" Margin="3,10,3,10" >
-            <Button x:Name="CreateRepositoryButton" Content="Create"  Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1"  
+        <DockPanel Grid.Column="0" LastChildFill="True">
+            <StackPanel x:Name="MenuLocalStackPanel" DockPanel.Dock="Top" Margin="3,10,3,10" >
+                <Border Style="{StaticResource BottomHeaderBorder}">
+                    <TextBlock Text="Local repository" FontSize="20" TextAlignment="Center" Padding="3" Margin="0,0,0,10" />
+                </Border>
+                <Button x:Name="CreateRepositoryButton" Content="Create"  Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1"  
                     Click="CreateRepositoryButton_Click"/>
-            <Button x:Name="OpenRepositoryDropDownButton" Content="Open"  Style="{DynamicResource MaterialDesignFlatButton}" 
-                    Height="25" BorderThickness="1,1,1,1" 
-                    Click="OpenRepositoryDropDownButton_Click"/>
-            <Button Content="Delete"  Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
-        </StackPanel>
-
-        <DockPanel Grid.Column="1" LastChildFill="True">
-            <StackPanel  DockPanel.Dock="Top" VerticalAlignment="Top" Height="25" Orientation="Horizontal" >
-                <Button x:Name="ShowAllButton" Click="ShowAllButton_Click" Content="Show All" Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
-                <Button x:Name="DeleteButton" Click="DeleteButton_Click"  Content="Show All" Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
-                <Button x:Name="DownloadButton" Click="DownloadButton_Click"  Content="Show All" Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+                <Button x:Name="OpenLocalRepositoryButton" Content="Open from folder"  
+                Style="{DynamicResource MaterialDesignFlatButton }"  Height="25" BorderThickness="1,1,1,1"
+                Click="OpenLocalRepositoryButton_Click"
+                />
             </StackPanel>
-            <DataGrid>
-
-            </DataGrid>
+            <StackPanel x:Name="MenuRemoteStackPanel" DockPanel.Dock="Top" Margin="3,10,3,10" >
+                <Border Style="{StaticResource BottomHeaderBorder}">
+                    <TextBlock Text="Remote repository" FontSize="20" TextAlignment="Center" Padding="3" Margin="0,0,0,10" />
+                </Border>
+                
+                <Button x:Name="ShowAllButton" Click="ShowAllButton_Click" Content="Show my remote repositories" 
+                        Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+                <Button x:Name="DownloadButton" Click="DownloadButton_Click"  Content="Download from remote" 
+                        Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+                <Button x:Name="DeleteButton" Click="DeleteButton_Click"  Content="Delete" 
+                        Style="{DynamicResource MaterialDesignFlatButton}" Height="25" BorderThickness="1,1,1,1" />
+            </StackPanel>
         </DockPanel>
-
+        <DockPanel Grid.Column="1" LastChildFill="True">
+            <Border Style="{StaticResource BottomHeaderBorder}" DockPanel.Dock="Top" Margin="3,10,3,10">
+                <TextBlock Text="List of available repositories"
+                               FontSize="20" TextAlignment="Justify" Padding="3" Margin="0,0,0,10" HorizontalAlignment="Stretch" />
+            </Border>
+            <ListView x:Name="UserRepositoriesListView" DockPanel.Dock="Top">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Title}" Width="200" >Title</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Id}" Width="200" >Id</GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
     </Grid>
 </base:BaseWindow>

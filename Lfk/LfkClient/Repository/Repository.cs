@@ -24,7 +24,7 @@ namespace LfkClient.Repository
         private Repository()
         {
             RepoAgent = new RepoAgent.RepoAgent();
-            RepoController = new RepoController();          
+            RepoController = new RepoController();
         }
 
         public static Repository GetInstance()
@@ -39,7 +39,7 @@ namespace LfkClient.Repository
 
         public bool TryInit(AbstractRepository abstractRepository, out string message)
         {
-            return RepoController.Init(abstractRepository, out message);
+            return RepoController.Create(abstractRepository, out message);
         }
 
         public void OpenLocal(string path)
@@ -67,9 +67,9 @@ namespace LfkClient.Repository
             return RepoAgent.HandleHistory();
         }
 
-        public void Upload()
+        public void Update()
         {
-            RepoController.Upload();
+            RepoAgent.HandleUpdate();
         }
 
         public void Switch(Commit commit)
@@ -121,9 +121,17 @@ namespace LfkClient.Repository
             return RepoController.GetManagedRepositories(userId);
         }
 
-        public void Download(string repositoryId)
+        public bool Download(string path, string repositoryId, out string message)
         {
-            RepoController.Download(repositoryId);
+            bool rc = RepoController.Download(path, repositoryId, out message);
+            Commit lastCommit = History().LastOrDefault();
+
+            if (lastCommit != null)
+            {
+                Switch(lastCommit);
+            }
+
+            return rc;
         }
     }
 }

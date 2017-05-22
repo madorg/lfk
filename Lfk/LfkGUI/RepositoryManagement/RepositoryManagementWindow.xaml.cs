@@ -16,7 +16,7 @@ using LfkSharedResources.Models.Repository;
 using LfkSharedResources.Models.User;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using LfkGUI.Repository;
+
 
 namespace LfkGUI.RepositoryManagement
 {
@@ -32,31 +32,17 @@ namespace LfkGUI.RepositoryManagement
 
         private void OnOpenRepository(object sender, EventArgs e)
         {
-            RepositoryWindow rw = new RepositoryWindow("");
+            LfkGUI.Repository.RepositoryWindow rw = new LfkGUI.Repository.RepositoryWindow("");
             rw.Show();
         }
-
-        private void OpenRepositoryDropDownButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!MenuStackPanel.Children.Contains(Resources["OpenLocalRepositoryButton"] as Button) ||
-               !MenuStackPanel.Children.Contains(Resources["OpenRemoteRepositoryButton"] as Button))
-            {
-                MenuStackPanel.Children.Insert(2, Resources["OpenLocalRepositoryButton"] as Button);
-                MenuStackPanel.Children.Insert(3, Resources["OpenRemoteRepositoryButton"] as Button);
-            }
-            else
-            {
-                MenuStackPanel.Children.RemoveRange(2, 2);
-            }
-        }
-
         private async void OpenLocalRepositoryButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog() {
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog()
+            {
                 ShowNewFolderButton = true,
                 RootFolder = Environment.SpecialFolder.MyComputer
             };
-           
+
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
@@ -76,11 +62,6 @@ namespace LfkGUI.RepositoryManagement
                 }
 
             }
-        }
-
-        private void OpenRemoteRepositoryButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private async void CreateRepositoryButton_Click(object sender, RoutedEventArgs e)
@@ -114,25 +95,80 @@ namespace LfkGUI.RepositoryManagement
                 }
                 else
                 {
-                    MessageBox.Show(message, "Ошибка при создании репозитория", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogResult result = await this.ShowMessageAsync("Ошибка", message,
+                         MessageDialogStyle.Affirmative);
                 }
             }
         }
 
-        private void ShowAllButton_Click(object sender, RoutedEventArgs e)
+        private async void ShowAllButton_Click(object sender, RoutedEventArgs e)
         {
-            List<LocalRepository> repositories = LfkClient.Repository.Repository.GetInstance().GetManagedRepositories(App.User.Id.ToString());
-            repositories.ForEach(r => System.Windows.Forms.MessageBox.Show(r.Title));
+            try
+            {
+                List<LocalRepository> repositories =
+                    LfkClient.Repository.Repository.GetInstance().GetManagedRepositories(App.User.Id.ToString());
+                UserRepositoriesListView.ItemsSource = repositories;
+            }
+            catch (Exception ex)
+            {
+                MessageDialogResult result = await this.ShowMessageAsync("Ошибка", ex.Message,
+                        MessageDialogStyle.Affirmative);
+            }
+
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            LocalRepository lr = (UserRepositoriesListView.SelectedItem as LocalRepository);
+            string message;
+            if (lr != null)
+            {
+            }
         }
 
-        private void DownloadButton_Click(object sender, RoutedEventArgs e)
+        private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            LfkClient.Repository.Repository.GetInstance().Download("f8aa4309-7517-4c80-9eb7-49f9a8364404");
+            LocalRepository lr = (UserRepositoriesListView.SelectedItem as LocalRepository);
+            string message;
+            if (lr != null)
+            {
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                fbd.RootFolder = Environment.SpecialFolder.MyComputer;
+
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    bool downloaded =
+                        LfkClient.Repository.Repository.GetInstance().Download(fbd.SelectedPath, lr.Id.ToString(), out message);
+
+
+                    if (downloaded)
+                    {
+                        MessageDialogResult result = await this.ShowMessageAsync(
+                            "New repository!",
+                            "Do you want to open it?",
+                        MessageDialogStyle.AffirmativeAndNegative);
+                        if (result == MessageDialogResult.Affirmative)
+                        {
+                            this.Closing += OnOpenRepository;
+                            this.Close();
+                        }
+                    }
+                    else
+                    {
+                        MessageDialogResult result = await this.ShowMessageAsync(
+                            "Ошибка",
+                            message,
+                        MessageDialogStyle.Affirmative);
+                    }
+
+                }
+            }
+            else
+            {
+                await this.ShowMessageAsync("Внимание", "Пожалуйста выберите репозиторий для скачивания",
+                       MessageDialogStyle.Affirmative);
+            }
         }
+
     }
 }

@@ -33,7 +33,8 @@ namespace LfkServer.Repository
                         break;
 
                     case RepositoryNetworkActions.Read:
-                        repositoryConnector.HandleRead(data.ToString());
+                        serverRepository = repositoryConnector.HandleRead(data.ToString());
+                        responseData = serverRepository;
                         break;
 
                     case RepositoryNetworkActions.Update:

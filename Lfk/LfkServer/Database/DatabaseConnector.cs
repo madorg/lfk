@@ -13,7 +13,7 @@ namespace LfkServer.Database
 
         protected void OpenConnection()
         {
-            sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=F:\bstu\oop\4_sem\course\courseWorkCS\Lfk\LfkServer\Database.mdf;Integrated Security=True");
+            sqlConnection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\courseWorkCS\Lfk\LfkServer\Database.mdf;Integrated Security=True");
             sqlConnection.Open();
         }
 

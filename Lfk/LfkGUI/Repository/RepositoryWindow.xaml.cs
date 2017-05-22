@@ -67,9 +67,10 @@ namespace LfkGUI.Repository
             this.Close();
         }
 
-        private void UploadCommandButton_Click(object sender, RoutedEventArgs e)
+
+        private void UpdateCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            LfkClient.Repository.Repository.GetInstance().Upload();
+            LfkClient.Repository.Repository.GetInstance().Update();
         }
     }
 }

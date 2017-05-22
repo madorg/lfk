@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LfkExceptions;
+using LfkSharedResources.Models;
 
 namespace LfkServer.Database
 {
@@ -54,56 +55,75 @@ namespace LfkServer.Database
             DataContext dataContext = new DataContext(sqlConnection);
 
             Table<DBRepository> repositoresTable = dataContext.GetTable<DBRepository>();
-            Table<Commit> commitsTable = dataContext.GetTable<Commit>();
-            Table<RepoObject> repoObjectTable = dataContext.GetTable<RepoObject>();
-            Table<File> filesTable = dataContext.GetTable<File>();
+            Table<DBCommit> commitsTable = dataContext.GetTable<DBCommit>();
+            Table<DBRepoObject> repoObjectTable = dataContext.GetTable<DBRepoObject>();
+            Table<DBFile> filesTable = dataContext.GetTable<DBFile>();
 
+            List<Commit> commits = new List<Commit>();
+            List<RepoObject> repoObjects = new List<RepoObject>();
+            List<File> files = new List<File>();
 
-            //var repoObjectsAndFilenamesJoin = repoObjectTable.Join(
-            //                filesTable,
-            //                r => r.FileId,
-            //                f => f.Id,
-            //                (r, f) => new KeyValuePair<Guid, string>(r.FileId, f.Filename));
+            LocalRepository localRepository = (LocalRepository)repositoresTable.FirstOrDefault(r => r.Id == guid);
 
-            List<LfkSharedResources.Models.Commit> commits = commitsTable
-                .Where(c => c.RepositoryId == guid)
-                .Select(c => new LfkSharedResources.Models.Commit()
-                {
-                    Id = c.Id,
-                    Index = new LfkSharedResources.Models.Index()
+            //ЗАПРЕТИТЬ БЕЗ КОММИТА ДЕЛАТЬ UPDATE!!!!!!!!!!!!!!!!
+            foreach (DBCommit commit in commitsTable.Where(c => c.RepositoryId == guid))
+            {
+                Commit newCommit =
+                    new Commit()
                     {
-                        Id = c.IndexId,
-                        RepoObjectIdAndFileName =
-                        repoObjectTable.Where(rep=>rep.IndexId == c.IndexId).Join(
-                            filesTable,
+                        Id = commit.Id,
+                        Date = commit.Date,
+                        Comment = commit.Comment,
+                        Index = new Index()
+                        {
+                            Id = commit.IndexId,
+                            RepoObjectIdAndFileName = new Dictionary<Guid, string>(
+                            repoObjectTable.Join(filesTable,
                             r => r.FileId,
                             f => f.Id,
-                            (r, f) => new KeyValuePair<Guid, string>(r.FileId, f.Filename))
-                            .AsEnumerable()
-                            .ToDictionary(m => m.Key, m => m.Value)
-                        //repoObjectsAndFilenamesJoin.ToDictionary(m => m.Key, m => m.Value).Where()
-                    },
-                    Comment = c.Comment,
-                    Date = c.Date
-                }
-                ).ToList();
-            //List<RepoObject> objects = new List<RepoObject>();
-            //foreach (Commit commit in commits)
-            //{
-            //    objects.AddRange(repoObjectTable.Where(o => o.IndexId == commit.IndexId));
-            //}
+                            (r, f) => new { Key = r.Id, Value = f.Filename }
+                            )
+                            .ToDictionary(m => m.Key, m => m.Value))
+                        }
+                    };
+                commits.Add(newCommit);
+            }
 
-            //repositoresTable.FirstOrDefault(r => r.Id == guid);
-            //serverRepository = new ServerRepository()
-            //{
-            //    Objects = objects,
-            //    Commits = commits
-            //};
-
-
+            foreach (Commit commit in commits)
+            {
+                repoObjects.AddRange(repoObjectTable
+                    .Where(ro => ro.IndexId == commit.Index.Id)
+                    .Select(m =>
+                    new RepoObject()
+                    {
+                        Id = m.Id,
+                        FileId = m.FileId,
+                        Hash = m.Data,
+                        HuffmanTree = m.HuffmanTree,
+                        IndexId = m.IndexId
+                    }
+                    ));
+            }
+            //проблема очень надо решить
+            foreach (RepoObject repoObject in repoObjects)
+            {
+                files.AddRange(filesTable.Where(f => f.Id == repoObject.FileId).Select(m =>
+                  new File()
+                  {
+                      Id = m.Id,
+                      Filename = m.Filename
+                  }).Distinct());
+            }
+            serverRepository = new ServerRepository()
+            {
+                Commits = commits,
+                LocalRepository = localRepository,
+                Files = files,
+                Objects = repoObjects
+            };
 
             this.CloseConnection();
-            return null;
+            return serverRepository;
         }
 
         public void HandleUpdate(ServerRepository serverRepository)
@@ -112,38 +132,41 @@ namespace LfkServer.Database
 
             DataContext dataContext = new DataContext(sqlConnection);
 
-            Table<Commit> commitsTable = dataContext.GetTable<Commit>();
-            Table<RepoObject> repoObjectsTable = dataContext.GetTable<RepoObject>();
+            Table<DBCommit> commitsTable = dataContext.GetTable<DBCommit>();
+            Table<DBRepoObject> repoObjectsTable = dataContext.GetTable<DBRepoObject>();
+            Table<DBFile> filesTable = dataContext.GetTable<DBFile>();
 
-            foreach (var commit in serverRepository.Commits)
+            var newCommits = serverRepository.Commits.Select(commit => new DBCommit()
             {
-                Commit newCommit = new Commit()
-                {
-                    Id = commit.Id,
-                    RepositoryId = serverRepository.LocalRepository.Id,
-                    IndexId = commit.Index.Id,
-                    Date = commit.Date,
-                    Comment = commit.Comment
-                };
+                Id = commit.Id,
+                RepositoryId = serverRepository.LocalRepository.Id,
+                IndexId = commit.Index.Id,
+                Date = commit.Date,
+                Comment = commit.Comment
+            })
+            .Where(newc=> 
+            !commitsTable.Any(c=>c.Id == newc.Id)
+            );
+            commitsTable.InsertAllOnSubmit(newCommits);
 
-                commitsTable.InsertOnSubmit(newCommit);
-            }
-
-            foreach (var repoObject in serverRepository.Objects)
+            var newRepoObjects = serverRepository.Objects.Select(repoObject => new DBRepoObject()
             {
-                RepoObject newRepoObject = new RepoObject()
-                {
-                    Id = repoObject.Id,
-                    FileId = Guid.NewGuid(),
-                    IndexId = repoObject.IndexId,
-                    Data = repoObject.Hash,
-                    HuffmanTree = repoObject.HuffmanTree
-                };
+                Id = repoObject.Id,
+                FileId = repoObject.FileId,
+                IndexId = repoObject.IndexId,
+                Data = repoObject.Hash,
+                HuffmanTree = repoObject.HuffmanTree
+            }).Where(m => !repoObjectsTable.Any(r => r.Id == m.Id));
+            repoObjectsTable.InsertAllOnSubmit(newRepoObjects);
 
-                repoObjectsTable.InsertOnSubmit(newRepoObject);
-            }
-
+            var newFiles = serverRepository.Files.Select(f => new DBFile()
+            {
+                Id = f.Id,
+                Filename = f.Filename
+            }).Where(m => !filesTable.Any(df => df.Id == m.Id));
+            filesTable.InsertAllOnSubmit(newFiles);
             dataContext.SubmitChanges();
+
             this.CloseConnection();
         }
 

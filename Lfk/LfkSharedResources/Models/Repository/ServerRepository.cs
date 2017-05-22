@@ -12,5 +12,6 @@ namespace LfkSharedResources.Models.Repository
         public LocalRepository LocalRepository { get; set; }
         public List<Commit> Commits { get; set; }
         public List<RepoObject> Objects { get; set; }
+        public List<File> Files { get; set; }
     }
 }

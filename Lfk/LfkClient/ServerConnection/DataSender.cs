@@ -3,6 +3,7 @@ using LfkSharedResources.Extensions;
 using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkPackages;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace LfkClient.ServerConnection
 {
@@ -22,6 +23,7 @@ namespace LfkClient.ServerConnection
                 {
                     if (tcpClient.Available != 0)
                     {
+                        Thread.Sleep(30);
                         readedData = new byte[tcpClient.Available];
                         tcpClient.GetStream().Read(readedData, 0, readedData.Length);
                         break;
