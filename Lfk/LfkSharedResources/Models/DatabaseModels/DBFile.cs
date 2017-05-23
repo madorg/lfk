@@ -15,17 +15,17 @@ namespace LfkSharedResources.Models.DatabaseModels
         [Column(Name = "filename")]
         public string Filename { get; set; }
 
-        public override bool Equals(object obj)
-        {
-            DBFile file = obj as DBFile;
-            if (file == null)
-            {
-                return false;
-            }
-            else
-            {
-                return Id == file.Id;
-            }
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    DBFile file = obj as DBFile;
+        //    if (file == null)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        return Id == file.Id;
+        //    }
+        //}
     }
 }

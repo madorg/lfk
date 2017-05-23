@@ -40,18 +40,13 @@ namespace LfkGUI.Repository
         {
             MetroWindow window = App.Current.MainWindow as MetroWindow; 
             LfkSharedResources.Models.Commit commit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
-            try
-            {
+
                 LfkClient.Repository.Repository.GetInstance().Switch(commit);
                 await window.ShowMessageAsync("Success","Успешное переключение на коммит : \n" + 
                     commit.Id.ToString() + 
                     "\n" + "Сообщение : " +
-                    commit.Comment ,MessageDialogStyle.Affirmative, new MetroDialogSettings() {ColorScheme = MetroDialogColorScheme.Accented });
-            }
-            catch
-            {
+                    commit.Comment ,MessageDialogStyle.Affirmative, new MetroDialogSettings() {ColorScheme = MetroDialogColorScheme.Inverted });
 
-            } 
         }
 
         private async void HistoryListView_Selected(object sender, RoutedEventArgs e)

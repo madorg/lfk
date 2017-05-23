@@ -8,6 +8,7 @@ using LfkClient.Repository.RepoControl;
 using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Models;
+using LfkClient.UserMessages;
 
 namespace LfkClient.Repository
 {
@@ -42,7 +43,7 @@ namespace LfkClient.Repository
             return RepoController.Create(abstractRepository, out message);
         }
 
-        public void OpenLocal(string path,Guid userId)
+        public void OpenLocal(string path, Guid userId)
         {
             RepoController.OpenLocal(path, userId);
         }
@@ -141,6 +142,40 @@ namespace LfkClient.Repository
         public string GetCurrentRepositoryName()
         {
             return RepoAgent.GetCurrentRepositoryPath();
+        }
+
+        public InvalidRepositoryCreationReasons CanCreateRepository(LocalRepository localRepository)
+        {
+            FileSystem.Path = localRepository.Path;
+            InvalidRepositoryCreationReasons reason = InvalidRepositoryCreationReasons.None;
+
+            if (RepoController.IsFolderContainRepository())
+            {
+                reason = InvalidRepositoryCreationReasons.FolderAlreadyContainsRepository;
+            }
+            else if (RepoController.IsExistRepositorySameTitle(localRepository))
+            {
+                reason = InvalidRepositoryCreationReasons.DuplicateTitle;
+            }
+
+            return reason;
+        }
+
+        public InvalidRepositoryOpenReasons CanOpenRepository(string path, Guid userid)
+        {
+            FileSystem.Path = path;
+            InvalidRepositoryOpenReasons reason = InvalidRepositoryOpenReasons.None;
+
+            if (!RepoController.IsFolderContainRepository())
+            {
+                reason = InvalidRepositoryOpenReasons.FolderDoesNotContainRepository;
+            }
+            else if (!RepoController.IsUserHolderOfRepository(path,userid))
+            {
+                reason = InvalidRepositoryOpenReasons.RepositoryDoNotBelongToUser;
+            }
+
+            return reason;
         }
     }
 }

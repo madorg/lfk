@@ -55,21 +55,17 @@
     <Compile Include="FileSystemControl\FileTypes.cs" />
     <Compile Include="ServerConnection\DataSender.cs" />
     <Compile Include="ServerConnection\ServerConnector.cs" />
-    <Compile Include="Validation\AuthorizationValidator.cs" />
     <Compile Include="Authorization\Authorizator.cs" />
     <Compile Include="FileSystemControl\FileSystemReader.cs" />
     <Compile Include="FileSystemControl\FileSystemWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\RepoAgent\RepoAgent.cs" />
-    <Compile Include="Validation\RepoControlValidator.cs" />
     <Compile Include="Repository\RepoControl\RepoController.cs" />
     <Compile Include="Repository\Repository.cs" />
-    <Compile Include="Validation\Validator.cs" />
+    <Compile Include="UserMessages\InvalidRepositoryCreationReasons.cs" />
+    <Compile Include="UserMessages\InvalidRepositoryOpenReasons.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Authorization\UserControl\" />
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>

@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Generic;
+using System.Text;
+using System;
 
 namespace LfkClient.FileSystemControl
 {
@@ -34,7 +36,7 @@ namespace LfkClient.FileSystemControl
 
         public void AppendToFile(string fileName, string data)
         {
-            using (StreamWriter sw = new StreamWriter(fileName, true))
+            using (StreamWriter sw = new StreamWriter(fileName, true, Encoding.Unicode))
             {
                 sw.Write(data);
             }
@@ -42,7 +44,7 @@ namespace LfkClient.FileSystemControl
 
         public void WriteToFile(string fileName, string data)
         {
-            using (StreamWriter sw = new StreamWriter(fileName, false))
+            using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.Unicode))
             {
                 sw.Write(data);
             }
@@ -79,6 +81,21 @@ namespace LfkClient.FileSystemControl
 
                 CreateFile(filename);
             }
+        }
+
+        internal void DeleteFolder(string path)
+        {
+            DirectoryInfo di = new DirectoryInfo(path);
+
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+
         }
     }
 }

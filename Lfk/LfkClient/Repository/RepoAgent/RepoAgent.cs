@@ -52,6 +52,8 @@ namespace LfkClient.Repository.RepoAgent
                     Id = Guid.NewGuid(),
                     Filename = filename
                 });
+
+
             }
             JsonSerializer.SerializeObjectToFile(files, FileSystemPaths.LfkFilesFile);
             JsonSerializer.SerializeObjectToFile(deserializedIncludedFile, FileSystemPaths.LfkIncludedFile);
