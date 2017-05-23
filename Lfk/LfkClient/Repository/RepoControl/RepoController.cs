@@ -163,7 +163,10 @@ namespace LfkClient.Repository.RepoControl
 
         private void ClearRepositoryFolder()
         {
-            FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
+            if (FileSystem.IsFolderExist(FileSystemPaths.LfkMainFolder))
+            {
+                FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
+            }
         }
 
         private void Initialization(LocalRepository repo)

@@ -86,6 +86,7 @@ namespace LfkClient.FileSystemControl
         internal void DeleteFolder(string path)
         {
             DirectoryInfo di = new DirectoryInfo(path);
+            
 
             foreach (FileInfo file in di.GetFiles())
             {

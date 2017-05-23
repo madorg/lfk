@@ -70,7 +70,7 @@ namespace LfkGUI.Authorization
             if (registrationPage != null)
             {
                 string message = "Неверные данные";
-                Guid userId;
+                Guid userId = Guid.Empty;
                 SignupUser signupUser = new SignupUser()
                 {
                     Name = registrationPage.SignupNameTextBox.Text,
@@ -79,11 +79,17 @@ namespace LfkGUI.Authorization
                 };
                 if (registrationPage.SignupPasswordTextBox.Password == registrationPage.SignupConfirmPasswordTextBox.Password)
                 {
-                    if (SignupValidation.IsValid(signupUser) && Authorizator.TrySignup(signupUser, out message, out userId))
+                    var controller = await this.ShowProgressAsync("Подождите", "Сервер слишком далеко");
+                    bool rc = await Task.Run(() =>
+                    {
+                        return Authorizator.TrySignup(signupUser, out message, out userId);
+                    });
+
+                    if (SignupValidation.IsValid(signupUser) && rc)
                     {
                         MessageDialogResult result = await this.ShowMessageAsync("You have signed in successfully", message,
                             MessageDialogStyle.Affirmative);
-
+                        await controller.CloseAsync();
                         App.User = new User()
                         {
                             Id = userId
