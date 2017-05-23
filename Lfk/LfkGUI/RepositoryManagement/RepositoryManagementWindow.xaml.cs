@@ -66,43 +66,54 @@ namespace LfkGUI.RepositoryManagement
 
         private void ShowAllButton_Click(object sender, RoutedEventArgs e)
         {
-                List<LocalRepository> repositories =
-                    Repository.GetManagedRepositories(App.User.Id.ToString());
-                UserRepositoriesListView.ItemsSource = repositories;
+            List<LocalRepository> repositories =
+                Repository.GetManagedRepositories(App.User.Id.ToString());
+            UserRepositoriesListView.ItemsSource = repositories;
         }
 
         private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
             LocalRepository lr = (UserRepositoriesListView.SelectedItem as LocalRepository);
-            string message;
+            string message = string.Empty;
+            bool rc = false;
             if (lr != null)
             {
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-                fbd.RootFolder = Environment.SpecialFolder.MyComputer;
-
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                string path;
+                if (GetFolderBrowseDialogSelectedPath(out path))
                 {
-                    bool downloaded =
-                        LfkClient.Repository.Repository.GetInstance().Download(fbd.SelectedPath, lr.Id.ToString(), out message);
-
-                    if (downloaded)
+                    InvalidRepositoryDownloadReasons reason = InvalidRepositoryDownloadReasons.None;
+                    MessageDialogResult result;
+                    reason = Repository.CanDownloadRepository(path);
+                    switch (reason)
                     {
-                        MessageDialogResult result = await this.ShowMessageAsync(
-                            "New repository!",
-                            "Do you want to open it?",
-                        MessageDialogStyle.AffirmativeAndNegative);
-                        if (result == MessageDialogResult.Affirmative)
-                        {
-                            this.Closing += OnOpenRepository;
-                            this.Close();
-                        }
+                        case InvalidRepositoryDownloadReasons.None:
+                            rc = Repository.Download(path, lr.Id.ToString(), out message);
+                            result =  await this.ShowMessageAsync("You download repository!",
+                                "Do you want to open it?",
+                                MessageDialogStyle.AffirmativeAndNegative);
+                            if (result == MessageDialogResult.Affirmative)
+                            {
+                                this.Closing += OnOpenRepository;
+                                this.Close();
+                            }
+                            break;
+                        case InvalidRepositoryDownloadReasons.FolderAlreadyContainsRepository:
+                            result = await this.ShowMessageAsync("Внимание",
+                                "Вы уверены что хотите перезаписать репозиторий в :" +
+                                path + " ?",
+                                MessageDialogStyle.AffirmativeAndNegative);
+                            if (result == MessageDialogResult.Affirmative)
+                            {
+                                rc = Repository.Download(path, lr.Id.ToString(), out message);
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    else
+                    if (!rc)
                     {
-                        MessageDialogResult result = await this.ShowMessageAsync(
-                            "Ошибка",
-                            message,
-                        MessageDialogStyle.Affirmative);
+                        await this.ShowMessageAsync("Ошибка", message,
+                       MessageDialogStyle.Affirmative);
                     }
                 }
             }

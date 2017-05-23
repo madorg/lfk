@@ -139,6 +139,20 @@ namespace LfkClient.Repository
 
             return rc;
         }
+
+        public InvalidRepositoryDownloadReasons CanDownloadRepository(string path)
+        {
+            FileSystem.Path = path;
+            InvalidRepositoryDownloadReasons reason = InvalidRepositoryDownloadReasons.None;
+
+            if (RepoController.IsFolderContainRepository())
+            {
+                reason = InvalidRepositoryDownloadReasons.FolderAlreadyContainsRepository;
+            }
+
+            return reason;
+        }
+
         public string GetCurrentRepositoryName()
         {
             return RepoAgent.GetCurrentRepositoryPath();
