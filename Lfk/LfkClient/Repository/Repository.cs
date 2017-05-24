@@ -145,8 +145,9 @@ namespace LfkClient.Repository
             FileSystem.Path = path;
             InvalidRepositoryDownloadReasons reason = InvalidRepositoryDownloadReasons.None;
 
-            if (RepoController.IsFolderContainRepository())
+            if (FileSystem.IsFolderExist(path))
             {
+                
                 reason = InvalidRepositoryDownloadReasons.FolderAlreadyContainsRepository;
             }
 

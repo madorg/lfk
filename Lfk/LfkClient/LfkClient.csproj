@@ -63,6 +63,7 @@
     <Compile Include="Repository\RepoControl\RepoController.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="UserMessages\InvalidRepositoryCreationReasons.cs" />
+    <Compile Include="UserMessages\InvalidRepositoryDownloadReasons.cs" />
     <Compile Include="UserMessages\InvalidRepositoryOpenReasons.cs" />
   </ItemGroup>
   <ItemGroup />

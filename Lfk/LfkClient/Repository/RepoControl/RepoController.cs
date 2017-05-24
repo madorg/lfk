@@ -68,10 +68,13 @@ namespace LfkClient.Repository.RepoControl
 
         public bool Download(string path, string repositoryId, out string message)
         {
+            
             message = string.Empty;
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Read, repositoryId);
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
             ServerRepository serverRepository = responsePackage.Data as ServerRepository;
+
+            path +="\\" +  serverRepository.LocalRepository.Title;
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
@@ -115,10 +118,6 @@ namespace LfkClient.Repository.RepoControl
             {
                 rc = folderRepository.UserId == userId;
             }
-            else
-            {
-                rc = false;
-            }
 
             return rc;
         }
@@ -145,13 +144,12 @@ namespace LfkClient.Repository.RepoControl
             ServerRepository serverRepository = responsePackage.Data as ServerRepository;
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
-
+                FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
             }
             else
             {
 
             }
-
         }
 
         public bool IsFolderContainRepository()

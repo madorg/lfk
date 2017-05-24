@@ -1,22 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 using LfkSharedResources.Models.Repository;
-using LfkSharedResources.Models.User;
-using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using LfkExceptions;
 using LfkClient.UserMessages;
 
 namespace LfkGUI.RepositoryManagement
@@ -30,6 +17,7 @@ namespace LfkGUI.RepositoryManagement
         public RepositoryManagementWindow()
         {
             InitializeComponent();
+            this.DeleteButton.Click += ShowAllButton_Click;
         }
         #region Главные обработчики
 
@@ -83,7 +71,7 @@ namespace LfkGUI.RepositoryManagement
                 {
                     InvalidRepositoryDownloadReasons reason = InvalidRepositoryDownloadReasons.None;
                     MessageDialogResult result;
-                    reason = Repository.CanDownloadRepository(path);
+                    reason = Repository.CanDownloadRepository(path +"\\" +lr.Title);
                     switch (reason)
                     {
                         case InvalidRepositoryDownloadReasons.None:
@@ -99,7 +87,7 @@ namespace LfkGUI.RepositoryManagement
                             break;
                         case InvalidRepositoryDownloadReasons.FolderAlreadyContainsRepository:
                             result = await this.ShowMessageAsync("Внимание",
-                                "Вы уверены что хотите перезаписать репозиторий в :" +
+                                "По данному путю уже существует каталог со схожим именем, вы зотите его перезаписать :" +
                                 path + " ?",
                                 MessageDialogStyle.AffirmativeAndNegative);
                             if (result == MessageDialogResult.Affirmative)

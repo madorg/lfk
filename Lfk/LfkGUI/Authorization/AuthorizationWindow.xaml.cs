@@ -45,13 +45,15 @@ namespace LfkGUI.Authorization
                 {
                    return Authorizator.TryLogin(loginUser, out message, out userId);
                 });
+
+                await controller.CloseAsync();
+
                 if (rc)
                 {
                     App.User = new User()
                     {
                         Id = userId
                     };
-                    await controller.CloseAsync();
                     this.Closing += OnSuccessAuthorization;
                     this.Close();
                 }
@@ -84,12 +86,12 @@ namespace LfkGUI.Authorization
                     {
                         return Authorizator.TrySignup(signupUser, out message, out userId);
                     });
-
+                    await controller.CloseAsync();
                     if (SignupValidation.IsValid(signupUser) && rc)
                     {
                         MessageDialogResult result = await this.ShowMessageAsync("You have signed in successfully", message,
                             MessageDialogStyle.Affirmative);
-                        await controller.CloseAsync();
+                     
                         App.User = new User()
                         {
                             Id = userId

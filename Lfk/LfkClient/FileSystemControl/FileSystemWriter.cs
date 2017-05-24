@@ -87,7 +87,6 @@ namespace LfkClient.FileSystemControl
         {
             DirectoryInfo di = new DirectoryInfo(path);
             
-
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
@@ -97,6 +96,7 @@ namespace LfkClient.FileSystemControl
                 dir.Delete(true);
             }
 
+            Directory.Delete(path);
         }
     }
 }
