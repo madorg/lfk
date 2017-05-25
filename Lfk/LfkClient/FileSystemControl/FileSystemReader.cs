@@ -31,7 +31,18 @@ namespace LfkClient.FileSystemControl
 
         public string ReadFileContent(string fileName)
         {
-            return File.ReadAllText(fileName, Encoding.Unicode);
+            Encoding fileEncoding = GetFileEncoding(fileName);
+            string fileContent = File.ReadAllText(fileName, fileEncoding);
+
+            if (fileEncoding.BodyName != Encoding.Unicode.BodyName)
+            {
+                byte[] oldBytes = fileEncoding.GetBytes(fileContent);
+                byte[] newBytes = Encoding.Convert(fileEncoding, Encoding.Unicode, oldBytes);
+                fileContent = Encoding.Unicode.GetString(newBytes);
+                File.WriteAllText(fileName, fileContent, Encoding.Unicode);
+            }
+
+            return fileContent;
         }
 
         internal bool IsFolderExist(string path)
@@ -45,6 +56,7 @@ namespace LfkClient.FileSystemControl
 
             using (StreamReader sr = new StreamReader(fileName))
             {
+                sr.Peek();
                 e = sr.CurrentEncoding;
             }
 

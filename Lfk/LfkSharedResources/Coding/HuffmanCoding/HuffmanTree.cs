@@ -68,28 +68,41 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         /// <returns></returns>
         public byte[] EncodeData(string source)
         {
-            List<bool> encoded = new List<bool>();
+            byte[] encodedBytes = null;
 
-            Traverse(nodes.First());  // DANGROUORS!!
-
-            foreach (char symbol in source)
+            if (source != string.Empty)
             {
-                encoded.AddRange(Find(nodes.First(), symbol).Data.Code);
+                List<bool> encoded = new List<bool>();
+
+                Traverse(nodes.FirstOrDefault());
+
+                foreach (char symbol in source)
+                {
+                    encoded.AddRange(Find(nodes.First(), symbol).Data.Code);
+                }
+
+                BitArray encodedBits = new BitArray(encoded.ToArray());
+
+                byte[] size = new byte[4];
+                size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source) + 2);
+
+                encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];
+                for (int i = 0; i < 4; i++)
+                {
+                    encodedBytes[i] = size[i];
+                }
+
+                encodedBits.CopyTo(encodedBytes, 4);
             }
-
-            BitArray encodedBits = new BitArray(encoded.ToArray());
-
-            
-            byte[] size = new byte[4];
-
-            size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source) + 2) ;
-
-            byte[] encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];
-            for (int i = 0; i < 4; i++)
+            else
             {
-                encodedBytes[i] = size[i];
+                encodedBytes = new byte[4];
+                byte[] size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source));
+                for (int i = 0; i < 4; i++)
+                {
+                    encodedBytes[i] = size[i];
+                }
             }
-            encodedBits.CopyTo(encodedBytes, 4);
 
             return encodedBytes;
         }
@@ -146,7 +159,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         public byte[] EncodeHuffmanTree()
         {
             StringBuilder encodedTree = new StringBuilder();
-            EncodeNode(nodes.First(), ref encodedTree);
+            EncodeNode(nodes.FirstOrDefault(), ref encodedTree);
             return Encoding.Unicode.GetBytes(encodedTree.ToString());
         }        
 
@@ -261,16 +274,19 @@ namespace LfkSharedResources.Coding.HuffmanCoding
 
         private void EncodeNode(HuffmanTreeNode node, ref StringBuilder encodedTree)
         {
-            if (node.Left == null && node.Right == null)
+            if (node != null)
             {
-                encodedTree.Append('1');
-                encodedTree.Append(node.Data.Symbol);
-            }
-            else
-            {
-                encodedTree.Append('0');
-                EncodeNode(node.Left, ref encodedTree);
-                EncodeNode(node.Right, ref encodedTree);
+                if (node.Left == null && node.Right == null)
+                {
+                    encodedTree.Append('1');
+                    encodedTree.Append(node.Data.Symbol);
+                }
+                else
+                {
+                    encodedTree.Append('0');
+                    EncodeNode(node.Left, ref encodedTree);
+                    EncodeNode(node.Right, ref encodedTree);
+                }
             }
         }
 
