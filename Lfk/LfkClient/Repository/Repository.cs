@@ -9,6 +9,7 @@ using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Models;
 using LfkClient.UserMessages;
+using System.Threading.Tasks;
 
 namespace LfkClient.Repository
 {
@@ -108,18 +109,18 @@ namespace LfkClient.Repository
             return RepoAgent.GetUnincludedFiles();
         }
 
-        public string[] GetChangedFilesAfterLastCommit()
+        public async Task<string[]> GetChangedFilesAfterLastCommit()
         {
-            return RepoAgent.GetChangedFilesAfterLastCommit();
+            return await RepoAgent.GetChangedFilesAfterLastCommit();
         }
 
         /// <summary>
         /// Возвращает список всех изменных файлов после последней команды Add
         /// </summary>
         /// <returns>Список изменных файлов</returns>
-        public string[] GetChangedFiles()
+        public async Task<string[]> GetChangedFiles()
         {
-            return RepoAgent.GetChangedFiles();
+            return await RepoAgent.GetChangedFiles();
         }
 
         public List<LocalRepository> GetManagedRepositories(string userId)

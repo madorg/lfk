@@ -13,6 +13,7 @@ using LfkSharedResources.Networking.NetworkActions;
 using LfkClient.ServerConnection;
 using LfkSharedResources.Networking.NetworkPackages;
 using LfkExceptions;
+using System.Threading.Tasks;
 
 namespace LfkClient.Repository.RepoAgent
 {
@@ -156,7 +157,7 @@ namespace LfkClient.Repository.RepoAgent
                     FileSystemPaths.LfkObjectsFolder + idFileNamePair.Key.ToString());
 
                 HuffmanTree huffmanTree = new HuffmanTree(oldBlob.HuffmanTree);
-                string decodedFileContent = huffmanTree.DecodeData(oldBlob.Hash);
+                string decodedFileContent = huffmanTree.DecodeData(oldBlob.Hash).Result;
                 //FileSystem.CreateFile(idFileNamePair.Value);
 
                 FileSystem.CreateFileWithFolders(idFileNamePair.Value);
@@ -257,7 +258,7 @@ namespace LfkClient.Repository.RepoAgent
             return GetWorkingDirectoryFiles().Except(GetIncludedFiles()).ToArray();
         }
 
-        public string[] GetChangedFilesAfterLastCommit()
+        public async Task<string[]> GetChangedFilesAfterLastCommit()
         {
             List<string> changedFilesAfterLastCommit = new List<string>();
 
@@ -284,7 +285,7 @@ namespace LfkClient.Repository.RepoAgent
             return changedFilesAfterLastCommit.ToArray();
         }
 
-        public string[] GetChangedFiles()
+        public async Task<string[]> GetChangedFiles()
         {
             List<string> changedFiles = new List<string>();
             List<string> includedFiles = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
@@ -293,7 +294,7 @@ namespace LfkClient.Repository.RepoAgent
             if (commits.Count != 0)
             {
                 Index previousIndex = commits.Last().Index;
-                changedFiles = GetChangedFilesAccordingToIndex(previousIndex);
+                changedFiles = await GetChangedFilesAccordingToIndex(previousIndex);
             }
             else
             {
@@ -305,14 +306,14 @@ namespace LfkClient.Repository.RepoAgent
                 }
                 else
                 {
-                    changedFiles = GetChangedFilesAccordingToIndex(currentIndex);
+                    changedFiles = await GetChangedFilesAccordingToIndex(currentIndex);
                 }
             }
 
             return changedFiles.ToArray();
         }
 
-        private List<string> GetChangedFilesAccordingToIndex(Index index)
+        private async Task<List<string>> GetChangedFilesAccordingToIndex(Index index)
         {
             List<string> changedFiles = new List<string>();
             List<string> includedFiles = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
@@ -326,13 +327,23 @@ namespace LfkClient.Repository.RepoAgent
                     Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
                     RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
 
-                    HuffmanTree huffmanTree = new HuffmanTree(previosBlob.HuffmanTree);
-                    string previousFileContent = huffmanTree.DecodeData(previosBlob.Hash);
+                    //if (previosBlob)
 
-                    if (fileContent != previousFileContent)
+                    HuffmanTree huffmanTree = new HuffmanTree(fileContent);
+                    byte[] currentHash = huffmanTree.EncodeData(fileContent);
+
+                    if (!currentHash.SequenceEqual(previosBlob.Hash))
                     {
                         changedFiles.Add(includedFile);
                     }
+
+                    //HuffmanTree huffmanTree = new HuffmanTree(previosBlob.HuffmanTree);      // скорость примелима
+                    //string previousFileContent = await huffmanTree.DecodeData(previosBlob.Hash);   // скорость критически низкая!
+
+                    //if (fileContent != previousFileContent)
+                    //{
+                    //    changedFiles.Add(includedFile);
+                    //}
                 }
                 else
                 {

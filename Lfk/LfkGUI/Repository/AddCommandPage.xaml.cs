@@ -26,10 +26,15 @@ namespace LfkGUI.Repository
         public AddCommandPage()
         {
             InitializeComponent();
+            SetChangedFiles();
+        }
+
+        private async void SetChangedFiles()
+        {
             TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
-                LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
+                await LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
             TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView,
-               LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit());
+               await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit());
         }
 
         private void ChangedFilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -108,7 +113,7 @@ namespace LfkGUI.Repository
             }
         }
 
-        private void AddedFilesRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        private async void AddedFilesRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             ItemsControl item = e.OriginalSource as ItemsControl;
             if (item.Parent != null)
@@ -118,7 +123,7 @@ namespace LfkGUI.Repository
 
                 ChangedFilesTreeView.Items.Clear();
                 TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
-                    LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
+                    await LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
                 ItemsControl parent = item.Parent as ItemsControl;
                 if (parent != null)
                 {

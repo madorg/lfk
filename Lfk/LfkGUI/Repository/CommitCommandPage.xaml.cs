@@ -24,10 +24,10 @@ namespace LfkGUI.Repository
     /// </summary>
     public partial class CommitCommandPage : Page
     {
-        private void UpdateChangedFilesListBox()
+        private async void UpdateChangedFilesListBox()
         {
             LastChangedFilesListBox.Items.Clear();
-            foreach (var item in LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit())
+            foreach (var item in await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit())
             {
                 LastChangedFilesListBox.Items.Add(new ListBoxItem()
                 {

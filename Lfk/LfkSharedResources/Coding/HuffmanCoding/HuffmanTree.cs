@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LfkSharedResources.Coding.HuffmanCoding
 {
@@ -113,7 +114,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         /// Осуществляет декодировку указанных данных на основе дерева Хаффмана
         /// </summary>
         /// <param name="encodedData">Данные для декодировки</param>
-        public string DecodeData(byte[] encodedData)
+        public async Task<string> DecodeData(byte[] encodedData)
         {
             HuffmanTreeNode currentNode = nodes.First();
 
