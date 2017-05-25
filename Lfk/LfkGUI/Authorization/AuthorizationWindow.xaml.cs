@@ -6,7 +6,7 @@ using LfkSharedResources.Models.User;
 using LfkGUI.RepositoryManagement;
 using MahApps.Metro.Controls.Dialogs;
 using LfkGUI.Utility.Validation;
-
+using System.Threading.Tasks;
 namespace LfkGUI.Authorization
 {
     /// <summary>
@@ -22,7 +22,6 @@ namespace LfkGUI.Authorization
 
         private void OnSuccessAuthorization(object sender, EventArgs e)
         {
-            // TODO: добавить параметры с информаицей о юзере
             RepositoryManagementWindow rmw = new RepositoryManagementWindow();
             rmw.Show();
         }
@@ -39,17 +38,22 @@ namespace LfkGUI.Authorization
                     Email = loginPage.LoginEmailTextBox.Text,
                     Password = loginPage.LoginPasswordTextBox.Password
                 };
-                Guid userId;
+                Guid userId = Guid.Empty;
+                var controller =  await this.ShowProgressAsync("Подождите", "Сервер слишком далеко");
+                
+                bool rc = await Task.Run(() =>
+                {
+                   return Authorizator.TryLogin(loginUser, out message, out userId);
+                });
 
-                if (
-                    //LoginValidation.IsValid(loginUser) && 
-                    Authorizator.TryLogin(loginUser, out message, out userId))
+                await controller.CloseAsync();
+
+                if (rc)
                 {
                     App.User = new User()
                     {
                         Id = userId
                     };
-
                     this.Closing += OnSuccessAuthorization;
                     this.Close();
                 }
@@ -68,7 +72,7 @@ namespace LfkGUI.Authorization
             if (registrationPage != null)
             {
                 string message = "Неверные данные";
-                Guid userId;
+                Guid userId = Guid.Empty;
                 SignupUser signupUser = new SignupUser()
                 {
                     Name = registrationPage.SignupNameTextBox.Text,
@@ -77,11 +81,17 @@ namespace LfkGUI.Authorization
                 };
                 if (registrationPage.SignupPasswordTextBox.Password == registrationPage.SignupConfirmPasswordTextBox.Password)
                 {
-                    if (SignupValidation.IsValid(signupUser) && Authorizator.TrySignup(signupUser, out message, out userId))
+                    var controller = await this.ShowProgressAsync("Подождите", "Сервер слишком далеко");
+                    bool rc = await Task.Run(() =>
+                    {
+                        return Authorizator.TrySignup(signupUser, out message, out userId);
+                    });
+                    await controller.CloseAsync();
+                    if (SignupValidation.IsValid(signupUser) && rc)
                     {
                         MessageDialogResult result = await this.ShowMessageAsync("You have signed in successfully", message,
                             MessageDialogStyle.Affirmative);
-
+                     
                         App.User = new User()
                         {
                             Id = userId

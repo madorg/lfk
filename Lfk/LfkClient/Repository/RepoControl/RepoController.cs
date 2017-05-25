@@ -19,6 +19,11 @@ namespace LfkClient.Repository.RepoControl
     /// </summary>
     internal class RepoController
     {
+        static RepoController()
+        {
+            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+        }
         /// <summary>
         /// Инициализирует системный каталог lfk необходимыми файлами и папками
         /// </summary>
@@ -34,34 +39,22 @@ namespace LfkClient.Repository.RepoControl
 
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, serverRepository);
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            message = responsePackage.OperationInfo.Message;
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
                 Initialization(repo);
             }
 
-            message = responsePackage.OperationInfo.Message;
             return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
         }
 
         /// <summary>
         /// Открывает каталог содержащий репозиторий 
         /// </summary>
-        public void OpenLocal(string path,Guid userId)
+        public void OpenLocal(string path, Guid userId)
         {
             FileSystem.Path = path;
-            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
-            try
-            {
-                LocalRepository repo = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
-                if (repo.UserId != userId) throw new NotAllowedOpenRepository("Извините, но это не ваш репозиторий");
-            }
-            catch (System.IO.DirectoryNotFoundException ex)
-            {
-                //Если файла не существует то обрабатывается исключение и дальше выбрасывается с информацией о том что не найден файл инициализации
-                throw;
-            }
         }
 
 
@@ -73,17 +66,22 @@ namespace LfkClient.Repository.RepoControl
             return repositories;
         }
 
-        public bool Download(string path, string repositoryId,out string message)
+        public bool Download(string path, string repositoryId, out string message)
         {
+            
             message = string.Empty;
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Read, repositoryId);
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
             ServerRepository serverRepository = responsePackage.Data as ServerRepository;
 
+            path +="\\" +  serverRepository.LocalRepository.Title;
+
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
                 serverRepository.LocalRepository.Path = path;
+
                 Initialization(serverRepository.LocalRepository);
+
                 JsonSerializer.SerializeObjectToFile(serverRepository.Files, FileSystemPaths.LfkFilesFile);
 
                 JsonSerializer.SerializeObjectToFile(
@@ -93,7 +91,7 @@ namespace LfkClient.Repository.RepoControl
                 foreach (RepoObject repoObject in serverRepository.Objects)
                 {
                     string serilaizedRepoObject = JsonSerializer.SerializeObject(repoObject);
-                    FileSystem.InitializeInexistentFile(FileSystemPaths.LfkObjectsFolder +  repoObject.Id.ToString(), serilaizedRepoObject);
+                    FileSystem.InitializeInexistentFile(FileSystemPaths.LfkObjectsFolder + repoObject.Id.ToString(), serilaizedRepoObject);
                 }
 
                 foreach (Commit commit in serverRepository.Commits)
@@ -112,9 +110,67 @@ namespace LfkClient.Repository.RepoControl
             return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
         }
 
+        internal bool IsUserHolderOfRepository(string path, Guid userId)
+        {
+            bool rc = false;
+            LocalRepository folderRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+            if (folderRepository != null)
+            {
+                rc = folderRepository.UserId == userId;
+            }
+
+            return rc;
+        }
+
+        internal bool IsExistRepositorySameTitle(LocalRepository localRepository)
+        {
+            bool rc = false;
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.View, localRepository.UserId);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            List<LocalRepository> repositories = responsePackage.Data as List<LocalRepository>;
+
+            if (repositories.Contains(repositories.FirstOrDefault(rep => rep.Title == localRepository.Title)))
+            {
+                rc = true;
+            }
+
+            return rc;
+        }
+
+        public void Delete(string repositoryId)
+        {
+            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Delete, repositoryId);
+            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
+            ServerRepository serverRepository = responsePackage.Data as ServerRepository;
+            if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
+            {
+                FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
+            }
+            else
+            {
+
+            }
+        }
+
+        public bool IsFolderContainRepository()
+        {
+            bool rc = false;
+            rc = FileSystem.IsFolderExist(FileSystemPaths.LfkMainFolder);
+            return rc;
+        }
+
+        private void ClearRepositoryFolder()
+        {
+            if (FileSystem.IsFolderExist(FileSystemPaths.LfkMainFolder))
+            {
+                FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
+            }
+        }
+
         private void Initialization(LocalRepository repo)
         {
             FileSystem.Path = repo.Path;
+            ClearRepositoryFolder();
 
             FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
 
@@ -125,10 +181,6 @@ namespace LfkClient.Repository.RepoControl
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
             FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
-
-
-            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
 
             JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
 

@@ -1,4 +1,6 @@
-﻿namespace LfkClient.FileSystemControl
+﻿using System.Text;
+
+namespace LfkClient.FileSystemControl
 {    
     /// <summary>
     /// Отвечает за работу с файловой системой (рабочим каталогом пользователя)
@@ -108,6 +110,15 @@
             return reader.ReadFileContent(Path + fileName);
         }
 
+        public static bool IsFolderExist(string path)
+        {
+            return reader.IsFolderExist(Path + path);
+        }
+
+        public static Encoding GetFileEncoding(string fileName)
+        {
+            return reader.GetFileEncoding(Path + fileName);
+        }
         #endregion
 
         #region Методы удаления / Нужно обсудить еще
@@ -115,7 +126,12 @@
         public static void DeleteFile(string fileName)
         {
             writer.DeleteFile(Path + fileName);
-        } 
+        }
+
+        public static void DeleteFolder(string folder)
+        {
+            writer.DeleteFolder(Path + folder);
+        }
         #endregion
     }
 }

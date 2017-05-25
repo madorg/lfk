@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -78,8 +79,10 @@ namespace LfkSharedResources.Coding.HuffmanCoding
 
             BitArray encodedBits = new BitArray(encoded.ToArray());
 
+            
             byte[] size = new byte[4];
-            size = BitConverter.GetBytes(source.Length);
+
+            size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source) + 2) ;
 
             byte[] encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];
             for (int i = 0; i < 4; i++)
@@ -144,7 +147,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         {
             StringBuilder encodedTree = new StringBuilder();
             EncodeNode(nodes.First(), ref encodedTree);
-            return Encoding.UTF8.GetBytes(encodedTree.ToString());
+            return Encoding.Unicode.GetBytes(encodedTree.ToString());
         }        
 
         #endregion
