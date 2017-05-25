@@ -21,7 +21,7 @@ namespace LfkClient.Repository.RepoAgent
     /// </summary>
     internal class RepoAgent
     {
-        private Guid currentIndexId;
+        private static Guid currentIndexId;
 
         public void InitializeRepoAgent()
         {
@@ -33,7 +33,6 @@ namespace LfkClient.Repository.RepoAgent
                 currentIndexId = index.Id;
                 JsonSerializer.SerializeObjectToFile<Index>(index, FileSystemPaths.LfkIndexFile);
             }
-            
         }
 
         #region Обработчики основных команд системы контроля версия (Handle)
@@ -61,6 +60,7 @@ namespace LfkClient.Repository.RepoAgent
 
         public void HandleAdd(IEnumerable<string> added)
         {
+            currentIndexId = JsonDeserializer.DeserializeObjectFromFile<Index>(FileSystemPaths.LfkIndexFile).Id;
             List<File> deserializedFiles = JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
             foreach (string fileName in added)
             {
@@ -68,9 +68,9 @@ namespace LfkClient.Repository.RepoAgent
 
                 string addedFileContent = FileSystem.ReadFileContent(fileName);
 
-                HuffmanTree huffmanTree = new HuffmanTree(addedFileContent);
-                byte[] encodedFileContent = huffmanTree.EncodeData(addedFileContent);
-                byte[] encodedHuffmanTree = huffmanTree.EncodeHuffmanTree();
+                HuffmanTree huffmanTree = new HuffmanTree(addedFileContent);              // ok
+                byte[] encodedFileContent = huffmanTree.EncodeData(addedFileContent);     // maybe ok
+                byte[] encodedHuffmanTree = huffmanTree.EncodeHuffmanTree();              // ??? not tested
 
                 Guid indexId = currentIndexId;
                 Guid fileId = deserializedFiles.Find(f => f.Filename == fileName).Id;

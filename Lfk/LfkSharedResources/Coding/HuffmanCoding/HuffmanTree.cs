@@ -74,25 +74,27 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             {
                 List<bool> encoded = new List<bool>();
 
-                Traverse(nodes.FirstOrDefault());
+                Traverse(nodes.FirstOrDefault());  // ok
 
                 foreach (char symbol in source)
                 {
                     encoded.AddRange(Find(nodes.First(), symbol).Data.Code);
-                }
+                }  // ok
 
-                BitArray encodedBits = new BitArray(encoded.ToArray());
+                BitArray encodedBits = new BitArray(encoded.ToArray());  // ok
 
-                byte[] size = new byte[4];
-                size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source) + 2);
+                byte[] size = new byte[4];                                            // ???
+                size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source));  // ???
 
-                encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];
+                encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];      // ???????
                 for (int i = 0; i < 4; i++)
                 {
                     encodedBytes[i] = size[i];
                 }
 
                 encodedBits.CopyTo(encodedBytes, 4);
+
+                BitArray ba = new BitArray(encodedBytes);
             }
             else
             {
@@ -120,7 +122,8 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             {
                 sizeInBytes[i] = encodedData[i];
             }
-            int size = BitConverter.ToInt32(sizeInBytes, 0);
+            int sizeInBits = BitConverter.ToInt32(sizeInBytes, 0);
+            int size = sizeInBits / 2;  // на каждый символ по два байта
 
             BitArray encodedBits = new BitArray(encodedData);
             string decodedData = string.Empty;
@@ -160,7 +163,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
         {
             StringBuilder encodedTree = new StringBuilder();
             EncodeNode(nodes.FirstOrDefault(), ref encodedTree);
-            return Encoding.Unicode.GetBytes(encodedTree.ToString());
+            return Encoding.UTF8.GetBytes(encodedTree.ToString());
         }        
 
         #endregion

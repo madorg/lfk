@@ -119,6 +119,7 @@ namespace LfkClient.FileSystemControl
         {
             return reader.GetFileEncoding(Path + fileName);
         }
+
         #endregion
 
         #region Методы удаления / Нужно обсудить еще
