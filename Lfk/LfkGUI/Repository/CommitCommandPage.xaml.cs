@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
+
 namespace LfkGUI.Repository
 {
     /// <summary>
@@ -42,29 +45,25 @@ namespace LfkGUI.Repository
 
         private async void CommitButton_Click(object sender, RoutedEventArgs e)
         {
-            if (LastChangedFilesListBox.Items.Count == 0)
+            MetroWindow mainWindow = Application.Current.MainWindow as MetroWindow;
+            if (mainWindow != null)
             {
-                DockPanel modalDialog = App.Current.Resources["ModalDialogWithText"] as DockPanel;
-                (modalDialog.Children[0] as TextBlock).Text = "Error!";
-                (modalDialog.Children[1] as TextBlock).Text = "No changes to make commit!";
-                DialogContent.Children.Add(modalDialog);
-                await DialogHost.Show(DialogContent);
-                DialogContent.Children.Remove(modalDialog);
-            }
-            else if (!string.IsNullOrWhiteSpace(CommitMessageTextBox.Text))
-            {
-                LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
-                UpdateChangedFilesListBox();
-                CommitMessageTextBox.Clear();
-            }
-            else
-            {
-                DockPanel modalDialog = App.Current.Resources["ModalDialogWithText"] as DockPanel;
-                (modalDialog.Children[0] as TextBlock).Text = "Error!";
-                (modalDialog.Children[1] as TextBlock).Text = "Please insert commit message to make commit!";
-                DialogContent.Children.Add(modalDialog);
-                await DialogHost.Show(DialogContent);
-                DialogContent.Children.Remove(modalDialog);
+                if (LastChangedFilesListBox.Items.Count == 0)
+                {
+                    await mainWindow.ShowMessageAsync("Ошибка", "Нечего коммитить",
+                                 MessageDialogStyle.Affirmative);
+                }
+                else if (!string.IsNullOrWhiteSpace(CommitMessageTextBox.Text))
+                {
+                    LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
+                    UpdateChangedFilesListBox();
+                    CommitMessageTextBox.Clear();
+                }
+                else
+                {
+                    await mainWindow.ShowMessageAsync("Ошибка", "Введите сообщение коммита",
+                                  MessageDialogStyle.Affirmative);
+                }
             }
         }
     }

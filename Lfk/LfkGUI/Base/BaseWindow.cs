@@ -52,12 +52,22 @@ namespace LfkGUI.Base
             stackPanel.Children.Add(languageToggleSwitch);
             ToggleSwitch themeToggleSwitch = new ToggleSwitch() { Name = "ThemeToggleSwitch" };
 
+            
+
             themeToggleSwitch.SetResourceReference(ToggleSwitch.HeaderProperty, "ColorThemeString");
             themeToggleSwitch.SetResourceReference(ToggleSwitch.OnLabelProperty, "DarkThemeString");
             themeToggleSwitch.SetResourceReference(ToggleSwitch.OffLabelProperty, "LightThemeString");
             themeToggleSwitch.IsCheckedChanged += ThemeToggleSwitch_IsCheckedChanged;
 
             stackPanel.Children.Add(themeToggleSwitch);
+
+            Button quitButton = new Button();
+            quitButton.SetResourceReference(Button.StyleProperty, "MaterialDesignRaisedDarkButton");
+            quitButton.Content = "change user";
+            quitButton.Click += QuitButton_Click;
+
+            stackPanel.Children.Add(quitButton);
+
             settingsFlyout = new Flyout()
             {
                 Name = "SettingsFlyout",
@@ -69,6 +79,7 @@ namespace LfkGUI.Base
             settingsFlyout.SetResourceReference(Flyout.HeaderProperty, "SettingsString");
             this.Flyouts = new FlyoutsControl();
             this.Flyouts.Items.Add(settingsFlyout);
+
             #endregion
             #region Добавление кнопки настроек на панели окна 
             Button settingsButton = new Button()
@@ -101,6 +112,16 @@ namespace LfkGUI.Base
 
             #endregion
         }
+
+        private void QuitButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Closing += (s, ev) => {
+                App.User = null;
+                new Authorization.AuthorizationWindow().Show();
+            };
+            this.Close();
+        }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             settingsFlyout.IsOpen = !settingsFlyout.IsOpen;

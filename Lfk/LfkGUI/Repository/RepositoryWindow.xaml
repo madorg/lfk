@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:LfkGUI"
         xmlns:base="clr-namespace:LfkGUI.Base"
         mc:Ignorable="d"
-        Title="{DynamicResource RepositoryWindowTitle}" Height="500" Width="800"
+        Title="{DynamicResource RepositoryWindowTitle}" Height="500" Width="900"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}" >
     <Grid>
         <Grid.RowDefinitions>
@@ -36,8 +36,8 @@
                     Style="{StaticResource MaterialDesignFlatButton}" Click="CommitCommandButton_Click" />
             <Button x:Name="HistoryCommandButton"   Content="{DynamicResource HistoryString}"
                     Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
-            <Button x:Name="UploadCommandButton"   Content="Upload"
-                    Style="{StaticResource MaterialDesignFlatButton}" Click="UploadCommandButton_Click"/>
+            <Button x:Name="UpdateCommandButton"   Content="Update"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="UpdateCommandButton_Click"/>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="1" x:Name="NavigationStackPanel" Margin="5">
             <Button x:Name="NavigateToRepositoryManagementWindowButton" Content="{DynamicResource BackToRepositoryManagementString}"

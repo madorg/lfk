@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Coding\HuffmanCoding\HuffmanTree.cs" />
     <Compile Include="Exceptions\ClientExceptions\ClientException.cs" />
+    <Compile Include="Exceptions\ClientExceptions\NotAllowedOpenRepository.cs" />
+    <Compile Include="Exceptions\ClientExceptions\RepositoryUpdateWithoutCommitsException.cs" />
     <Compile Include="Exceptions\ClientExceptions\ServerExceptions\ServerConnectionException.cs" />
     <Compile Include="Exceptions\LfkException.cs" />
     <Compile Include="Exceptions\ServerExceptions\DuplicateEmailException.cs" />
@@ -61,11 +63,12 @@
     <Compile Include="Exceptions\SharedResourcesExceptions\SerializationExceptions\JsonSerializerNullArgumentException.cs" />
     <Compile Include="Extensions\NetworkExtensions.cs" />
     <Compile Include="Models\Commit.cs" />
-    <Compile Include="Models\DatabaseModels\Commit.cs" />
-    <Compile Include="Models\DatabaseModels\File.cs" />
-    <Compile Include="Models\DatabaseModels\RepoObject.cs" />
-    <Compile Include="Models\DatabaseModels\Repository.cs" />
-    <Compile Include="Models\DatabaseModels\User.cs" />
+    <Compile Include="Models\DatabaseModels\DBCommit.cs" />
+    <Compile Include="Models\DatabaseModels\DBFile.cs" />
+    <Compile Include="Models\DatabaseModels\DBRepoObject.cs" />
+    <Compile Include="Models\DatabaseModels\DBRepository.cs" />
+    <Compile Include="Models\DatabaseModels\DBUser.cs" />
+    <Compile Include="Models\File.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\RepoObject.cs" />
     <Compile Include="Models\Repository\AbstractRepository.cs" />

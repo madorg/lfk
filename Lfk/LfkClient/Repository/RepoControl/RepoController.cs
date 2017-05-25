@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Networking;
@@ -8,6 +9,8 @@ using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkSharedResources.Networking.NetworkPackages;
 using LfkSharedResources.Serialization.Json;
 using LfkSharedResources.Models;
+using System;
+using LfkExceptions;
 
 namespace LfkClient.Repository.RepoControl
 {
@@ -19,7 +22,7 @@ namespace LfkClient.Repository.RepoControl
         /// <summary>
         /// Инициализирует системный каталог lfk необходимыми файлами и папками
         /// </summary>
-        public bool Init(AbstractRepository abstractRepository, out string message)
+        public bool Create(AbstractRepository abstractRepository, out string message)
         {
             LocalRepository repo = abstractRepository as LocalRepository;
             ServerRepository serverRepository = new ServerRepository()
@@ -34,23 +37,7 @@ namespace LfkClient.Repository.RepoControl
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
-                FileSystem.Path = repo.Path;
-
-                FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
-
-                FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
-                FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
-
-                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
-                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
-                FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
-
-                JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
-                JsonSerializer.WriteMethod = FileSystem.WriteToFile;
-
-                JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
-
-                Repository.GetInstance().RepoAgent.InitializeRepoAgent();
+                Initialization(repo);
             }
 
             message = responsePackage.OperationInfo.Message;
@@ -60,15 +47,15 @@ namespace LfkClient.Repository.RepoControl
         /// <summary>
         /// Открывает каталог содержащий репозиторий 
         /// </summary>
-        public void OpenLocal(string path)
+        public void OpenLocal(string path,Guid userId)
         {
             FileSystem.Path = path;
             JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
             JsonSerializer.WriteMethod = FileSystem.WriteToFile;
-
             try
             {
                 LocalRepository repo = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
+                if (repo.UserId != userId) throw new NotAllowedOpenRepository("Извините, но это не ваш репозиторий");
             }
             catch (System.IO.DirectoryNotFoundException ex)
             {
@@ -77,29 +64,6 @@ namespace LfkClient.Repository.RepoControl
             }
         }
 
-        public void Upload()
-        {
-            LocalRepository localRepository = JsonDeserializer.DeserializeObjectFromFile<LocalRepository>(FileSystemPaths.LfkInfoFile);
-            List<Commit> commits = Repository.GetInstance().History();
-            List<RepoObject> objects = new List<RepoObject>();
-            foreach (string filename in FileSystem.ReadWorkingDirectoryFiles(FileTypes.SystemObjects))
-            {
-                RepoObject repoObject = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(filename);
-                objects.Add(repoObject);
-            }
-
-            ServerRepository serverRepository = new ServerRepository()
-            {
-                LocalRepository = localRepository,
-                Commits = commits,
-                Objects = objects
-            };
-
-            byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Create, serverRepository);
-            ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
-
-            System.Windows.Forms.MessageBox.Show(responsePackage.OperationInfo.Message);
-        }
 
         public List<LocalRepository> GetManagedRepositories(string userId)
         {
@@ -109,12 +73,66 @@ namespace LfkClient.Repository.RepoControl
             return repositories;
         }
 
-        public void Download(string repositoryId)
+        public bool Download(string path, string repositoryId,out string message)
         {
+            message = string.Empty;
             byte[] data = NetworkPackageController.ConvertDataToBytes(NetworkPackageDestinations.Repository, RepositoryNetworkActions.Read, repositoryId);
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
             ServerRepository serverRepository = responsePackage.Data as ServerRepository;
-            ////////////
+
+            if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
+            {
+                serverRepository.LocalRepository.Path = path;
+                Initialization(serverRepository.LocalRepository);
+                JsonSerializer.SerializeObjectToFile(serverRepository.Files, FileSystemPaths.LfkFilesFile);
+
+                JsonSerializer.SerializeObjectToFile(
+                    serverRepository.Files.Select(file => file.Filename).ToList(),
+                    FileSystemPaths.LfkIncludedFile);
+
+                foreach (RepoObject repoObject in serverRepository.Objects)
+                {
+                    string serilaizedRepoObject = JsonSerializer.SerializeObject(repoObject);
+                    FileSystem.InitializeInexistentFile(FileSystemPaths.LfkObjectsFolder +  repoObject.Id.ToString(), serilaizedRepoObject);
+                }
+
+                foreach (Commit commit in serverRepository.Commits)
+                {
+                    string serializedCommit = JsonSerializer.SerializeObject(commit);
+                    FileSystem.InitializeInexistentFile(FileSystemPaths.LfkCommitsFolder + commit.Id.ToString(), serializedCommit);
+                }
+
+                foreach (File file in serverRepository.Files)
+                {
+                    FileSystem.CreateFileWithFolders(file.Filename);
+                }
+            }
+
+            message = responsePackage.OperationInfo.Message;
+            return responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok ? true : false;
+        }
+
+        private void Initialization(LocalRepository repo)
+        {
+            FileSystem.Path = repo.Path;
+
+            FileSystem.CreateFolder(FileSystemPaths.LfkMainFolder);
+
+            FileSystem.CreateFolder(FileSystemPaths.LfkObjectsFolder);
+            FileSystem.CreateFolder(FileSystemPaths.LfkCommitsFolder);
+
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIncludedFile, "[]");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkIndexFile, "{}");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkInfoFile, "{}");
+            FileSystem.InitializeInexistentFile(FileSystemPaths.LfkFilesFile, "[]");
+
+
+            JsonDeserializer.ReadMethod = FileSystem.ReadFileContent;
+            JsonSerializer.WriteMethod = FileSystem.WriteToFile;
+
+            JsonSerializer.SerializeObjectToFile(repo, FileSystemPaths.LfkInfoFile);
+
+            Repository.GetInstance().RepoAgent.InitializeRepoAgent();
         }
     }
-}   
+}

@@ -13,5 +13,6 @@
         public const string LfkIncludedFile = @"\.lfk\included.json";
         public const string LfkIndexFile    = @"\.lfk\index.json";
         public const string LfkInfoFile     = @"\.lfk\info.json";
+        public const string LfkFilesFile    = @"\.lfk\files.json";
     }
 }

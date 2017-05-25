@@ -11,7 +11,9 @@
     <Grid>
         <DockPanel>
             <materialDesign:Card  DockPanel.Dock="Top" Padding="20" Width="300"  Margin="10">
-                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}" Text="{DynamicResource PleaseLoginString}"/>
+                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}" 
+                           Foreground="{DynamicResource PrimaryHueLightBrush}" 
+                           Text="{DynamicResource PleaseLoginString}"/>
             </materialDesign:Card>
             <StackPanel  DockPanel.Dock="Bottom" Orientation="Vertical"  VerticalAlignment="Stretch">
                 <DockPanel Width="300" LastChildFill="False" HorizontalAlignment="Center" >
