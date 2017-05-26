@@ -34,16 +34,8 @@ namespace LfkGUI.Utility
             {
                 branch = BuildBranch(root, ref filenames, ref i, ref j);
 
-                bool isContain = false;
-                foreach (TreeViewItem item in root.Items)
-                {
-                    if(string.Equals(item.Header.ToString(),branch.Header.ToString()))
-                    {
-                        isContain = true;
-                        break;
-                    }
-                }
-                if (!isContain)
+                
+                if (!IsTreeViewContainItemHeader(root,branch.Header.ToString()))
                 {
                     root.Items.Add(branch);
                 }
@@ -59,6 +51,19 @@ namespace LfkGUI.Utility
 
             return branch;
         }
+        private static bool IsTreeViewContainItemHeader(ItemsControl treevViewItem,string header)
+        {
+            bool isContain = false;
+            foreach (TreeViewItem item in treevViewItem.Items)
+            {
+                if (string.Equals(item.Header.ToString(), header))
+                {
+                    isContain = true;
+                    break;
+                }
+            }
+            return isContain;
+        }
 
         private static RemovableTreeViewItem BuildBranch(ItemsControl root, ref string[][] filenames, ref int i, ref int j)
         {
@@ -69,7 +74,7 @@ namespace LfkGUI.Utility
                 string[] pathToFind = new string[j];
                 Array.Copy(filenames[i], pathToFind, j);
                 FindNode(root, pathToFind, 0, 0, ref branch);
-                if (!branch.Items.Contains(node))
+                if (!IsTreeViewContainItemHeader(branch, node.Header.ToString()))
                 {
                     branch.Items.Add(node);
                 }
