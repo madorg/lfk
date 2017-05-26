@@ -97,8 +97,7 @@ namespace LfkGUI.Repository
                 List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
                 TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
 
-                LfkClient.Repository.Repository.GetInstance()
-                    .Add(files);
+                LfkClient.Repository.Repository.GetInstance().Add(files);
 
                 ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
             }

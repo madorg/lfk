@@ -34,7 +34,16 @@ namespace LfkGUI.Utility
             {
                 branch = BuildBranch(root, ref filenames, ref i, ref j);
 
-                if (!root.Items.Contains(branch))
+                bool isContain = false;
+                foreach (TreeViewItem item in root.Items)
+                {
+                    if(string.Equals(item.Header.ToString(),branch.Header.ToString()))
+                    {
+                        isContain = true;
+                        break;
+                    }
+                }
+                if (!isContain)
                 {
                     root.Items.Add(branch);
                 }

@@ -29,11 +29,9 @@ namespace LfkGUI.Repository
         {
             InitializeComponent();
             var history = LfkClient.Repository.Repository.GetInstance().History();
-            if (history != null && history.Count != 0)
+            if (history.Count != 0)
             {
-                (HistoryListView.Resources["Commits"] as ArrayList).AddRange(
-                    history
-                    );
+                (HistoryListView.Resources["Commits"] as ArrayList).AddRange(history);
             }
         }
 
@@ -71,19 +69,6 @@ namespace LfkGUI.Repository
                 commit.Id.ToString() +
                 "\n" + "Сообщение : " +
                 commit.Comment, MessageDialogStyle.Affirmative, new MetroDialogSettings() { ColorScheme = MetroDialogColorScheme.Inverted });
-        }
-
-        private async void HistoryListView_Selected(object sender, RoutedEventArgs e)
-        {
-            //LfkSharedResources.Models.Commit selectedCommit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
-
-
-            //ContentText.Text = "";
-            //foreach (var item in selectedCommit.Index.RepoObjectIdAndFileName)
-            //{
-            //    ContentText.Text += item.Value + "\n";
-            //}
-            //await DialogHost.Show(DialogContent);
         }
 
     }

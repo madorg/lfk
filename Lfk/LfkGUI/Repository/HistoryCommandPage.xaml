@@ -17,7 +17,7 @@
                 <TextBlock Text="History of commits" Foreground="WhiteSmoke" FontSize="20" MinWidth="300" Margin="30,0,0,0"/>
                 <Button x:Name="SwitchCommandButton"   Content="Switch" Style="{StaticResource MaterialDesignFlatButton}"  Click="SwitchCommandButton_Click"/>
             </DockPanel>
-            <ListView x:Name="HistoryListView" ItemsSource="{DynamicResource ResourceKey=Commits}" SelectionChanged="HistoryListView_Selected">
+            <ListView x:Name="HistoryListView" ItemsSource="{DynamicResource ResourceKey=Commits}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
