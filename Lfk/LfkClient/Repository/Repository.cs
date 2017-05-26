@@ -79,6 +79,18 @@ namespace LfkClient.Repository
             RepoAgent.HandleSwitch(commit);
         }
 
+        public InvalidCommitSwitchingReasons CanSwitch(Commit commit)
+        {
+            InvalidCommitSwitchingReasons reason = InvalidCommitSwitchingReasons.None;
+
+            if (RepoAgent.GetChangedFiles().Result.Length != 0 && RepoAgent.GetChangedFilesAfterLastCommit().Result.Length != 0)
+            {
+                reason = InvalidCommitSwitchingReasons.NotCommittedChanges;
+            }
+
+            return reason;
+        }
+
         public void Uninclude(IEnumerable<string> unincluded)
         {
             RepoAgent.HandleUninclude(unincluded);
@@ -107,6 +119,11 @@ namespace LfkClient.Repository
         public string[] GetUnincludedFiles()
         {
             return RepoAgent.GetUnincludedFiles();
+        }
+
+        public async Task<string[]> GetChangedFilesAfterParentCommit()
+        {
+            return await RepoAgent.GetChangedFilesAfterParentCommit();
         }
 
         public async Task<string[]> GetChangedFilesAfterLastCommit()

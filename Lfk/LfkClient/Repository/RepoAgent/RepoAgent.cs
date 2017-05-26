@@ -22,7 +22,8 @@ namespace LfkClient.Repository.RepoAgent
     /// </summary>
     internal class RepoAgent
     {
-        private static Guid currentIndexId;
+        private Guid currentIndexId;
+        private Guid parentCommitId;
 
         public void InitializeRepoAgent()
         {
@@ -31,7 +32,9 @@ namespace LfkClient.Repository.RepoAgent
             if (index.Id == Guid.Empty)
             {
                 index.Id = Guid.NewGuid();
+                index.ParentCommitId = Guid.Empty;
                 currentIndexId = index.Id;
+                parentCommitId = index.ParentCommitId;
                 JsonSerializer.SerializeObjectToFile<Index>(index, FileSystemPaths.LfkIndexFile);
             }
         }
@@ -126,7 +129,9 @@ namespace LfkClient.Repository.RepoAgent
             JsonSerializer.SerializeObjectToFile(commit, FileSystemPaths.LfkCommitsFolder + commit.Id.ToString());
 
             currentIndexId = Guid.NewGuid();
+            parentCommitId = commit.Id;
             index.Id = currentIndexId;
+            index.ParentCommitId = parentCommitId;
 
             JsonSerializer.SerializeObjectToFile(index, FileSystemPaths.LfkIndexFile);
         }
@@ -151,6 +156,8 @@ namespace LfkClient.Repository.RepoAgent
         /// <param name="commit">Объект коммита, на который обеспечивается переключение</param>
         public void HandleSwitch(Commit commit)
         {
+            JsonSerializer.SerializeObjectToFile(commit.Index, FileSystemPaths.LfkIndexFile);
+            FileSystem.ReadWorkingDirectoryFiles(FileTypes.Client);
             foreach (KeyValuePair<Guid, string> idFileNamePair in commit.Index.RepoObjectIdAndFileName)
             {
                 RepoObject oldBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(
@@ -158,7 +165,6 @@ namespace LfkClient.Repository.RepoAgent
 
                 HuffmanTree huffmanTree = new HuffmanTree(oldBlob.HuffmanTree);
                 string decodedFileContent = huffmanTree.DecodeData(oldBlob.Hash).Result;
-                //FileSystem.CreateFile(idFileNamePair.Value);
 
                 FileSystem.CreateFileWithFolders(idFileNamePair.Value);
                 FileSystem.WriteToFile(idFileNamePair.Value, decodedFileContent);
@@ -214,8 +220,8 @@ namespace LfkClient.Repository.RepoAgent
             List<Commit> commits = Repository.GetInstance().History();
             List<RepoObject> objects = new List<RepoObject>();
             List<File> files = JsonDeserializer.DeserializeObjectFromFile<List<File>>(FileSystemPaths.LfkFilesFile);
-            
-            if(commits.Count == 0)
+
+            if (commits.Count == 0)
             {
                 throw new RepositoryUpdateWithoutCommitsException("Перед загрузкой на сервер сделайте хотя бы один коммит");
             }
@@ -258,6 +264,37 @@ namespace LfkClient.Repository.RepoAgent
             return GetWorkingDirectoryFiles().Except(GetIncludedFiles()).ToArray();
         }
 
+        public async Task<string[]> GetChangedFilesAfterParentCommit()
+        {
+            List<string> changedFilesAfterParentCommit = new List<string>();
+            Index currentIndex = JsonDeserializer.DeserializeObjectFromFile<Index>(FileSystemPaths.LfkIndexFile);
+
+            if (currentIndex.ParentCommitId == Guid.Empty)
+            {
+                changedFilesAfterParentCommit.AddRange(currentIndex.RepoObjectIdAndFileName.Values);
+            }
+            else
+            {
+                Commit parentCommit = GetParentCommit(currentIndex.ParentCommitId);
+                foreach (var blobInfo in currentIndex.RepoObjectIdAndFileName)
+                {
+                    if (!parentCommit.Index.RepoObjectIdAndFileName.ContainsKey(blobInfo.Key))
+                    {
+                        changedFilesAfterParentCommit.Add(blobInfo.Value);
+                    }
+                }
+            }
+
+            return changedFilesAfterParentCommit.ToArray();
+        }
+
+        private Commit GetParentCommit(Guid parentId)
+        {
+            Commit parentCommit = null;
+            parentCommit = JsonDeserializer.DeserializeObjectFromFile<Commit>(FileSystemPaths.LfkCommitsFolder + parentId.ToString());
+            return parentCommit;
+        }
+
         public async Task<string[]> GetChangedFilesAfterLastCommit()
         {
             List<string> changedFilesAfterLastCommit = new List<string>();
@@ -290,24 +327,15 @@ namespace LfkClient.Repository.RepoAgent
             List<string> changedFiles = new List<string>();
             List<string> includedFiles = JsonDeserializer.DeserializeObjectFromFile<List<string>>(FileSystemPaths.LfkIncludedFile);
 
-            List<Commit> commits = HandleHistory();
-            if (commits.Count != 0)
+            Index currentIndex = JsonDeserializer.DeserializeObjectFromFile<Index>(FileSystemPaths.LfkIndexFile);
+
+            if (currentIndex.Id == Guid.Empty)
             {
-                Index previousIndex = commits.Last().Index;
-                changedFiles = await GetChangedFilesAccordingToIndex(previousIndex);
+                changedFiles.AddRange(includedFiles);
             }
             else
             {
-                Index currentIndex = JsonDeserializer.DeserializeObjectFromFile<Index>(FileSystemPaths.LfkIndexFile);
-
-                if (currentIndex.Id == Guid.Empty)
-                {
-                    changedFiles.AddRange(includedFiles);
-                }
-                else
-                {
-                    changedFiles = await GetChangedFilesAccordingToIndex(currentIndex);
-                }
+                changedFiles = await GetChangedFilesAccordingToIndex(currentIndex);
             }
 
             return changedFiles.ToArray();
@@ -327,23 +355,21 @@ namespace LfkClient.Repository.RepoAgent
                     Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
                     RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
 
-                    //if (previosBlob)
-
                     HuffmanTree huffmanTree = new HuffmanTree(fileContent);
+                    byte[] currentHuffmanTree = huffmanTree.EncodeHuffmanTree();
                     byte[] currentHash = huffmanTree.EncodeData(fileContent);
 
-                    if (!currentHash.SequenceEqual(previosBlob.Hash))
+                    if (currentHuffmanTree.SequenceEqual(previosBlob.HuffmanTree))
+                    {
+                        if (!currentHash.SequenceEqual(previosBlob.Hash))
+                        {
+                            changedFiles.Add(includedFile);
+                        }
+                    }
+                    else
                     {
                         changedFiles.Add(includedFile);
                     }
-
-                    //HuffmanTree huffmanTree = new HuffmanTree(previosBlob.HuffmanTree);      // скорость примелима
-                    //string previousFileContent = await huffmanTree.DecodeData(previosBlob.Hash);   // скорость критически низкая!
-
-                    //if (fileContent != previousFileContent)
-                    //{
-                    //    changedFiles.Add(includedFile);
-                    //}
                 }
                 else
                 {

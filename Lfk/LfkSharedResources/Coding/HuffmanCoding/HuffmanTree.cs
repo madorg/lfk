@@ -75,27 +75,25 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             {
                 List<bool> encoded = new List<bool>();
 
-                Traverse(nodes.FirstOrDefault());  // ok
+                Traverse(nodes.FirstOrDefault());
 
                 foreach (char symbol in source)
                 {
                     encoded.AddRange(Find(nodes.First(), symbol).Data.Code);
-                }  // ok
+                }
 
-                BitArray encodedBits = new BitArray(encoded.ToArray());  // ok
+                BitArray encodedBits = new BitArray(encoded.ToArray());
 
-                byte[] size = new byte[4];                                            // ???
-                size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source));  // ???
+                byte[] size = new byte[4];
+                size = BitConverter.GetBytes(Encoding.Unicode.GetByteCount(source));
 
-                encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];      // ???????
+                encodedBytes = new byte[((encodedBits.Length - 1) / 8 + 1) + 4];
                 for (int i = 0; i < 4; i++)
                 {
                     encodedBytes[i] = size[i];
                 }
 
                 encodedBits.CopyTo(encodedBytes, 4);
-
-                BitArray ba = new BitArray(encodedBytes);
             }
             else
             {
@@ -119,31 +117,26 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             HuffmanTreeNode currentNode = nodes.First();
 
             byte[] sizeInBytes = new byte[4];
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < sizeInBytes.Length; i++)
             {
                 sizeInBytes[i] = encodedData[i];
             }
-            int sizeInBits = BitConverter.ToInt32(sizeInBytes, 0);
-            int size = sizeInBits / 2;  // на каждый символ по два байта
+
+            int bitsCount = BitConverter.ToInt32(sizeInBytes, 0);
+            int size = bitsCount / 2;  // на каждый символ по два байта
 
             BitArray encodedBits = new BitArray(encodedData);
             string decodedData = string.Empty;
 
             for (int i = 32; i < encodedBits.Length; i++)
             {
-                if (encodedBits[i])
+                if (encodedBits[i] == true && currentNode.Right != null)
                 {
-                    if (currentNode.Right != null)
-                    {
-                        currentNode = currentNode.Right;
-                    }
+                    currentNode = currentNode.Right;
                 }
-                else
+                else if (encodedBits[i] == false && currentNode.Left != null)
                 {
-                    if (currentNode.Left != null)
-                    {
-                        currentNode = currentNode.Left;
-                    }
+                    currentNode = currentNode.Left;
                 }
 
                 if (currentNode.Left == null && currentNode.Right == null)
@@ -165,7 +158,7 @@ namespace LfkSharedResources.Coding.HuffmanCoding
             StringBuilder encodedTree = new StringBuilder();
             EncodeNode(nodes.FirstOrDefault(), ref encodedTree);
             return Encoding.UTF8.GetBytes(encodedTree.ToString());
-        }        
+        }
 
         #endregion
 

@@ -133,6 +133,15 @@ namespace LfkClient.FileSystemControl
         {
             writer.DeleteFolder(Path + folder);
         }
+
+        public static void ClearWorkingDirectory()
+        {
+            foreach (string path in reader.ReadWorkingDirectoryFiles(Path))
+            {
+
+            }
+        }
+
         #endregion
     }
 }

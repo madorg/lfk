@@ -16,6 +16,7 @@ using System.Collections;
 using MaterialDesignThemes.Wpf;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using LfkClient.UserMessages;
 
 namespace LfkGUI.Repository
 {
@@ -38,15 +39,38 @@ namespace LfkGUI.Repository
 
         private async void SwitchCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            MetroWindow window = App.Current.MainWindow as MetroWindow; 
+            MetroWindow window = App.Current.MainWindow as MetroWindow;
             LfkSharedResources.Models.Commit commit = HistoryListView.SelectedItem as LfkSharedResources.Models.Commit;
 
-                LfkClient.Repository.Repository.GetInstance().Switch(commit);
-                await window.ShowMessageAsync("Success","Успешное переключение на коммит : \n" + 
-                    commit.Id.ToString() + 
-                    "\n" + "Сообщение : " +
-                    commit.Comment ,MessageDialogStyle.Affirmative, new MetroDialogSettings() {ColorScheme = MetroDialogColorScheme.Inverted });
+            InvalidCommitSwitchingReasons reason = LfkClient.Repository.Repository.GetInstance().CanSwitch(commit);
 
+            switch (reason)
+            {
+                case InvalidCommitSwitchingReasons.None:
+                    SwitchCommit(commit);
+                    break;
+
+                case InvalidCommitSwitchingReasons.NotCommittedChanges:
+                    MessageDialogResult result = await window.ShowMessageAsync("Bad", "Вы уверены, что хотите переключиться на другой коммит без сохранения текущего состояния? \n", MessageDialogStyle.AffirmativeAndNegative);
+                    if (result == MessageDialogResult.Affirmative)
+                    {
+                        SwitchCommit(commit);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private async void SwitchCommit(LfkSharedResources.Models.Commit commit)
+        {
+            MetroWindow window = App.Current.MainWindow as MetroWindow;
+            LfkClient.Repository.Repository.GetInstance().Switch(commit);
+            await window.ShowMessageAsync("Success", "Успешное переключение на коммит : \n" +
+                commit.Id.ToString() +
+                "\n" + "Сообщение : " +
+                commit.Comment, MessageDialogStyle.Affirmative, new MetroDialogSettings() { ColorScheme = MetroDialogColorScheme.Inverted });
         }
 
         private async void HistoryListView_Selected(object sender, RoutedEventArgs e)

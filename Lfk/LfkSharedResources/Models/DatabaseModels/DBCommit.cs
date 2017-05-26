@@ -20,6 +20,7 @@ namespace LfkSharedResources.Models.DatabaseModels
         public DateTime Date { get; set; }
         [Column(Name = "comment")]
         public string Comment { get; set; }
-
+        [Column(Name = "parent_commit_id")]
+        public Guid ParentCommitId { get; set; }
     }
 }

@@ -77,6 +77,7 @@ namespace LfkServer.Database
                         Index = new Index()
                         {
                             Id = commit.IndexId,
+                            ParentCommitId = commit.ParentCommitId,
                             RepoObjectIdAndFileName = new Dictionary<Guid, string>(
                             repoObjectTable.Where(repo => repo.IndexId == commit.IndexId)
                             .Join(filesTable,
@@ -143,7 +144,8 @@ namespace LfkServer.Database
                 RepositoryId = serverRepository.LocalRepository.Id,
                 IndexId = commit.Index.Id,
                 Date = commit.Date,
-                Comment = commit.Comment
+                Comment = commit.Comment,
+                ParentCommitId = commit.Index.ParentCommitId
             })
             .Where(newc =>
             !commitsTable.Any(c => c.Id == newc.Id)

@@ -62,6 +62,7 @@
     <Compile Include="Repository\RepoAgent\RepoAgent.cs" />
     <Compile Include="Repository\RepoControl\RepoController.cs" />
     <Compile Include="Repository\Repository.cs" />
+    <Compile Include="UserMessages\InvalidCommitSwitchingReasons.cs" />
     <Compile Include="UserMessages\InvalidRepositoryCreationReasons.cs" />
     <Compile Include="UserMessages\InvalidRepositoryDownloadReasons.cs" />
     <Compile Include="UserMessages\InvalidRepositoryOpenReasons.cs" />

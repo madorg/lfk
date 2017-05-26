@@ -34,7 +34,7 @@ namespace LfkGUI.Repository
             TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
                 await LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
             TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView,
-               await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit());
+               await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterParentCommit());
         }
 
         private void ChangedFilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

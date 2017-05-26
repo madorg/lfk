@@ -27,7 +27,7 @@ namespace LfkGUI.Repository
         private async void UpdateChangedFilesListBox()
         {
             LastChangedFilesListBox.Items.Clear();
-            foreach (var item in await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterLastCommit())
+            foreach (var item in await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterParentCommit())
             {
                 LastChangedFilesListBox.Items.Add(new ListBoxItem()
                 {

@@ -11,6 +11,7 @@ namespace LfkSharedResources.Models
         }
 
         public Guid Id { get; set; }
+        public Guid ParentCommitId { get; set; }
         public Dictionary<Guid, string> RepoObjectIdAndFileName { get; set; }
     }
 }
