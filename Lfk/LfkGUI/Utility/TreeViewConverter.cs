@@ -5,12 +5,13 @@ using System.Text;
 using System.Windows.Controls;
 using System.IO;
 using LfkGUI.Base;
+using System.Threading.Tasks;
 
 namespace LfkGUI.Utility
 {
     public class TreeViewConverter
     {
-        public static void BuildFilesTreeViewItem(TreeView tree, string[] filespaths)
+        public async static Task BuildFilesTreeViewItem(TreeView tree, string[] filespaths)
         {
             string[][] filenames = new string[filespaths.Length][];
 
@@ -33,7 +34,6 @@ namespace LfkGUI.Utility
             else if (j == 0)
             {
                 branch = BuildBranch(root, ref filenames, ref i, ref j);
-
                 
                 if (!IsTreeViewContainItemHeader(root,branch.Header.ToString()))
                 {
@@ -94,7 +94,6 @@ namespace LfkGUI.Utility
                     {
                         item = node.Items[branchNumber] as RemovableTreeViewItem;
                     }
-
                     FindNode(node.Items[branchNumber] as ItemsControl, filepaths, 0, ++branchDepth, ref item);
                 }
                 else if (node.Items.Count != 0)
@@ -137,6 +136,24 @@ namespace LfkGUI.Utility
             }
 
             return list;
+        }
+
+        public static bool IsFolderTreeViewItem(TreeViewItem treeViewItem)
+        {
+            return !Path.HasExtension(treeViewItem.Header.ToString());
+        }
+        public static void RemoveTreeViewItem(TreeViewItem treeViewItem)
+        {
+            ItemsControl parentControl = treeViewItem.Parent as ItemsControl;
+            parentControl.Items.Remove(treeViewItem);
+            TreeViewItem parentItem = parentControl as TreeViewItem;
+            if(parentItem != null)
+            {
+                if (IsFolderTreeViewItem(parentItem) && parentItem.Items.Count == 0)
+                {
+                    RemoveTreeViewItem(parentItem);
+                }
+            }
         }
 
         private static void ParseTreeViewItem(RemovableTreeViewItem root, ref List<string> files, string prefix)

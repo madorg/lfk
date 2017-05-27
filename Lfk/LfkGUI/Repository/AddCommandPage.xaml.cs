@@ -26,14 +26,15 @@ namespace LfkGUI.Repository
         public AddCommandPage()
         {
             InitializeComponent();
+
             SetChangedFiles();
         }
 
         private async void SetChangedFiles()
         {
-            TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
+            await TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
                 await LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
-            TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView,
+            await TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView,
                await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterParentCommit());
         }
 
@@ -50,7 +51,6 @@ namespace LfkGUI.Repository
                 isDrag = true;
                 if (treeView != null && treeView.Items.Count > 0)
                 {
-
                     object temp = treeView.SelectedItem;
                     DataObject data = null;
                     data = new DataObject(typeof(TreeViewItem), temp);
@@ -89,17 +89,16 @@ namespace LfkGUI.Repository
             }
         }
 
-        private void TreeView_Drop(object sender, DragEventArgs e)
+        private async void TreeView_Drop(object sender, DragEventArgs e)
         {
             TreeViewItem item = e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem;
             if (item != null)
             {
                 List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
-                TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
+                await TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
 
                 LfkClient.Repository.Repository.GetInstance().Add(files);
-
-                ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
+                TreeViewConverter.RemoveTreeViewItem(item);
             }
         }
 
@@ -117,17 +116,11 @@ namespace LfkGUI.Repository
             ItemsControl item = e.OriginalSource as ItemsControl;
             if (item.Parent != null)
             {
+                TreeViewItem treeViewItem = item as TreeViewItem;
                 LfkClient.Repository.Repository.GetInstance().Reset(
-                    TreeViewConverter.ParseTreeViewItemToFullFilenames(item as TreeViewItem));
+                    TreeViewConverter.ParseTreeViewItemToFullFilenames(treeViewItem));
 
-                ChangedFilesTreeView.Items.Clear();
-                TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
-                    await LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
-                ItemsControl parent = item.Parent as ItemsControl;
-                if (parent != null)
-                {
-                    parent.Items.Remove(item);
-                }
+                TreeViewConverter.RemoveTreeViewItem(treeViewItem);
             }
 
         }

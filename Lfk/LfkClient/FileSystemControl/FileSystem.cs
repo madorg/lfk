@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 
 namespace LfkClient.FileSystemControl
 {    
@@ -138,7 +139,13 @@ namespace LfkClient.FileSystemControl
         {
             foreach (string path in reader.ReadWorkingDirectoryFiles(Path))
             {
-
+                FileAttributes pathType = File.GetAttributes(path);
+                if (pathType.HasFlag(FileAttributes.Directory)){
+                    writer.DeleteFolder(path);
+                }
+                else {
+                    writer.DeleteFile(path);
+                }
             }
         }
 

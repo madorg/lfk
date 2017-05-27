@@ -2,6 +2,7 @@
 using LfkSharedResources.Extensions;
 using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkPackages;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 

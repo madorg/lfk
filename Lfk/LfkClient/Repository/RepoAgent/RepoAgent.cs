@@ -157,7 +157,7 @@ namespace LfkClient.Repository.RepoAgent
         public void HandleSwitch(Commit commit)
         {
             JsonSerializer.SerializeObjectToFile(commit.Index, FileSystemPaths.LfkIndexFile);
-            FileSystem.ReadWorkingDirectoryFiles(FileTypes.Client);
+            FileSystem.ClearWorkingDirectory();
             foreach (KeyValuePair<Guid, string> idFileNamePair in commit.Index.RepoObjectIdAndFileName)
             {
                 RepoObject oldBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(

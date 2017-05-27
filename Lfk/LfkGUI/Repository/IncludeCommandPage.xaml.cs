@@ -29,11 +29,14 @@ namespace LfkGUI.Repository
         public IncludeCommandPage()
         {
             InitializeComponent();
-
-            TreeViewConverter.BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
+            SetFiles();
+        }
+        private async void SetFiles()
+        {
+            await TreeViewConverter.BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
                 LfkClient.Repository.Repository.GetInstance().GetUnincludedFiles());
-            TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView,
-                LfkClient.Repository.Repository.GetInstance().GetIncludedFiles());
+            await TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView,
+               LfkClient.Repository.Repository.GetInstance().GetIncludedFiles());
         }
         private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -90,8 +93,7 @@ namespace LfkGUI.Repository
                 List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
                 TreeViewConverter.BuildFilesTreeViewItem(IncludedFilesTreeView, files.ToArray());
                 LfkClient.Repository.Repository.GetInstance().Include(files);
-
-                ((item as ItemsControl).Parent as ItemsControl).Items.Remove(item);
+                TreeViewConverter.RemoveTreeViewItem(item as TreeViewItem);
             }
         }
 
@@ -103,22 +105,19 @@ namespace LfkGUI.Repository
                                MessageDialogStyle.Affirmative);
         }
 
-        private void IncludedRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        private async void IncludedRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             ItemsControl item = e.OriginalSource as ItemsControl;
             if (item.Parent != null)
             {
-                LfkClient.Repository.Repository.GetInstance().Uninclude(TreeViewConverter.ParseTreeViewItemToFullFilenames(item as TreeViewItem));
-
-                WorkingDirectoryFilesTreeView.Items.Clear();
-                TreeViewConverter.BuildFilesTreeViewItem(WorkingDirectoryFilesTreeView,
-                LfkClient.Repository.Repository.GetInstance().GetUnincludedFiles());
-
-                ItemsControl parent = item.Parent as ItemsControl;
-                if (parent != null)
-                {
-                    parent.Items.Remove(item);
-                }
+                TreeViewItem treeViewItem = item as TreeViewItem;
+                List<string> unincludedFiles = TreeViewConverter.ParseTreeViewItemToFullFilenames(treeViewItem);
+                LfkClient.Repository.Repository.GetInstance().Uninclude(unincludedFiles);
+                TreeViewConverter.RemoveTreeViewItem(treeViewItem);
+                await TreeViewConverter.BuildFilesTreeViewItem(
+                    WorkingDirectoryFilesTreeView,
+                    unincludedFiles.ToArray());
+              
             }
 
         }
