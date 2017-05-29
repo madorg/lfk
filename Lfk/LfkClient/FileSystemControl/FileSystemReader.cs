@@ -32,7 +32,7 @@ namespace LfkClient.FileSystemControl
         public string ReadFileContent(string fileName)
         {
             Encoding fileEncoding = GetFileEncoding(fileName);
-            string fileContent = File.ReadAllText(fileName, fileEncoding);
+            string fileContent = File.ReadAllText(fileName, Encoding.Default);
 
             if (fileEncoding.BodyName != Encoding.Unicode.BodyName)
             {
