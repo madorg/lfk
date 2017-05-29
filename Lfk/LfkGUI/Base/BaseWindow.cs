@@ -117,7 +117,7 @@ namespace LfkGUI.Base
         {
             this.Closing += (s, ev) => {
                 App.User = null;
-                new Authorization.AuthorizationWindow().Show();
+                new LfkGUI.Views.AuthorizationViews.AuthorizationWindow().Show();
             };
             this.Close();
         }

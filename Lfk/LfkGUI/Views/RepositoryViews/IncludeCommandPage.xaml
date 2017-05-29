@@ -1,0 +1,51 @@
+﻿<Page x:Class="LfkGUI.Views.RepositoryViews.IncludeCommandPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LfkGUI.Repository"
+      xmlns:commands ="clr-namespace:LfkGUI.Utility"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="IncludeCommandPage">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
+         VerticalAlignment="Stretch" />
+        <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True"  ToolTip="{DynamicResource ToolTipWorkinDirecktoryTreeViewString}">
+            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource WorkingDirectoryString}" TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Label Content="{DynamicResource FilesCountString}"/>
+                <Label x:Name="WorkingDirectoryFilesCount" Content="0"/>
+            </StackPanel>
+            <TreeView  x:Name="WorkingDirectoryFilesTreeView"  Margin="3,3,3,3" AllowDrop="False"
+                       MouseDown="FilesTreeView_MouseLeftButtonDown"
+                       MouseMove="FilesTreeView_MouseMove">
+                <TreeView.CommandBindings>
+                    <CommandBinding x:Name="WorkingDirectoryRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem" Executed="WorkingDirectoryRemoveCommand_Executed"/>
+                </TreeView.CommandBindings>
+            </TreeView>
+        </DockPanel>
+        <DockPanel LastChildFill="True" Grid.Row="0" Grid.Column="1" Margin="10" >
+            <TextBlock DockPanel.Dock="Top" TextAlignment="Center" Padding="4" FontSize="20" 
+                       Text="{DynamicResource IncludedFilesString}"
+                       Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Label Content="{DynamicResource FilesCountString}"/>
+                    <Label x:Name="IncludedFilesCount" Content="0"/>
+                </StackPanel>
+            <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
+                       Drop="TreeView_Drop"
+                       >
+                <TreeView.CommandBindings>
+                    <CommandBinding x:Name="IncludedRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem" Executed="IncludedRemoveCommand_Executed"/>
+                </TreeView.CommandBindings>
+            </TreeView>
+        </DockPanel>
+
+    </Grid>
+</Page>
