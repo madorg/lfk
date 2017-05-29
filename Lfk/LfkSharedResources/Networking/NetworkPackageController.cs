@@ -46,7 +46,6 @@ namespace LfkSharedResources.Networking
         public static T ConvertBytesToPackage<T>(byte[] data)
         {
             string serializedPackage = Encoding.UTF8.GetString(data);
-            Console.WriteLine(serializedPackage);
             T package = JsonDeserializer.DeserializeObject<T>(serializedPackage);
             return package;
         }

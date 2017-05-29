@@ -9,13 +9,18 @@ using LfkServer.Database;
 using LfkSharedResources.Networking;
 using LfkExceptions;
 using System.Collections.Generic;
+using NLog;
 
 namespace LfkServer.Repository
 {
     class RepositoryController
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static ResponseNetworkPackage HandleRequest(string action, object data)
         {
+            logger.Debug("Запуск обработки запроса к данным Repository, действие = " + action);
+
             ServerRepository serverRepository = null;
             RepositoryConnector repositoryConnector = new RepositoryConnector();
 
@@ -43,7 +48,6 @@ namespace LfkServer.Repository
                         break;
 
                     case RepositoryNetworkActions.Delete:
-                        // подключение к БД, поиск соответсвующей записи, формирование ответа
                         repositoryConnector.HandleDelete(data.ToString());
                         break;
 
@@ -59,22 +63,27 @@ namespace LfkServer.Repository
                 operationInfo = new NetworkOperationInfo()
                 {
                     Code = NetworkStatusCodes.Ok,
-                    Message = "Это сообщение для пользователя"
+                    Message = "ОК"
                 };
             }
             catch (ServerException serverException)
             {
+                logger.Error("Обработка исключения ServerException: " + serverException.Message);
                 operationInfo = new NetworkOperationInfo()
                 {
                     Code = NetworkStatusCodes.Fail,
                     Message = serverException.Message
                 };
             }
+            finally
+            {
+                responsePackage =
+                        NetworkPackageController.ConvertBytesToPackage<ResponseNetworkPackage>(
+                            NetworkPackageController.ConvertDataToBytes(operationInfo, responseData));
+                logger.Debug("Пакет с ответом для запроса к данным Repository (" + action + ") сформирован");
+            }
 
-            responsePackage =
-                    NetworkPackageController.ConvertBytesToPackage<ResponseNetworkPackage>(
-                        NetworkPackageController.ConvertDataToBytes(operationInfo, responseData));
-
+            logger.Debug("Завершение обработки запроса к данным Repository, действие = " + action);
             return responsePackage;
         }
     }

@@ -8,13 +8,18 @@ using LfkServer.Database;
 using System.Data.SqlClient;
 using System;
 using LfkExceptions;
+using NLog;
 
 namespace LfkServer.User
 {
     class UserController
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static ResponseNetworkPackage HandleRequest(string action, object data)
         {
+            logger.Debug("Запуск обработки запроса к данным User, действие = " + action);
+
             ResponseNetworkPackage responsePackage = new ResponseNetworkPackage();
             UserConnector userConnector = new UserConnector();
 
@@ -47,6 +52,7 @@ namespace LfkServer.User
             }
             catch (ServerException serverException)
             {
+                logger.Error("Обработка исключения ServerException: " + serverException.Message);
                 operationInfo = new NetworkOperationInfo()
                 {
                     Code = NetworkStatusCodes.Fail,
@@ -58,8 +64,10 @@ namespace LfkServer.User
                 responsePackage = 
                     NetworkPackageController.ConvertBytesToPackage<ResponseNetworkPackage>(
                         NetworkPackageController.ConvertDataToBytes(operationInfo, guid));
+                logger.Debug("Пакет с ответом для запроса к данным User (" + action + ") сформирован");
             }
 
+            logger.Debug("Завершение обработки запроса к данным User, действие = " + action);
             return responsePackage;
         }
     }
