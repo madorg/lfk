@@ -139,7 +139,7 @@ namespace LfkClient.FileSystemControl
         {
             foreach (string path in reader.ReadWorkingDirectoryFiles(Path))
             {
-                FileAttributes pathType = File.GetAttributes(path);
+                FileAttributes pathType = File.GetAttributes(Path + path);
                 if (pathType.HasFlag(FileAttributes.Directory)){
                     writer.DeleteFolder(path);
                 }
