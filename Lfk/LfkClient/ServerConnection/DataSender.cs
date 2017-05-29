@@ -36,7 +36,11 @@ namespace LfkClient.ServerConnection
             }
             catch (SocketException)
             {
-                throw new ServerConnectionException("Возникла проблема при подключении к серверу. Пожалуйста, повторите запрос позже.");
+                responsePackage = new ResponseNetworkPackage();
+                NetworkPackageController.SetOperationInfo(
+                    responsePackage, 
+                    LfkSharedResources.Networking.NetworkDiagnostics.NetworkStatusCodes.Fail,
+                    "Возникла проблема при подключении к серверу. Пожалуйста, повторите запрос позже.");
             }
 
             return responsePackage;

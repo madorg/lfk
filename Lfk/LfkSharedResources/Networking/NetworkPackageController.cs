@@ -73,5 +73,16 @@ namespace LfkSharedResources.Networking
 
             return package;
         }
+
+        public static void SetOperationInfo(ResponseNetworkPackage package, NetworkStatusCodes statusCode, string message)
+        {
+            NetworkOperationInfo operationInfo = new NetworkOperationInfo()
+            {
+                Code = statusCode,
+                Message = message
+            };
+
+            package.OperationInfo = operationInfo;
+        }
     }
 }
