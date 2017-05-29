@@ -74,7 +74,14 @@ namespace LfkClient.Repository.RepoControl
             ResponseNetworkPackage responsePackage = ServerConnector.Send(data);
             ServerRepository serverRepository = responsePackage.Data as ServerRepository;
 
-            path += path.EndsWith("\\") ? serverRepository.LocalRepository.Title + "\\" : "\\" + serverRepository.LocalRepository.Title + "\\";
+            if (!path.EndsWith("\\"))
+            {
+                path += "\\" + serverRepository.LocalRepository.Title;
+            }
+            else
+            {
+                path += serverRepository.LocalRepository.Title;
+            }
 
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {

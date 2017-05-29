@@ -141,10 +141,10 @@ namespace LfkClient.FileSystemControl
             {
                 FileAttributes pathType = File.GetAttributes(Path + path);
                 if (pathType.HasFlag(FileAttributes.Directory)){
-                    writer.DeleteFolder(path);
+                    writer.DeleteFolder(Path + path);
                 }
                 else {
-                    writer.DeleteFile(path);
+                    writer.DeleteFile(Path + path);
                 }
             }
         }
