@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using LfkSharedResources.Networking;
 using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkSharedResources.Networking.NetworkPackages;
+using System.Net;
+using NLog;
 
 namespace LfkServer.Client.Handlers
 {
@@ -12,18 +14,19 @@ namespace LfkServer.Client.Handlers
     /// </summary>
     class ResponseHandler
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static async Task HandleResponse (TcpClient client, ResponseNetworkPackage responsePackage)
         {
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("ResponseHandler (поток " + Environment.CurrentManagedThreadId + "): начал отправку ответа для клиентского потока");
-            // ------------------ END LOG ------------------ //
+            logger.Info("Запуск формирования ОТВЕТА клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
 
             byte[] responseData = NetworkPackageController.ConvertDataToBytes(responsePackage.OperationInfo, responsePackage.Data);
-            await client.GetStream().WriteAsync(responseData, 0, responseData.Length);
+            logger.Debug("Размер данных ответа для " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString() + " = " + responseData.Length + " байт");
 
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("ResponseHandler (поток " + Environment.CurrentManagedThreadId + "): законил отправку ответа для клиентского потока");
-            // ------------------ END LOG ------------------ //
+            await client.GetStream().WriteAsync(responseData, 0, responseData.Length);
+            logger.Debug("Ответ для " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString() + " успешно записан в клиентский поток");
+
+            logger.Info("Завершение формирования ОТВЕТА клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
         }
     }
 }

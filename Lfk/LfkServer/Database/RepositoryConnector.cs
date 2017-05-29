@@ -10,14 +10,20 @@ using System.Text;
 using System.Threading.Tasks;
 using LfkExceptions;
 using LfkSharedResources.Models;
+using NLog;
 
 namespace LfkServer.Database
 {
     class RepositoryConnector : DatabaseConnector
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public void HandleCreate(ServerRepository serverRepository)
         {
+            logger.Debug("Запуск обработки операции CREATE");
+
             this.OpenConnection();
+            logger.Debug("CREATE: Соединение с БД открыто");
 
             DataContext dataContext = new DataContext(sqlConnection);
             Table<DBRepository> repositoresTable = dataContext.GetTable<DBRepository>();
@@ -34,22 +40,31 @@ namespace LfkServer.Database
             try
             {
                 dataContext.SubmitChanges();
+                logger.Debug("CREATE: Данные успешно добавлены в БД");
             }
             catch (SqlException sqlException) when (sqlException.Number == 2627)
             {
+                logger.Error("CREATE: Ошибка SQL-сервера №2627, генерация DuplicateEmailException; подробности см. в LfkLog.txt");
+                logger.Trace(sqlException.StackTrace);
                 throw new DuplicateRepositoryTitleException("Репозиторий с именем " + dbRepository.Title + " уже существует.");
             }
             finally
             {
                 this.CloseConnection();
+                logger.Debug("CREATE: Соединение с БД закрыто");
             }
+
+            logger.Debug("Завершение обработки операции CREATE");
         }
 
         public ServerRepository HandleRead(string repositoryId)
         {
+            logger.Debug("Запуск обработки операции READ");
+
             ServerRepository serverRepository;
 
             this.OpenConnection();
+            logger.Debug("READ: Соединение с БД открыто");
 
             Guid guid = Guid.Parse(repositoryId);
             DataContext dataContext = new DataContext(sqlConnection);
@@ -65,7 +80,6 @@ namespace LfkServer.Database
 
             LocalRepository localRepository = (LocalRepository)repositoresTable.FirstOrDefault(r => r.Id == guid);
 
-            //ЗАПРЕТИТЬ БЕЗ КОММИТА ДЕЛАТЬ UPDATE!!!!!!!!!!!!!!!!
             foreach (DBCommit commit in commitsTable.Where(c => c.RepositoryId == guid))
             {
                 Commit newCommit =
@@ -88,6 +102,7 @@ namespace LfkServer.Database
                             .ToDictionary(m => m.Key, m => m.Value))
                         }
                     };
+
                 commits.Add(newCommit);
             }
 
@@ -106,7 +121,7 @@ namespace LfkServer.Database
                     }
                     ));
             }
-            //проблема очень надо решить
+
             foreach (RepoObject repoObject in repoObjects)
             {
                 files.AddRange(filesTable.Where(f => f.Id == repoObject.FileId).Select(m =>
@@ -125,12 +140,18 @@ namespace LfkServer.Database
             };
 
             this.CloseConnection();
+            logger.Debug("READ: Соединение с БД закрыто");
+
+            logger.Debug("Завершение обработки операции READ");
             return serverRepository;
         }
 
         public void HandleUpdate(ServerRepository serverRepository)
         {
+            logger.Debug("Запуск обработки операции UPDATE");
+
             this.OpenConnection();
+            logger.Debug("UPDATE: Соединение с БД открыто");
 
             DataContext dataContext = new DataContext(sqlConnection);
 
@@ -172,11 +193,17 @@ namespace LfkServer.Database
             dataContext.SubmitChanges();
 
             this.CloseConnection();
+            logger.Debug("UPDATE: Соединение с БД закрыто");
+
+            logger.Debug("Завершение обработки операции UPDATE");
         }
 
         public List<LocalRepository> HandleView(string userId)
         {
+            logger.Debug("Запуск обработки операции VIEW");
+
             this.OpenConnection();
+            logger.Debug("VIEW: Соединение с БД открыто");
 
             Guid guid = Guid.Parse(userId);
             DataContext dataContext = new DataContext(sqlConnection);
@@ -192,13 +219,19 @@ namespace LfkServer.Database
                 }).ToList();
 
             this.CloseConnection();
+            logger.Debug("VIEW: Соединение с БД закрыто");
 
+            logger.Debug("Завершение обработки операции VIEW");
             return managedRepositories;
         }
 
         public void HandleDelete(string repositoryId)
         {
+            logger.Debug("Запуск обработки операции DELETE");
+
             this.OpenConnection();
+            logger.Debug("DELETE: Соединение с БД открыто");
+
             Guid guid = Guid.Parse(repositoryId);
             DataContext dataContext = new DataContext(sqlConnection);
 
@@ -229,6 +262,9 @@ namespace LfkServer.Database
             dataContext.SubmitChanges();
 
             this.CloseConnection();
+            logger.Debug("DELETE: Соединение с БД закрыто");
+
+            logger.Debug("Завершение обработки операции DELETE");
         }
     }
 }

@@ -6,11 +6,15 @@ using LfkSharedResources.Networking.NetworkDiagnostics;
 using LfkServer.Repository;
 using LfkServer.User;
 using LfkSharedResources.Networking.NetworkPackages;
+using NLog;
+using System.Net;
 
 namespace LfkServer.Client
 {
     class ClientController
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private RequestHandler requestHandler;
         private ResponseHandler responseHandler;
 
@@ -22,9 +26,7 @@ namespace LfkServer.Client
 
         public async void HandleClient(TcpClient client)
         {
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): принял клиентский поток");
-            // ------------------ END LOG ------------------ //
+            logger.Info("Запуск обработки запроса/ответа клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
 
             RequestNetworkPackage requestPackage = await requestHandler.HandleRequest(client);
 
@@ -45,9 +47,8 @@ namespace LfkServer.Client
 
             await ResponseHandler.HandleResponse(client, responsePackage);
 
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("ClientController (поток " + Environment.CurrentManagedThreadId + "): закончил свою работу с клиентским потоком");
-            // ------------------ END LOG ------------------ //
+            logger.Info("Завершение обработки клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
+            client.Close();
         }
     }
 }

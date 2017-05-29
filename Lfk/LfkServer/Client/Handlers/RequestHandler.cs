@@ -7,6 +7,8 @@ using LfkSharedResources.Networking;
 using System.IO;
 using System.Net.Sockets;
 using LfkSharedResources.Networking.NetworkPackages;
+using NLog;
+using System.Net;
 
 namespace LfkServer.Client.Handlers
 {
@@ -15,21 +17,22 @@ namespace LfkServer.Client.Handlers
     /// </summary>
     class RequestHandler
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public async Task<RequestNetworkPackage> HandleRequest(TcpClient client)
         {
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): начал обработку клиентского потока");
-            // ------------------ END LOG ------------------ //
+            logger.Info("Запуск обработки ЗАПРОСА клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
 
             byte[] data = new byte[client.Available];
+            logger.Debug("Размер данных запроса от " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString() + " = " + data.Length + " байт");
+
             await client.GetStream().ReadAsync(data, 0, data.Length);
+            logger.Debug("Запрос от " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString() + " успешно считан");
 
             RequestNetworkPackage package = NetworkPackageController.ConvertBytesToPackage<RequestNetworkPackage>(data);
+            logger.Debug("Запрос от " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString() + " успешно десериализован в пакет");
 
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("RequestHandler (поток " + Environment.CurrentManagedThreadId + "): закончил обработку клиентского потока");
-            // ------------------ END LOG ------------------ //
-
+            logger.Info("Завершение обработки ЗАПРОСА клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
             return package;
         }
     }

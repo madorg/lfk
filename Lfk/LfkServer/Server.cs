@@ -10,8 +10,7 @@ using LfkSharedResources.Networking;
 using LfkServer.Client;
 using System.Diagnostics;
 using System.IO;
-
-// TODO: убрать консоль-логгирование, обсудить и разработать адекватную файловую систему логгирования
+using NLog;
 
 namespace LfkServer
 {
@@ -50,6 +49,8 @@ namespace LfkServer
 
         #endregion
 
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private static TcpListener serverListener;
 
         private Server()
@@ -60,31 +61,18 @@ namespace LfkServer
         private void Start()
         {
             serverListener.Start();
-
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("Server (поток " + Environment.CurrentManagedThreadId + "): сервер запущен");
-            // ------------------ END LOG ------------------ //
+            logger.Info("Ожидание клиентов запущено");
 
             ClientController clientController = new ClientController();
-
-            // ------------------ START LOG ------------------ //
-            Console.WriteLine("Server (поток " + Environment.CurrentManagedThreadId + "): ожидание клиентов");
-            // ------------------ END LOG ------------------ //
 
             while (true)
             {
                 TcpClient client = serverListener.AcceptTcpClient();
-
-                // ------------------ START LOG ------------------ //
-                Console.WriteLine("Server (поток " + Environment.CurrentManagedThreadId + "): принял клиента с ip = " + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
-                // ------------------ END LOG ------------------ //
+                logger.Info("Принял клиента с ip = {0}", (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString());
 
                 clientController.HandleClient(client);
-                
 
-                // ------------------ START LOG ------------------ //
-                Console.WriteLine("Server (поток " + Environment.CurrentManagedThreadId + "): сервер готов принять нового клиента");
-                // ------------------ END LOG ------------------ //
+                logger.Info("Готов принять нового клиента");
             }
         }
 
@@ -98,6 +86,7 @@ namespace LfkServer
             //handler += Handler;
             //SetConsoleCtrlHandler(handler, true);
 
+            logger.Debug("Запуск программы");
             Server server = new Server();
             server.Start();
         }
