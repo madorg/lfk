@@ -156,7 +156,14 @@ namespace LfkClient.Repository.RepoAgent
         /// <param name="commit">Объект коммита, на который обеспечивается переключение</param>
         public void HandleSwitch(Commit commit)
         {
-            JsonSerializer.SerializeObjectToFile(commit.Index, FileSystemPaths.LfkIndexFile);
+            Index index = new Index()
+            {
+                Id = Guid.NewGuid(),
+                ParentCommitId = commit.Id,
+                RepoObjectIdAndFileName = commit.Index.RepoObjectIdAndFileName
+            };
+
+            JsonSerializer.SerializeObjectToFile(index, FileSystemPaths.LfkIndexFile);
             FileSystem.ClearWorkingDirectory();
             foreach (KeyValuePair<Guid, string> idFileNamePair in commit.Index.RepoObjectIdAndFileName)
             {

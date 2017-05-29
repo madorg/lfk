@@ -151,7 +151,10 @@ namespace LfkClient.Repository.RepoControl
             ServerRepository serverRepository = responsePackage.Data as ServerRepository;
             if (responsePackage.OperationInfo.Code == NetworkStatusCodes.Ok)
             {
-                FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
+                if (FileSystem.IsFolderExist(FileSystemPaths.LfkMainFolder))
+                {
+                    FileSystem.DeleteFolder(FileSystemPaths.LfkMainFolder);
+                }
             }
             else
             {
