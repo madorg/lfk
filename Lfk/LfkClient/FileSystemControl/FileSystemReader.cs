@@ -62,5 +62,10 @@ namespace LfkClient.FileSystemControl
 
             return e;
         }
+
+        internal bool IsFileExist(string filename)
+        {
+            return File.Exists(filename);
+        }
     }
 }

@@ -355,20 +355,27 @@ namespace LfkClient.Repository.RepoAgent
 
             foreach (string includedFile in includedFiles)
             {
-                string fileContent = FileSystem.ReadFileContent(includedFile);
-
-                if (index.RepoObjectIdAndFileName.ContainsValue(includedFile))
+                if (FileSystem.IsFileExist(includedFile))
                 {
-                    Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
-                    RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
+                    string fileContent = FileSystem.ReadFileContent(includedFile);
 
-                    HuffmanTree huffmanTree = new HuffmanTree(fileContent);
-                    byte[] currentHuffmanTree = huffmanTree.EncodeHuffmanTree();
-                    byte[] currentHash = huffmanTree.EncodeData(fileContent);
-
-                    if (currentHuffmanTree.SequenceEqual(previosBlob.HuffmanTree))
+                    if (index.RepoObjectIdAndFileName.ContainsValue(includedFile))
                     {
-                        if (!currentHash.SequenceEqual(previosBlob.Hash))
+                        Guid previosBlobId = index.RepoObjectIdAndFileName.First(i => i.Value == includedFile).Key;
+                        RepoObject previosBlob = JsonDeserializer.DeserializeObjectFromFile<RepoObject>(FileSystemPaths.LfkObjectsFolder + previosBlobId);
+
+                        HuffmanTree huffmanTree = new HuffmanTree(fileContent);
+                        byte[] currentHuffmanTree = huffmanTree.EncodeHuffmanTree();
+                        byte[] currentHash = huffmanTree.EncodeData(fileContent);
+
+                        if (currentHuffmanTree.SequenceEqual(previosBlob.HuffmanTree))
+                        {
+                            if (!currentHash.SequenceEqual(previosBlob.Hash))
+                            {
+                                changedFiles.Add(includedFile);
+                            }
+                        }
+                        else
                         {
                             changedFiles.Add(includedFile);
                         }
@@ -377,10 +384,6 @@ namespace LfkClient.Repository.RepoAgent
                     {
                         changedFiles.Add(includedFile);
                     }
-                }
-                else
-                {
-                    changedFiles.Add(includedFile);
                 }
             }
 

@@ -116,6 +116,11 @@ namespace LfkClient.FileSystemControl
             return reader.IsFolderExist(Path + path);
         }
 
+        public static bool IsFileExist(string filename)
+        {
+            return reader.IsFileExist(Path + filename);
+        }
+
         public static Encoding GetFileEncoding(string fileName)
         {
             return reader.GetFileEncoding(Path + fileName);
