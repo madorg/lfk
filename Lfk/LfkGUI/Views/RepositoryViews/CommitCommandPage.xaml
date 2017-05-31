@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-      xmlns:local="clr-namespace:LfkGUI.Repository"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="CommitCommandPage">
@@ -20,25 +19,22 @@
 
             <DockPanel DockPanel.Dock="Top" Margin="30" LastChildFill="True">
 
-                <ListBox x:Name="LastChangedFilesListBox">
+                <ListBox x:Name="LastChangedFilesListBox" ItemsSource="{Binding FilesToBeCommitted}">
 
                 </ListBox>
             </DockPanel>
-            <!--<materialDesign:Card Margin="0,20,0,20" Padding="0">-->
-            <StackPanel Margin="10"  >
+            <StackPanel Margin="10">
                 <Label Content="Commit message:" FontSize="20"/>
-                <TextBox Name="CommitMessageTextBox"
-                             Margin="10"
-                             Foreground="{DynamicResource MaterialDesignBody}"
-                      TextWrapping="Wrap"
-                      AcceptsReturn="True"
-                      VerticalScrollBarVisibility="Visible" 
-                      MaxHeight="200" >
+                <TextBox Name="CommitMessageTextBox" Margin="10"
+                         Foreground="{DynamicResource MaterialDesignBody}"
+                         Text="{Binding CommitMessage,Mode=TwoWay}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Visible" 
+                         MaxHeight="200" >
                 </TextBox>
-                <Button x:Name="CommitButton" Content="Commit" HorizontalAlignment="Right"  Margin="10" Click="CommitButton_Click"/>
+                <Button Command="{Binding CommitCommand}" CommandParameter="{Binding ElementName=CommitMessageTextBox, Path=Text}" Content="Commit" HorizontalAlignment="Right"  Margin="10"/>
             </StackPanel>
-
-            <!--</materialDesign:Card>-->
 
         </DockPanel>
 

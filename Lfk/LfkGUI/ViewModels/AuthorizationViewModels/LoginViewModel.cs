@@ -16,10 +16,10 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
 {
     public class LoginViewModel : BasicViewModel
     {
-        private IDialogService dialogService;
+        private DialogService dialogService;
         public LoginUser LoginUser { get; set; }
         private WindowsService windowsService;
-        public LoginViewModel(LoginUser loginUser, IDialogService dService,WindowsService windowService)
+        public LoginViewModel(LoginUser loginUser, DialogService dService,WindowsService windowService)
         {
             LoginUser = loginUser;
             dialogService = dService;

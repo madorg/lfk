@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using LfkGUI.Utility;
 using LfkGUI.ViewModels.RepositoryViewModels;
 using LfkGUI.Services;
 
@@ -32,50 +31,33 @@ namespace LfkGUI.Views.RepositoryViews
             this.DataContext = new RepositoryAddCommandViewModel(new WindowsService(App.Current.MainWindow));
         }
 
-        private async void SetChangedFiles()
-        {
-            await TreeViewConverter.BuildFilesTreeViewItem(ChangedFilesTreeView,
-                await LfkClient.Repository.Repository.GetInstance().GetChangedFiles());
-            await TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView,
-               await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterParentCommit());
-        }
-
-        private void ChangedFilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void FilesTreeView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             startDragPoint = e.GetPosition(null);
         }
 
         private void StartDrag(object sender, MouseEventArgs e)
         {
-            try
+            TreeView treeView = sender as TreeView;
+            treeView.AllowDrop = false;
+            isDrag = true;
+            if (treeView != null && e.LeftButton == MouseButtonState.Pressed)
             {
-                TreeView treeView = sender as TreeView;
-                isDrag = true;
-                if (treeView != null && treeView.Items.Count > 0)
+                try
                 {
-                    object temp = treeView.SelectedItem;
-                    DataObject data = null;
-                    data = new DataObject(typeof(TreeViewItem), temp);
-                    if (data != null)
-                    {
-                        DragDropEffects effects = DragDropEffects.Move;
-                        if (e.RightButton == MouseButtonState.Pressed)
-                        {
-                            effects = DragDropEffects.All;
-                        }
-                        DragDropEffects de = DragDrop.DoDragDrop(treeView, data, effects);
-                    }
-                    isDrag = false;
+                    DataObject data = new DataObject(treeView.SelectedItem);
+                    DragDrop.DoDragDrop(treeView, data, DragDropEffects.Copy);
+                }
+                catch (Exception)
+                {
+
                 }
             }
-            catch (Exception)
-            {
-               
-            }
-           
+            isDrag = false;
+            treeView.AllowDrop = true;
         }
 
-        private void ChangedFilesTreeView_MouseMove(object sender, MouseEventArgs e)
+        private void FilesTreeView_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed ||
               e.RightButton == MouseButtonState.Pressed && !isDrag)
@@ -89,42 +71,6 @@ namespace LfkGUI.Views.RepositoryViews
                     StartDrag(sender, e);
                 }
             }
-        }
-
-        private async void TreeView_Drop(object sender, DragEventArgs e)
-        {
-            TreeViewItem item = e.Data.GetData(typeof(TreeViewItem)) as TreeViewItem;
-            if (item != null)
-            {
-                List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
-                await TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
-
-                LfkClient.Repository.Repository.GetInstance().Add(files);
-                TreeViewConverter.RemoveTreeViewItem(item);
-            }
-        }
-
-        private void ChangedFilesRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Base.RemovableTreeViewItem item = e.OriginalSource as Base.RemovableTreeViewItem;
-            if(item!= null)
-            {
-                item.ContextMenu.IsOpen = false;
-            }
-        }
-
-        private async void AddedFilesRemoveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            ItemsControl item = e.OriginalSource as ItemsControl;
-            if (item.Parent != null)
-            {
-                TreeViewItem treeViewItem = item as TreeViewItem;
-                LfkClient.Repository.Repository.GetInstance().Reset(
-                    TreeViewConverter.ParseTreeViewItemToFullFilenames(treeViewItem));
-
-                TreeViewConverter.RemoveTreeViewItem(treeViewItem);
-            }
-
         }
     }
 }

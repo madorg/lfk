@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace LfkGUI.Services
 {
-    class FolderOpenDialogService : IFolderOpenDialogService
+    class FolderOpenDialogService
     {
         public string FilePath { get; set; }
 

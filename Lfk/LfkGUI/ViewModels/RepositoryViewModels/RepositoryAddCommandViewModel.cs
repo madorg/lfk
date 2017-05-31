@@ -6,45 +6,33 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LfkGUI.Utility;
+using LfkGUI.Services.TreeService;
 
 namespace LfkGUI.ViewModels.RepositoryViewModels
 {
     public class RepositoryAddCommandViewModel : BasicViewModel
     {
         private WindowsService windowsService;
-        private DialogService dialogService;
         private LfkClient.Repository.Repository Repository = LfkClient.Repository.Repository.GetInstance();
 
         #region Свойства
 
-        ObservableCollection<string> ChangedFiles { get; set; }
-        ObservableCollection<string> FilesToBeCommitted { get; set; }
+        public TreeNode ChangedFiles { get; set; }
+        public TreeNode PreparedToCommitFiles { get; set; }
 
         #endregion
 
         public RepositoryAddCommandViewModel(WindowsService windowsService)
         {
-            ChangedFiles = new ObservableCollection<string>();
-            FilesToBeCommitted = new ObservableCollection<string>();
-            dialogService = new DialogService();
             this.windowsService = windowsService;
-            UpdateCollections();
+            UpdateTreeNodes();
         }
 
-        private async void UpdateCollections()
+        private async void UpdateTreeNodes()
         {
-            foreach (var item in await Repository.GetChangedFiles())
-            {
-                if (!ChangedFiles.Contains(item))
-                    ChangedFiles.Add(item);
-            }
-
-            foreach (var item in await Repository.GetChangedFilesAfterParentCommit())
-            {
-                if (!FilesToBeCommitted.Contains(item))
-                    FilesToBeCommitted.Add(item);
-            }
+            TreeBuilder treeBuilder = new TreeBuilder();
+            ChangedFiles = treeBuilder.BuildTreeFromFilenames((await Repository.GetChangedFiles()).ToArray());
+            PreparedToCommitFiles = treeBuilder.BuildTreeFromFilenames((await Repository.GetChangedFilesAfterParentCommit()).ToArray());
         }
 
         private RelayCommand addCommand;
@@ -52,38 +40,44 @@ namespace LfkGUI.ViewModels.RepositoryViewModels
         {
             get
             {
-                return addCommand ?? (addCommand = new RelayCommand(Add
-                //,obj => {
-                //return !string.IsNullOrWhiteSpace(LocalRepository.Title) && System.IO.Directory.Exists(Path);})
-                ));
+                return addCommand ?? (addCommand = new RelayCommand((node) =>
+                {
+                    Command(node, ChangedFiles, PreparedToCommitFiles, Repository.Add);
+                }, obj =>
+                {
+                    return obj != null && obj is TreeNode;
+                })
+                );
             }
         }
+
 
         private RelayCommand resetCommand;
         public RelayCommand ResetCommand
         {
             get
             {
-                return resetCommand ?? (resetCommand = new RelayCommand(Reset
-                //,obj => {
-                //return !string.IsNullOrWhiteSpace(LocalRepository.Title) && System.IO.Directory.Exists(Path);})
-                ));
+                return resetCommand ?? (resetCommand = new RelayCommand((node) =>
+                {
+                    Command(node, PreparedToCommitFiles, ChangedFiles, Repository.Reset);
+                }, obj =>
+                {
+                    return obj != null && obj is TreeNode;
+                })
+                 );
             }
         }
 
-        private void Reset(object obj)
+        private void Command(object obj, TreeNode source, TreeNode destination, Action<List<string>> action)
         {
-            throw new NotImplementedException();
+            TreeNode node = obj as TreeNode;
+            List<string> filepaths = new List<string>();
+            TreeBuilder builder = new TreeBuilder();
+            builder.ConvertTreeToFilenames(node, ref filepaths);
+            action(filepaths);
+
+            builder.AttachNodeToTree(destination, node);
+            builder.RemoveNodeFromTree(source, node);
         }
-
-        private async void Add(object obj)
-        {
-            //List<string> files = TreeViewConverter.ParseTreeViewItemToFullFilenames(item);
-            //await TreeViewConverter.BuildFilesTreeViewItem(AddedFilesTreeView, files.ToArray());
-
-            //LfkClient.Repository.Repository.GetInstance().Add(files);
-            //TreeViewConverter.RemoveTreeViewItem(item);
-        }
-
     }
 }

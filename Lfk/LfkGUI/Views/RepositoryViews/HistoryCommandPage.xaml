@@ -6,7 +6,6 @@
       xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-      xmlns:local="clr-namespace:LfkGUI.Repository"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="HistoryCommandPage">
@@ -15,9 +14,10 @@
         <DockPanel LastChildFill="True">
             <DockPanel  DockPanel.Dock="Top">
                 <TextBlock Text="History of commits" Foreground="WhiteSmoke" FontSize="20" MinWidth="300" Margin="30,0,0,0"/>
-                <Button x:Name="SwitchCommandButton"   Content="Switch" Style="{StaticResource MaterialDesignFlatButton}"  Click="SwitchCommandButton_Click"/>
+                <Button x:Name="SwitchCommandButton"   Content="Switch" Style="{StaticResource MaterialDesignFlatButton}"  Command="{Binding SwitchCommand}"
+                        CommandParameter="{Binding ElementName=HistoryListView,Path=SelectedItem}"/>
             </DockPanel>
-            <ListView x:Name="HistoryListView" ItemsSource="{DynamicResource ResourceKey=Commits}">
+            <ListView x:Name="HistoryListView" ItemsSource="{Binding Commits}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
@@ -26,10 +26,6 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Index.RepoObjectIdAndFileName.Count}">Количество включенных файлов</GridViewColumn>
                     </GridView>
                 </ListView.View>
-                <ListView.Resources>
-                    <collections:ArrayList x:Key="Commits">
-                    </collections:ArrayList>
-                </ListView.Resources>
             </ListView>
         </DockPanel>
     </Grid>

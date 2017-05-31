@@ -31,7 +31,7 @@ namespace LfkGUI.Views.RepositoryViews
         {
             InitializeComponent();
             string repositoryPath = LfkClient.Repository.Repository.GetInstance().GetCurrentRepositoryName();
-            this.Title = " [ " + repositoryPath+ " ] ";
+            this.Title = " [ " + repositoryPath + " ] ";
             this.DataContext = new RepositoryViewModel(new WindowsService(this));
 
         }
@@ -57,8 +57,8 @@ namespace LfkGUI.Views.RepositoryViews
 
         private void NavigateToRepositoryManagementWindowButton_Click(object sender, RoutedEventArgs e)
         {
-            new RepositoryManagement.RepositoryManagementWindow().Show();
-            this.Close();
+            //new RepositoryManagement.RepositoryManagementWindow().Show();
+            //this.Close();
         }
 
 

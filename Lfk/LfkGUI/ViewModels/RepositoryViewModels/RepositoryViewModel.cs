@@ -18,24 +18,5 @@ namespace LfkGUI.ViewModels.RepositoryViewModels
             this.windowsService = windowsService;
         }
 
-        
-
-        private RelayCommand addCommand;
-        public RelayCommand AddCommand
-        {
-            get
-            {
-                return addCommand ?? (addCommand = new RelayCommand(Add
-                //,obj => {
-                //return !string.IsNullOrWhiteSpace(LocalRepository.Title) && System.IO.Directory.Exists(Path);})
-                ));
-            }
-        }
-
-        private void Add(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

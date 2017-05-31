@@ -15,8 +15,8 @@ namespace LfkGUI.ViewModels.RepositoryManagementViewModels
     public class RepositoryManagementViewModel : BasicViewModel
     {
         private LfkClient.Repository.Repository Repository = LfkClient.Repository.Repository.GetInstance();
-        private IFolderOpenDialogService openFolderService;
-        private IDialogService dialogService;
+        private FolderOpenDialogService openFolderService;
+        private DialogService dialogService;
         private WindowsService windowsService;
 
         public RepositoryManagementViewModel(WindowsService windowService)

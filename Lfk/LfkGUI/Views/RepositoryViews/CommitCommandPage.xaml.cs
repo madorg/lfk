@@ -16,6 +16,8 @@ using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using MahApps.Metro.Controls.Dialogs;
 using MahApps.Metro.Controls;
+using LfkGUI.ViewModels.RepositoryViewModels;
+using LfkGUI.Services;
 
 namespace LfkGUI.Views.RepositoryViews
 {
@@ -24,47 +26,10 @@ namespace LfkGUI.Views.RepositoryViews
     /// </summary>
     public partial class CommitCommandPage : Page
     {
-        private async void UpdateChangedFilesListBox()
-        {
-            LastChangedFilesListBox.Items.Clear();
-            foreach (var item in await LfkClient.Repository.Repository.GetInstance().GetChangedFilesAfterParentCommit())
-            {
-                LastChangedFilesListBox.Items.Add(new ListBoxItem()
-                {
-                    Content = item,
-                    Foreground = Brushes.SpringGreen
-                });
-            }
-        }
         public CommitCommandPage()
         {
             InitializeComponent();
-            UpdateChangedFilesListBox();
-
-        }
-
-        private async void CommitButton_Click(object sender, RoutedEventArgs e)
-        {
-            MetroWindow mainWindow = Application.Current.MainWindow as MetroWindow;
-            if (mainWindow != null)
-            {
-                if (LastChangedFilesListBox.Items.Count == 0)
-                {
-                    await mainWindow.ShowMessageAsync("Ошибка", "Нечего коммитить",
-                                 MessageDialogStyle.Affirmative);
-                }
-                else if (!string.IsNullOrWhiteSpace(CommitMessageTextBox.Text))
-                {
-                    LfkClient.Repository.Repository.GetInstance().Commit(CommitMessageTextBox.Text);
-                    UpdateChangedFilesListBox();
-                    CommitMessageTextBox.Clear();
-                }
-                else
-                {
-                    await mainWindow.ShowMessageAsync("Ошибка", "Введите сообщение коммита",
-                                  MessageDialogStyle.Affirmative);
-                }
-            }
+            this.DataContext = new RepositoryCommitCommandViewModel(new WindowsService(App.Current.MainWindow));
         }
     }
 }

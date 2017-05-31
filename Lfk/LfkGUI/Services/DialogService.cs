@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace LfkGUI.Services
 {
-    public class DialogService : IDialogService
+    public class DialogService 
     {
         public async void ShowMessage(object window,string message)
         {

@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using LfkClient.Authorization;
 using LfkSharedResources.Models.User;
 using MahApps.Metro.Controls.Dialogs;
-using LfkGUI.Utility.Validation;
 
 using System.Threading.Tasks;
 using LfkGUI.ViewModels.AuthorizationViewModels;
@@ -21,6 +20,7 @@ namespace LfkGUI.Views.AuthorizationViews
         {
             InitializeComponent();
             AuthorizationFrame.Content = Resources["WelcomeTextBlock"];
+           
         }
 
         private void OnSuccessAuthorization(object sender, EventArgs e)

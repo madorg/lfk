@@ -3,8 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:LfkGUI.Repository"
-      xmlns:commands ="clr-namespace:LfkGUI.Utility"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:tree="clr-namespace:LfkGUI.Services.TreeService"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="IncludeCommandPage">
@@ -21,30 +21,50 @@
                 <Label Content="{DynamicResource FilesCountString}"/>
                 <Label x:Name="WorkingDirectoryFilesCount" Content="0"/>
             </StackPanel>
-            <TreeView  x:Name="WorkingDirectoryFilesTreeView"  Margin="3,3,3,3" AllowDrop="False"
+
+            <TreeView  x:Name="UntrackedFilesTreeView" Margin="3,3,3,3" AllowDrop="True"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"
-                       MouseMove="FilesTreeView_MouseMove">
-                <TreeView.CommandBindings>
-                    <CommandBinding x:Name="WorkingDirectoryRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem" Executed="WorkingDirectoryRemoveCommand_Executed"/>
-                </TreeView.CommandBindings>
+                       MouseMove="FilesTreeView_MouseMove"
+                       ItemsSource="{Binding UntrackedFilesRoot.ChildrenNodes, Mode=TwoWay}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type tree:TreeNode}" ItemsSource="{Binding Path=ChildrenNodes,Mode=TwoWay}">
+                        <TextBlock Text="{Binding Data}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <i:InvokeCommandAction Command="{Binding UnincludeCommand}" CommandParameter="{Binding ElementName=TrackedFilesTreeView,Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TreeView>
+
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Row="0" Grid.Column="1" Margin="10" >
             <TextBlock DockPanel.Dock="Top" TextAlignment="Center" Padding="4" FontSize="20" 
                        Text="{DynamicResource IncludedFilesString}"
                        Foreground="{DynamicResource MaterialDesignBody}"/>
 
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <Label Content="{DynamicResource FilesCountString}"/>
-                    <Label x:Name="IncludedFilesCount" Content="0"/>
-                </StackPanel>
-            <TreeView  x:Name="IncludedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True" 
-                       Drop="TreeView_Drop"
-                       >
-                <TreeView.CommandBindings>
-                    <CommandBinding x:Name="IncludedRemoveCommand" Command="commands:CustomCommands.RemoveTreeViewItem" Executed="IncludedRemoveCommand_Executed"/>
-                </TreeView.CommandBindings>
+                <Label x:Name="IncludedFilesCount" Content="0"/>
+            </StackPanel>
+
+            <TreeView  x:Name="TrackedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True"
+                       MouseDown="FilesTreeView_MouseLeftButtonDown"
+                       MouseMove="FilesTreeView_MouseMove"
+                       ItemsSource="{Binding TrackedFilesRoot.ChildrenNodes,Mode=TwoWay}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type tree:TreeNode}" ItemsSource="{Binding Path=ChildrenNodes,Mode=TwoWay}">
+                        <TextBlock Text="{Binding Data}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <i:InvokeCommandAction Command="{Binding IncludeCommand}" CommandParameter="{Binding ElementName=UntrackedFilesTreeView,Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TreeView>
+
         </DockPanel>
 
     </Grid>
