@@ -6,7 +6,7 @@
              xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"    
-             StartupUri="Authorization/AuthorizationWindow.xaml">
+             StartupUri="Views/AuthorizationViews/AuthorizationWindow.xaml">
              
             <!--StartupUri="RepositoryManagement/RepositoryManagementWindow.xaml"> -->
 
@@ -28,13 +28,14 @@
 
                 <!-- Material Design: MahApps Compatibility -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Fonts.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Flyout.xaml" />-->
                 
                 <!--Localization-->
                 <ResourceDictionary Source="Resources/Language_en-US.xaml"/>
                 
                 <!--Controls-->
                 <ResourceDictionary Source="Resources/ControlsDictionary.xaml"/>
+
+                <ResourceDictionary Source="Resources/ValidationDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

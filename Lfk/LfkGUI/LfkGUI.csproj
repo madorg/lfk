@@ -83,79 +83,56 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Authorization\AuthorizationWindow.xaml.cs">
+    <Compile Include="Views\Base\BaseWindow.cs" />
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\FolderOpenDialogService.cs" />
+    <Compile Include="Services\WindowsService.cs" />
+    <Compile Include="Services\TreeService\TreeBuilder.cs" />
+    <Compile Include="Services\TreeService\TreeNode.cs" />
+    <Compile Include="Validation\EmailValidationRule.cs" />
+    <Compile Include="Validation\NameValidationRule.cs" />
+    <Compile Include="ViewModels\AuthorizationViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\AuthorizationViewModels\SignupViewModel.cs" />
+    <Compile Include="ViewModels\BasicViewModel.cs" />
+    <Compile Include="ViewModels\Converters\MultiValueConverter.cs" />
+    <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\RepositoryManagementViewModels\RepositoryManagementViewModel.cs" />
+    <Compile Include="ViewModels\RepositoryViewModels\RepositoryAddCommandViewModel.cs" />
+    <Compile Include="ViewModels\RepositoryViewModels\RepositoryCommitCommandViewModel.cs" />
+    <Compile Include="ViewModels\RepositoryViewModels\RepositoryHistoryCommandViewModel.cs" />
+    <Compile Include="ViewModels\RepositoryViewModels\RepositoryIncludeCommandViewModel.cs" />
+    <Compile Include="ViewModels\RepositoryViewModels\RepositoryViewModel.cs" />
+    <Compile Include="Views\AuthorizationViews\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Authorization\LoginPage.xaml.cs">
+    <Compile Include="Views\AuthorizationViews\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Authorization\RegistrationPage.xaml.cs">
-      <DependentUpon>RegistrationPage.xaml</DependentUpon>
+    <Compile Include="Views\AuthorizationViews\SignupPage.xaml.cs">
+      <DependentUpon>SignupPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Base\BaseWindow.cs" />
-    <Compile Include="Base\RemovableTreeViewItem.cs" />
-    <Compile Include="RepositoryManagement\RepositoryManagementWindow.xaml.cs">
-      <DependentUpon>RepositoryManagementWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Repository\AddCommandPage.xaml.cs">
-      <DependentUpon>AddCommandPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Repository\CommitCommandPage.xaml.cs">
-      <DependentUpon>CommitCommandPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Repository\HistoryCommandPage.xaml.cs">
-      <DependentUpon>HistoryCommandPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Repository\IncludeCommandPage.xaml.cs">
-      <DependentUpon>IncludeCommandPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Repository\RepositoryWindow.xaml.cs">
-      <DependentUpon>RepositoryWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Utility\CustomCommands.cs" />
-    <Compile Include="Utility\TreeViewConverter.cs" />
-    <Compile Include="Utility\Validation\LoginValidation.cs" />
-    <Compile Include="Utility\Validation\SignupValidation.cs" />
-    <Page Include="Authorization\AuthorizationWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Authorization\LoginPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Authorization\RegistrationPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="RepositoryManagement\RepositoryManagementWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Repository\AddCommandPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Repository\CommitCommandPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Repository\HistoryCommandPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Repository\IncludeCommandPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Repository\RepositoryWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="Views\RepositoryManagementViews\RepositoryManagementWindow.xaml.cs">
+      <DependentUpon>RepositoryManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RepositoryViews\AddCommandPage.xaml.cs">
+      <DependentUpon>AddCommandPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RepositoryViews\CommitCommandPage.xaml.cs">
+      <DependentUpon>CommitCommandPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RepositoryViews\HistoryCommandPage.xaml.cs">
+      <DependentUpon>HistoryCommandPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RepositoryViews\IncludeCommandPage.xaml.cs">
+      <DependentUpon>IncludeCommandPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RepositoryViews\RepositoryWindow.xaml.cs">
+      <DependentUpon>RepositoryWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\ControlsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,6 +144,46 @@
     <Page Include="Resources\Language_ru-RU.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ValidationDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AuthorizationViews\AuthorizationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AuthorizationViews\LoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AuthorizationViews\SignupPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RepositoryManagementViews\RepositoryManagementWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RepositoryViews\AddCommandPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RepositoryViews\CommitCommandPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RepositoryViews\HistoryCommandPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RepositoryViews\IncludeCommandPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RepositoryViews\RepositoryWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

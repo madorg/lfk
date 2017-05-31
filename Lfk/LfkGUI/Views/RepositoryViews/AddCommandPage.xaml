@@ -1,0 +1,73 @@
+﻿<Page x:Class="LfkGUI.Views.RepositoryViews.AddCommandPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:clr="clr-namespace:System;assembly=mscorlib"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:tree="clr-namespace:LfkGUI.Services.TreeService"
+      mc:Ignorable="d"                 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="AddCommandPage">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="0" Grid.RowSpan="2" ShowsPreview="False" Width="5" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"
+         VerticalAlignment="Stretch" />
+        <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
+            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ChangedFilesString}" 
+                       TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Label Content="{DynamicResource FilesCountString}"/>
+                <Label x:Name="ChangedFilesCount" Content="0"/>
+            </StackPanel>
+
+            <TreeView  x:Name="ChangedFilesTreeView" Margin="3,3,3,3" AllowDrop="True"
+                       MouseDown="FilesTreeView_MouseLeftButtonDown"
+                       MouseMove="FilesTreeView_MouseMove"
+                       ItemsSource="{Binding ChangedFiles.ChildrenNodes, Mode=TwoWay}">
+                
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type tree:TreeNode}" ItemsSource="{Binding Path=ChildrenNodes,Mode=TwoWay}">
+                        <TextBlock Text="{Binding Data}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <i:InvokeCommandAction Command="{Binding ResetCommand}" CommandParameter="{Binding ElementName=PreparedToCommitFilesTreeView,Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TreeView>
+            
+        </DockPanel>
+        <DockPanel  Grid.Row="0" Grid.Column="1" Margin="10" ToolTip="To reset file remove it by right click menu" >
+            <TextBlock DockPanel.Dock="Top" Text="{DynamicResource AddedFilesString}" 
+                       TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Label Content="{DynamicResource FilesCountString}"/>
+                <Label x:Name="AddedFilesCount" Content="0"/>
+            </StackPanel>
+
+            <TreeView  x:Name="PreparedToCommitFilesTreeView" Margin="3,3,3,3" AllowDrop="True"
+                       MouseDown="FilesTreeView_MouseLeftButtonDown"
+                       MouseMove="FilesTreeView_MouseMove"
+                       ItemsSource="{Binding PreparedToCommitFiles.ChildrenNodes, Mode=TwoWay}">
+                
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type tree:TreeNode}" ItemsSource="{Binding Path=ChildrenNodes,Mode=TwoWay}">
+                        <TextBlock Text="{Binding Data}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <i:InvokeCommandAction Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=ChangedFilesTreeView,Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TreeView>
+            
+        </DockPanel>
+
+    </Grid>
+</Page>
