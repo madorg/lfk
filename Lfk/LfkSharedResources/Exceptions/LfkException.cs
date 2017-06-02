@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LfkExceptions
 {
+    [Serializable]
     public class LfkException : Exception
     {
         public LfkException(string message) : base(message)

@@ -64,7 +64,7 @@ namespace LfkClient.FileSystemControl
             {
                 CreateFile(filename);
             }
-            catch (DirectoryNotFoundException dnfe)
+            catch (DirectoryNotFoundException)
             {
                 List<string> paths = new List<string>(filename.Split('\\'));
                 paths.RemoveAt(paths.Count - 1);

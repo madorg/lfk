@@ -9,7 +9,6 @@ using LfkSharedResources.Models.Repository;
 using LfkClient.FileSystemControl;
 using LfkSharedResources.Models;
 using LfkClient.UserMessages;
-using System.Threading.Tasks;
 
 namespace LfkClient.Repository
 {

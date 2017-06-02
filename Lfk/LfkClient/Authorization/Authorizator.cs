@@ -56,7 +56,7 @@ namespace LfkClient.Authorization
 
                 message = responsePackage.OperationInfo.Message;
             }
-            catch (JsonSerializerException jse)
+            catch (JsonSerializerException)
             {
                 message = "Возникла ошибка при формировании сетевого пакета. Пожалуйста, проверьте правильность введёных данных и попробуйте ещё раз!";
             }
