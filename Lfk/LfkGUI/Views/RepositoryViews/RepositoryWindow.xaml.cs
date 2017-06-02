@@ -54,25 +54,5 @@ namespace LfkGUI.Views.RepositoryViews
         {
             CommandFrame.Content = new HistoryCommandPage();
         }
-
-        private void NavigateToRepositoryManagementWindowButton_Click(object sender, RoutedEventArgs e)
-        {
-            //new RepositoryManagement.RepositoryManagementWindow().Show();
-            //this.Close();
-        }
-
-
-        private async void UpdateCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                LfkClient.Repository.Repository.GetInstance().Update();
-            }
-            catch (RepositoryUpdateWithoutCommitsException ruwce)
-            {
-                await this.ShowMessageAsync("Ошибка", ruwce.Message,
-                             MessageDialogStyle.Affirmative);
-            }
-        }
     }
 }

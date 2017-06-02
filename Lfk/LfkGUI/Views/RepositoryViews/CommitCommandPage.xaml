@@ -20,7 +20,6 @@
             <DockPanel DockPanel.Dock="Top" Margin="30" LastChildFill="True">
 
                 <ListBox x:Name="LastChangedFilesListBox" ItemsSource="{Binding FilesToBeCommitted}">
-
                 </ListBox>
             </DockPanel>
             <StackPanel Margin="10">

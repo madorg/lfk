@@ -19,10 +19,6 @@
         <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True" >
             <TextBlock DockPanel.Dock="Top" Text="{DynamicResource ChangedFilesString}" 
                        TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Label Content="{DynamicResource FilesCountString}"/>
-                <Label x:Name="ChangedFilesCount" Content="0"/>
-            </StackPanel>
 
             <TreeView  x:Name="ChangedFilesTreeView" Margin="3,3,3,3" AllowDrop="True"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"
@@ -45,10 +41,6 @@
         <DockPanel  Grid.Row="0" Grid.Column="1" Margin="10" ToolTip="To reset file remove it by right click menu" >
             <TextBlock DockPanel.Dock="Top" Text="{DynamicResource AddedFilesString}" 
                        TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Label Content="{DynamicResource FilesCountString}"/>
-                <Label x:Name="AddedFilesCount" Content="0"/>
-            </StackPanel>
 
             <TreeView  x:Name="PreparedToCommitFilesTreeView" Margin="3,3,3,3" AllowDrop="True"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"

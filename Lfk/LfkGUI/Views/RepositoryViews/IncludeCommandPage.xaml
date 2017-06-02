@@ -17,10 +17,6 @@
          VerticalAlignment="Stretch" />
         <DockPanel x:Name="LeftDockPanel" Grid.Row="0" Grid.Column="0" Margin="10" LastChildFill="True"  ToolTip="{DynamicResource ToolTipWorkinDirecktoryTreeViewString}">
             <TextBlock DockPanel.Dock="Top" Text="{DynamicResource WorkingDirectoryString}" TextAlignment="Center" Padding="4" FontSize="20" Foreground="{DynamicResource MaterialDesignBody}"/>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Label Content="{DynamicResource FilesCountString}"/>
-                <Label x:Name="WorkingDirectoryFilesCount" Content="0"/>
-            </StackPanel>
 
             <TreeView  x:Name="UntrackedFilesTreeView" Margin="3,3,3,3" AllowDrop="True"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"
@@ -43,11 +39,6 @@
             <TextBlock DockPanel.Dock="Top" TextAlignment="Center" Padding="4" FontSize="20" 
                        Text="{DynamicResource IncludedFilesString}"
                        Foreground="{DynamicResource MaterialDesignBody}"/>
-
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Label Content="{DynamicResource FilesCountString}"/>
-                <Label x:Name="IncludedFilesCount" Content="0"/>
-            </StackPanel>
 
             <TreeView  x:Name="TrackedFilesTreeView"  Margin="3,3,3,3" AllowDrop="True"
                        MouseDown="FilesTreeView_MouseLeftButtonDown"

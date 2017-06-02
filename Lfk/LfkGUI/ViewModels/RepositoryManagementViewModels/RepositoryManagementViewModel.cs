@@ -83,7 +83,8 @@ namespace LfkGUI.ViewModels.RepositoryManagementViewModels
         {
             get
             {
-                return deleteCommand ?? (deleteCommand = new RelayCommand(Delete, obj => SelectedRepository.Id != Guid.Empty));
+                return deleteCommand ?? (deleteCommand = new RelayCommand(Delete, 
+                    obj => SelectedRepository.Id != Guid.Empty));
             }
         }
 

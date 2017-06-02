@@ -38,17 +38,11 @@
             <Button x:Name="HistoryCommandButton"   Content="{DynamicResource HistoryString}"
                     Style="{StaticResource MaterialDesignFlatButton}" Click="HistoryCommandButton_Click"/>
             <Button x:Name="UpdateCommandButton"   Content="Update"
-                    Style="{StaticResource MaterialDesignFlatButton}" Click="UpdateCommandButton_Click"/>
+                    Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding UpdateCommand}"/>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="1" x:Name="NavigationStackPanel" Margin="5">
             <Button x:Name="NavigateToRepositoryManagementWindowButton" Content="{DynamicResource BackToRepositoryManagementString}"
-                    Click="NavigateToRepositoryManagementWindowButton_Click"/>
+                    Command="{Binding BackCommand}"/>
         </StackPanel>
-        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderThickness="0,2,0,0" BorderBrush="{DynamicResource PrimaryHueDarkBrush}">
-            <StackPanel VerticalAlignment="Center"  Orientation="Horizontal">
-                <TextBlock FontSize="16"  FontWeight="Bold" Margin="30,0,0,0">Current commit :</TextBlock>
-                <TextBlock x:Name="StatusTextBox" FontSize="14"  Margin="30,0,0,0"></TextBlock>
-            </StackPanel>
-        </Border>
     </Grid>
 </base:BaseWindow>
