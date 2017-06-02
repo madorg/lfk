@@ -211,6 +211,8 @@ namespace LfkGUI.ViewModels.RepositoryManagementViewModels
         private void Delete(object obj)
         {
             LfkClient.Repository.Repository.GetInstance().Delete(SelectedRepository.Id.ToString());
+            ManagedRepositories.Remove(SelectedRepository);
+            SelectedRepository = new LocalRepository();
         }
 
         private async void Create(object obj)

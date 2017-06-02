@@ -171,7 +171,7 @@ namespace LfkClient.Repository
             return reason;
         }
 
-        public string GetCurrentRepositoryName()
+        public string GetCurrentRepositoryPath()
         {
             return RepoAgent.GetCurrentRepositoryPath();
         }

@@ -30,7 +30,7 @@ namespace LfkGUI.Views.RepositoryViews
         public RepositoryWindow()
         {
             InitializeComponent();
-            string repositoryPath = LfkClient.Repository.Repository.GetInstance().GetCurrentRepositoryName();
+            string repositoryPath = LfkClient.Repository.Repository.GetInstance().GetCurrentRepositoryPath();
             this.Title = " [ " + repositoryPath + " ] ";
             this.DataContext = new RepositoryViewModel(new WindowsService(this));
 
