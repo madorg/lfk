@@ -39,7 +39,7 @@ namespace LfkGUI.Views.AuthorizationViews
         private void LoginShowButton_Click(object sender, RoutedEventArgs e)
         {
             LoginPage loginPage = new LoginPage();
-            loginPage.DataContext = new LoginViewModel(new LoginUser() { Email = "example@mail.com", Password = "example" }, new DialogService(), new WindowsService(this));
+            loginPage.DataContext = new LoginViewModel(new LoginUser() { Email = "admin@mail.com", Password = "Admin1" }, new DialogService(), new WindowsService(this));
             AuthorizationFrame.Content = loginPage;
         }
     }

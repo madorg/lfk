@@ -11,21 +11,27 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using LfkGUI.Views.RepositoryManagementViews;
 using LfkGUI.ViewModels.RepositoryManagementViewModels;
+using System.Collections.ObjectModel;
+using LfkGUI.Validation;
 
 namespace LfkGUI.ViewModels.AuthorizationViewModels
 {
     public class LoginViewModel : BasicViewModel
     {
         private DialogService dialogService;
-        public LoginUser LoginUser { get; set; }
         private WindowsService windowsService;
-        public LoginViewModel(LoginUser loginUser, DialogService dService,WindowsService windowService)
+
+        public LoginViewModel(LoginUser loginUser, DialogService dService, WindowsService windowService)
         {
+            ValidationErrors = new ObservableCollection<ValidationError>();
             LoginUser = loginUser;
             dialogService = dService;
             windowsService = windowService;
         }
+
         #region Свойства
+        public ObservableCollection<ValidationError> ValidationErrors { get; private set; }
+        public LoginUser LoginUser { get; set; }
 
         public string Email
         {
@@ -40,12 +46,24 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
             }
         }
 
+        public string Password
+        {
+            get
+            {
+                return LoginUser.Password;
+            }
+            set
+            {
+                LoginUser.Password = value;
+                OnPropertyChanged("Password");
+            }
+        }
+
         #endregion
 
         #region Команды
 
         private RelayCommand loginCommand;
-
         public RelayCommand LoginCommand
         {
             get
@@ -53,6 +71,7 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
                 return loginCommand ?? (loginCommand = new RelayCommand(Login));
             }
         }
+
         #endregion
 
         #region Методы обработки комманд
@@ -61,7 +80,6 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
         {
             Guid userId = Guid.Empty;
             string message = string.Empty;
-            LoginUser.Password = (obj as PasswordBox).Password;
 
             if (Authorizator.TryLogin(LoginUser, out message, out userId))
             {
@@ -73,7 +91,7 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
             }
             else
             {
-                dialogService.ShowMessage(App.Current.MainWindow, message);
+                dialogService.ShowMessage(windowsService.CurrentOpenedWindow, message);
             }
         }
 

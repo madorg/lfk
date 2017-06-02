@@ -1,5 +1,7 @@
-﻿using System;
+﻿using LfkGUI.ViewModels.AuthorizationViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +22,22 @@ namespace LfkGUI.Views.AuthorizationViews
     /// </summary>
     public partial class LoginPage : Page
     {
+
         public LoginPage()
         {
             InitializeComponent();
+        }
+
+        private void Page_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                (DataContext as LoginViewModel).ValidationErrors.Add(e.Error);
+            }
+            else
+            {
+                (DataContext as LoginViewModel).ValidationErrors.Remove(e.Error);
+            }
         }
     }
 }

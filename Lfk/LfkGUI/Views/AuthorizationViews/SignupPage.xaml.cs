@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LfkGUI.ViewModels.AuthorizationViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,5 +26,16 @@ namespace LfkGUI.Views.AuthorizationViews
             InitializeComponent();
         }
 
+        private void Page_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                (DataContext as SignupViewModel).ValidationErrors.Add(e.Error);
+            }
+            else
+            {
+                (DataContext as SignupViewModel).ValidationErrors.Remove(e.Error);
+            }
+        }
     }
 }

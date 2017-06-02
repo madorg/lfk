@@ -1,9 +1,11 @@
 ﻿using LfkClient.Authorization;
 using LfkGUI.Services;
+using LfkGUI.Validation;
 using LfkGUI.Views.RepositoryManagementViews;
 using LfkSharedResources.Models.User;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,11 +22,13 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
 
         public SignupViewModel(SignupUser signupUser, DialogService dialogService,WindowsService windowService)
         {
+            ValidationErrors = new ObservableCollection<ValidationError>();
             SignupUser = signupUser;
             windowsService = windowService;
             this.dialogService = dialogService;
         }
         #region Свойства
+        public ObservableCollection<ValidationError> ValidationErrors { get; private set; }
 
         public string Name
         {
@@ -65,6 +69,19 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
             }
         }
 
+        private string confirmPassword;
+        public string ConfirmPassword
+        {
+            get
+            {
+                return confirmPassword;
+            }
+            set
+            {
+                confirmPassword = value;
+                OnPropertyChanged("ConfirmPassword");
+            }
+        }
         #endregion
 
         #region Команды
@@ -74,7 +91,9 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
         {
             get
             {
-                return signupCommand ?? (signupCommand = new RelayCommand(Signup));
+                return signupCommand ?? (signupCommand = new RelayCommand(Signup,obj=> {
+                    return true;
+                }));
             }
         }
 
@@ -86,12 +105,9 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
         {
             Guid userId = Guid.Empty;
             string message = string.Empty;
-            var objects = obj as List<object>;
-            var passwords = objects.Cast<PasswordBox>().ToList();
-            if (passwords[0].Password != passwords[1].Password)
+            if (Password != ConfirmPassword)
             {
-                dialogService.ShowMessage(App.Current.MainWindow, "Пароли не совпадают");
-                SignupUser.Password = passwords[0].Password;
+                dialogService.ShowMessage(windowsService.CurrentOpenedWindow, "Пароли не совпадают");
             }
             else if (Authorizator.TrySignup(SignupUser, out message, out userId))
             {
@@ -103,7 +119,7 @@ namespace LfkGUI.ViewModels.AuthorizationViewModels
             }
             else
             {
-                dialogService.ShowMessage(App.Current.MainWindow, message);
+                dialogService.ShowMessage(windowsService.CurrentOpenedWindow, message);
             }
         }
 

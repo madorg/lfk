@@ -10,7 +10,7 @@ namespace LfkSharedResources.Networking
     public static class ServerInformation
     {
         public static readonly int Port = 4200;
-        public static readonly IPAddress IP = IPAddress.Parse("192.168.100.4");
-        public static readonly string Hostname = "alexey";
+        public static readonly IPAddress IP = IPAddress.Parse("127.0.0.1");
+        public static readonly string Hostname = "localhost";
     }
 }

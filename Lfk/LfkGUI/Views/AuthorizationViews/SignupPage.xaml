@@ -7,10 +7,10 @@
       xmlns:validation="clr-namespace:LfkGUI.Validation"
       xmlns:local="clr-namespace:LfkGUI"
       xmlns:converter="clr-namespace:LfkGUI.ViewModels.Converters"
+      xmlns:password="clr-namespace:LfkGUI.ViewModels.Addition"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="400"
-      Title="SignupPage">
-
+      Title="SignupPage" Validation.Error="Page_Error">
     <Grid>
         <DockPanel>
             <materialDesign:Card  DockPanel.Dock="Top" Padding="20" Width="300"  Margin="10">
@@ -19,59 +19,88 @@
                            Text="{DynamicResource PleaseSignupString}"/>
             </materialDesign:Card>
             <StackPanel  DockPanel.Dock="Bottom" Orientation="Vertical"  VerticalAlignment="Stretch">
-                <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Label DockPanel.Dock="Left" Content="{DynamicResource NameString}" FontWeight="Bold"/>
-                    <TextBox DockPanel.Dock="Right"  Width="200" x:Name="SignupNameTextBox"
-                             Validation.ErrorTemplate="{DynamicResource ValidationTemplate}"
-                             Style="{DynamicResource TextBoxInError}"
-                             Foreground="{DynamicResource MaterialDesignBody}">
-                        <Binding Path="Name" UpdateSourceTrigger="PropertyChanged" >
+                    <TextBox Style="{DynamicResource StandardTextInput}" >
+                        <Binding Path="Name" Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 ValidatesOnDataErrors="True"
+                                 ValidatesOnNotifyDataErrors="True"
+                                 NotifyOnValidationError="True" >
                             <Binding.ValidationRules>
-                                <validation:NameValidationRule />
+                                <validation:NameValidationRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
                 </DockPanel>
 
-                <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Label DockPanel.Dock="Left"  Content="{DynamicResource EmailString}" FontWeight="Bold"/>
-                    <TextBox  DockPanel.Dock="Right" Width="200" x:Name="SignupEmailTextBox" MaxLength="24"
-                              Validation.ErrorTemplate="{DynamicResource ValidationTemplate}"
-                              Style="{DynamicResource TextBoxInError}"
-                              Foreground="{DynamicResource MaterialDesignBody}">
-                        <Binding Path="Email" UpdateSourceTrigger="PropertyChanged" >
-                            <Binding.ValidationRules>
-                                <validation:EmailValidationRule />
-                            </Binding.ValidationRules>
-                        </Binding>
+                    <TextBox Style="{DynamicResource StandardTextInput}" >
+                        <TextBox.Text>
+                            <Binding Path="Email" Mode="TwoWay" 
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     ValidatesOnNotifyDataErrors="True"
+                                     NotifyOnValidationError="True" >
+                                <Binding.ValidationRules>
+                                    <validation:EmailValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
                     </TextBox>
                 </DockPanel>
 
-                <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Label DockPanel.Dock="Left" Content="{DynamicResource PasswordString}" FontWeight="Bold"/>
-                    <PasswordBox DockPanel.Dock="Right"  Width="200" 
-                                 x:Name="SignupPasswordBox"
-                                 MaxLength="24"
-                                 Foreground="{DynamicResource MaterialDesignBody}"/>
+                    <PasswordBox Style="{DynamicResource StandardPasswordInput}">
+                        <password:BoundPasswordBox.BoundPassword>
+                            <Binding Path="Password" Mode="TwoWay" 
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     ValidatesOnNotifyDataErrors="True"
+                                     NotifyOnValidationError="True" >
+                                <Binding.ValidationRules>
+                                    <validation:PasswordValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </password:BoundPasswordBox.BoundPassword>
+                    </PasswordBox>
                 </DockPanel>
 
-                <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Label DockPanel.Dock="Left"  Content="{DynamicResource PasswordConfirmString}" FontWeight="Bold"/>
-                    <PasswordBox  DockPanel.Dock="Right" Width="200" 
-                                  x:Name="SignupConfirmPasswordBox"
-                                  MaxLength="24"
-                                  Foreground="{DynamicResource MaterialDesignBody}"/>
+                    <PasswordBox  Style="{DynamicResource StandardPasswordInput}">
+                        <password:BoundPasswordBox.BoundPassword>
+                            <Binding Path="ConfirmPassword" Mode="TwoWay" 
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     ValidatesOnNotifyDataErrors="True"
+                                     NotifyOnValidationError="True" >
+                                <Binding.ValidationRules>
+                                    <validation:PasswordValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </password:BoundPasswordBox.BoundPassword>
+                    </PasswordBox>
+
                 </DockPanel>
-                <DockPanel Width="320" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Button Content="{DynamicResource SignupString}"
                             Margin="0,30,0,0" Width="170"
-                    Command="{Binding SignupCommand}" >
-                        <Button.CommandParameter>
-                            <MultiBinding Converter="{converter:MultiValueConverter}">
-                                <Binding ElementName="SignupPasswordBox"/>
-                                <Binding ElementName="SignupConfirmPasswordBox"/>
-                            </MultiBinding>
-                        </Button.CommandParameter>
+                            Command="{Binding SignupCommand}" IsDefault="True">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                <Setter Property="Margin" Value="0,30,0,0"/>
+                                <Setter Property="Width" Value="150"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ValidationErrors.Count}" Value="0">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </DockPanel>
             </StackPanel>

@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace LfkGUI.Validation
 {
@@ -21,8 +22,7 @@ namespace LfkGUI.Validation
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string email = value.ToString();
-
+            string email = (value ?? string.Empty).ToString();
             if (!regex.IsMatch(email))
             {
                 return new ValidationResult(false, "Недопустимое e-mail");

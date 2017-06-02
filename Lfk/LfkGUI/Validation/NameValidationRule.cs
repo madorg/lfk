@@ -11,7 +11,7 @@ namespace LfkGUI.Validation
 {
     public class NameValidationRule : ValidationRule
     {
-        private string regexPattern = @"([A-Z0-9a-z]){3,24}";
+        private string regexPattern = @"([A-Za-z]){2,24}";
         private Regex regex;
 
         public NameValidationRule()
@@ -25,7 +25,7 @@ namespace LfkGUI.Validation
 
             if (!regex.IsMatch(email))
             {
-                return new ValidationResult(false, "Недопустимое имя");
+                return new ValidationResult(false, "Недопустимое имя, имя должно содержать от 2 до 24 букв");
             }
             else
             {

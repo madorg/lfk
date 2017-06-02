@@ -35,7 +35,6 @@
                 <!--Controls-->
                 <ResourceDictionary Source="Resources/ControlsDictionary.xaml"/>
 
-                <ResourceDictionary Source="Resources/ValidationDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

@@ -6,9 +6,11 @@
       xmlns:local="clr-namespace:LfkGUI"
       xmlns:validation="clr-namespace:LfkGUI.Validation"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:converter="clr-namespace:LfkGUI.ViewModels.Converters"
+      xmlns:password="clr-namespace:LfkGUI.ViewModels.Addition"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="400"
-      Title="LoginPage">
+      Title="LoginPage" DataContext="{Binding}" Validation.Error="Page_Error">
     <Grid>
         <DockPanel LastChildFill="True">
             <materialDesign:Card  DockPanel.Dock="Top" Padding="20" Width="300"  Margin="10">
@@ -17,34 +19,59 @@
                            Text="{DynamicResource PleaseLoginString}"/>
             </materialDesign:Card>
             <StackPanel  DockPanel.Dock="Bottom" Orientation="Vertical"  VerticalAlignment="Stretch">
-                <DockPanel Width="300" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Label DockPanel.Dock="Left" Content="{DynamicResource EmailString}" FontWeight="Bold"/>
-                    <TextBox DockPanel.Dock="Right"  Width="200" 
-                             Validation.ErrorTemplate="{DynamicResource ValidationTemplate}"
-                             Style="{DynamicResource TextBoxInError}"
-                             Foreground="{DynamicResource MaterialDesignBody}"
-                             TabIndex="0" >
-                        <Binding Path="Email" UpdateSourceTrigger="PropertyChanged" >
-                            <Binding.ValidationRules>
-                                <validation:EmailValidationRule />
-                            </Binding.ValidationRules>
-                        </Binding>
+                    
+                    <TextBox TabIndex="0"  Style="{DynamicResource StandardTextInput}">
+                        <TextBox.Text>
+                            <Binding Path="Email" Mode="TwoWay" 
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     ValidatesOnNotifyDataErrors="True"
+                                     NotifyOnValidationError="True" >
+                                <Binding.ValidationRules>
+                                    <validation:EmailValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
                     </TextBox>
+                    
                 </DockPanel>
 
-                <DockPanel Width="300" LastChildFill="False" HorizontalAlignment="Center" >
+                <DockPanel  Style="{DynamicResource LabeledTextInputDockPanel}" >
                     <Label DockPanel.Dock="Left"  Content="{DynamicResource PasswordString}" FontWeight="Bold"/>
-                    <PasswordBox DockPanel.Dock="Right" Width="200" 
-                             x:Name="LoginPasswordBox" 
-                             Validation.ErrorTemplate="{DynamicResource ValidationTemplate}"
-                             Foreground="{DynamicResource MaterialDesignBody}"
-                             MaxLength="24" TabIndex="1"/>
-
+                    <PasswordBox Style="{DynamicResource StandardPasswordInput}" TabIndex="1" >
+                        <password:BoundPasswordBox.BoundPassword>
+                            <Binding Path="Password" Mode="TwoWay" 
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     ValidatesOnNotifyDataErrors="True"
+                                     NotifyOnValidationError="True" >
+                                <Binding.ValidationRules>
+                                    <validation:PasswordValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </password:BoundPasswordBox.BoundPassword>
+                    </PasswordBox>
                 </DockPanel>
-                <DockPanel Width="300" HorizontalAlignment="Center">
-                <Button x:Name="LoginButton" Margin="0,30,0,0" Width="150"
-                        Content="{DynamicResource LoginString}" Style="{StaticResource MaterialDesignRaisedButton}"
-                    Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=LoginPasswordBox}"/>
+                
+                <DockPanel  Style="{DynamicResource LabeledTextInputDockPanel}">
+                    <Button x:Name="LoginButton" 
+                        Content="{DynamicResource LoginString}" 
+                        Command="{Binding LoginCommand}" IsDefault="True">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                <Setter Property="Margin" Value="0,30,0,0"/>
+                                <Setter Property="Width" Value="150"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ValidationErrors.Count}" Value="0">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </DockPanel>
             </StackPanel>
 
